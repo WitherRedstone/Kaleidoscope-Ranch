@@ -5,7 +5,6 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
-import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap) implements CustomPacketPayload {
+public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap, Map<UUID, Long> feedCooldownMap) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalHungerSyncPayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, "animal_hunger_sync"));
@@ -31,6 +31,12 @@ public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap) implemen
                     UUID_STREAM_CODEC.encode(buf, uuid);
                     buf.writeFloat(hunger);
                 });
+                Map<UUID, Long> cooldownMap = payload.feedCooldownMap();
+                buf.writeVarInt(cooldownMap.size());
+                cooldownMap.forEach((uuid, remaining) -> {
+                    UUID_STREAM_CODEC.encode(buf, uuid);
+                    buf.writeVarLong(remaining);
+                });
             },
             buf -> {
                 int size = buf.readVarInt();
@@ -40,7 +46,14 @@ public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap) implemen
                     float hunger = buf.readFloat();
                     hungerMap.put(uuid, hunger);
                 }
-                return new AnimalHungerSyncPayload(hungerMap);
+                int cooldownSize = buf.readVarInt();
+                Map<UUID, Long> cooldownMap = new HashMap<>(cooldownSize);
+                for (int i = 0; i < cooldownSize; i++) {
+                    UUID uuid = UUID_STREAM_CODEC.decode(buf);
+                    long remaining = buf.readVarLong();
+                    cooldownMap.put(uuid, remaining);
+                }
+                return new AnimalHungerSyncPayload(hungerMap, cooldownMap);
             }
     );
 

@@ -3,7 +3,8 @@
   "package": "com.chinaex123.kaleidoscope_ranch.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "AnimalBreedMixin"
+    "AnimalBreedMixin",
+    "TemptGoalAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

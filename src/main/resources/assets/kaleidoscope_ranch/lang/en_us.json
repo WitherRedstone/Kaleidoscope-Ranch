@@ -16,5 +16,6 @@
   "jade.plugin_kaleidoscope_ranch.pet_status": "Petted: %s",
   "jade.plugin_kaleidoscope_ranch.pet_status_yes": "Yes",
   "jade.plugin_kaleidoscope_ranch.pet_status_no": "No",
-  "jade.plugin_kaleidoscope_ranch.animal_hunger": "Hunger: %s"
+  "jade.plugin_kaleidoscope_ranch.animal_hunger": "Hunger: %s",
+  "jade.plugin_kaleidoscope_ranch.feed_cooldown": "Feed Cooldown: %s"
 }

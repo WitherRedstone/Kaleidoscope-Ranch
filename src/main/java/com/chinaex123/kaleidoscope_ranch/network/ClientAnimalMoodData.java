@@ -13,6 +13,7 @@ public class ClientAnimalMoodData {
     private final Map<UUID, Integer> clientMoodMap = new HashMap<>();
     private final Map<UUID, Boolean> clientPetTodayMap = new HashMap<>();
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
+    private final Map<UUID, Long> clientFeedCooldownMap = new HashMap<>();
 
     public static ClientAnimalMoodData getInstance() {
         return INSTANCE;
@@ -23,8 +24,9 @@ public class ClientAnimalMoodData {
         clientPetTodayMap.putAll(petTodayMap);
     }
 
-    public void updateHungerData(Map<UUID, Float> hungerMap) {
+    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownMap) {
         clientHungerMap.putAll(hungerMap);
+        clientFeedCooldownMap.putAll(feedCooldownMap);
     }
 
     public int getAnimalMoodScore(UUID uuid) {
@@ -45,5 +47,13 @@ public class ClientAnimalMoodData {
 
     public boolean hasAnimalHungerData(UUID uuid) {
         return clientHungerMap.containsKey(uuid);
+    }
+
+    public long getFeedCooldownRemaining(UUID uuid) {
+        return clientFeedCooldownMap.getOrDefault(uuid, 0L);
+    }
+
+    public boolean hasFeedCooldown(UUID uuid) {
+        return clientFeedCooldownMap.getOrDefault(uuid, 0L) > 0;
     }
 }

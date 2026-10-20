@@ -16,5 +16,6 @@
   "jade.plugin_kaleidoscope_ranch.pet_status": "抚摸: %s",
   "jade.plugin_kaleidoscope_ranch.pet_status_yes": "是",
   "jade.plugin_kaleidoscope_ranch.pet_status_no": "否",
-  "jade.plugin_kaleidoscope_ranch.animal_hunger": "饥饿度: %s"
+  "jade.plugin_kaleidoscope_ranch.animal_hunger": "饥饿度: %s",
+  "jade.plugin_kaleidoscope_ranch.feed_cooldown": "喂食冷却: %s"
 }

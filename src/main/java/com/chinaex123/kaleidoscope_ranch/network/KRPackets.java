@@ -32,7 +32,7 @@ public class KRPackets {
 
     private static void handleAnimalHungerSyncOnClient(AnimalHungerSyncPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
-            ClientAnimalMoodData.getInstance().updateHungerData(payload.animalHungerMap());
+            ClientAnimalMoodData.getInstance().updateHungerData(payload.animalHungerMap(), payload.feedCooldownMap());
         });
     }
 }

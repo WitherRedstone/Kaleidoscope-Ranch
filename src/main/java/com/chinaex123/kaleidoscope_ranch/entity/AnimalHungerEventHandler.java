@@ -3,6 +3,8 @@ package com.chinaex123.kaleidoscope_ranch.entity;
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
+import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerDecline;
+import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
@@ -13,6 +15,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KRTemptGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
@@ -34,10 +37,6 @@ import java.util.UUID;
 
 @EventBusSubscriber(modid = KaleidoscopeRanch.MODID)
 public class AnimalHungerEventHandler {
-
-    public static final float FEED_HUNGER_BONUS = 2.0f;
-    public static final int HUNGER_DECAY_TICK_INTERVAL = 12000;
-    public static final float HUNGER_DECAY_AMOUNT = 0.5f;
 
     @SubscribeEvent
     public static void onAnimalJoinLevel(EntityJoinLevelEvent event) {
@@ -63,7 +62,7 @@ public class AnimalHungerEventHandler {
                 wrappedGoal.getGoal() instanceof TemptGoal
         );
 
-        animal.goalSelector.addGoal(3, new TemptGoal(animal, 1.0, feedIngredient, false));
+        animal.goalSelector.addGoal(3, new KRTemptGoal(animal, 1.0, feedIngredient, false));
     }
 
     @SubscribeEvent
@@ -71,10 +70,11 @@ public class AnimalHungerEventHandler {
         MinecraftServer server = event.getServer();
         long tickCount = server.getTickCount();
 
-        if (tickCount % HUNGER_DECAY_TICK_INTERVAL != 0) return;
+        if (tickCount % HungerDecline.FECES_DECAY_TICK_INTERVAL != 0) return;
 
         for (ServerLevel level : server.getAllLevels()) {
             AnimalHungerSavedData data = getAnimalHungerData(level);
+            long currentGameTime = level.getGameTime();
             WorldBorder border = level.getWorldBorder();
             AABB worldBounds = new AABB(
                     border.getMinX(), level.getMinBuildHeight(), border.getMinZ(),
@@ -89,9 +89,21 @@ public class AnimalHungerEventHandler {
             for (Animal animal : animals) {
                 if (!data.hasAnimalHungerData(animal.getUUID())) continue;
 
-                float currentHunger = data.getAnimalHungerValue(animal.getUUID());
-                if (currentHunger > AnimalHunger.MIN_HUNGER) {
-                    data.addAnimalHungerValue(animal.getUUID(), -HUNGER_DECAY_AMOUNT);
+                UUID uuid = animal.getUUID();
+
+                if (data.isFeedCooldownExpired(uuid, currentGameTime) && data.getConsecutiveFeedCount(uuid) > 0) {
+                    data.resetConsecutiveFeedCount(uuid);
+                    syncHungerToTrackingPlayers(animal, data);
+                }
+
+                float currentHunger = data.getAnimalHungerValue(uuid);
+                if (currentHunger <= AnimalHunger.MIN_HUNGER) continue;
+
+                boolean wasFedToday = data.wasFedToday(uuid, currentGameTime);
+                float delta = HungerDecline.calcTickPenalty(level, animal, wasFedToday);
+
+                if (delta != 0) {
+                    data.addAnimalHungerValue(uuid, delta);
                     syncHungerToTrackingPlayers(animal, data);
                 }
             }
@@ -121,7 +133,7 @@ public class AnimalHungerEventHandler {
             int mood = moodData.getAnimalMoodScore(animal.getUUID());
             float hunger = hungerData.getAnimalHungerValue(animal.getUUID());
 
-            if (mood >= 100 && hunger >= AnimalHunger.MAX_HUNGER) {
+            if (HungerRise.canBreed(mood, hunger)) {
                 if (!player.hasInfiniteMaterials()) {
                     heldItem.shrink(1);
                 }
@@ -133,9 +145,23 @@ public class AnimalHungerEventHandler {
             }
         } else {
             float currentHunger = hungerData.getAnimalHungerValue(animal.getUUID());
-            if (currentHunger >= AnimalHunger.MAX_HUNGER) return;
+            long currentGameTime = level.getGameTime();
+            UUID uuid = animal.getUUID();
 
-            hungerData.addAnimalHungerValue(animal.getUUID(), FEED_HUNGER_BONUS);
+            boolean cooldownExpired = hungerData.isFeedCooldownExpired(uuid, currentGameTime);
+            int resolvedCount = HungerRise.resolveConsecutiveCount(
+                    cooldownExpired, hungerData.getConsecutiveFeedCount(uuid));
+
+            float gain = HungerRise.calcFeedGain(currentHunger, resolvedCount);
+            if (gain <= 0) return;
+
+            if (cooldownExpired) {
+                hungerData.resetConsecutiveFeedCount(uuid);
+            }
+
+            hungerData.addAnimalHungerValue(uuid, gain);
+            hungerData.incrementConsecutiveFeedCount(uuid);
+            hungerData.setLastFeedGameTime(uuid, currentGameTime);
             if (!player.hasInfiniteMaterials()) {
                 heldItem.shrink(1);
             }
@@ -174,14 +200,20 @@ public class AnimalHungerEventHandler {
     public static void syncHungerToTrackingPlayers(Animal animal, AnimalHungerSavedData data) {
         UUID uuid = animal.getUUID();
         Map<UUID, Float> hungerEntry = Map.of(uuid, data.getAnimalHungerValue(uuid));
-        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry);
+        long currentGameTime = animal.level().getGameTime();
+        long cooldownRemaining = data.getFeedCooldownRemaining(uuid, currentGameTime);
+        Map<UUID, Long> cooldownEntry = Map.of(uuid, cooldownRemaining);
+        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, cooldownEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
     public static void syncHungerToPlayer(ServerPlayer player, Animal animal, AnimalHungerSavedData data) {
         UUID uuid = animal.getUUID();
         Map<UUID, Float> hungerEntry = Map.of(uuid, data.getAnimalHungerValue(uuid));
-        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry);
+        long currentGameTime = animal.level().getGameTime();
+        long cooldownRemaining = data.getFeedCooldownRemaining(uuid, currentGameTime);
+        Map<UUID, Long> cooldownEntry = Map.of(uuid, cooldownRemaining);
+        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, cooldownEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }
 

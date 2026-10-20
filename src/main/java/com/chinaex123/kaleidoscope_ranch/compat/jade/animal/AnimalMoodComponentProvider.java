@@ -40,6 +40,15 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
                 ? "jade.plugin_kaleidoscope_ranch.pet_status_yes"
                 : "jade.plugin_kaleidoscope_ranch.pet_status_no";
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.pet_status", Component.translatable(petKey)));
+
+        if (clientData.hasFeedCooldown(uuid)) {
+            long remainingTicks = clientData.getFeedCooldownRemaining(uuid);
+            long remainingSeconds = remainingTicks / 20;
+            long minutes = remainingSeconds / 60;
+            long seconds = remainingSeconds % 60;
+            String timeStr = String.format("%d:%02d", minutes, seconds);
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.feed_cooldown", timeStr).withStyle(style -> style.withColor(0xAAAAAA)));
+        }
     }
 
     @Override
