@@ -1,0 +1,12 @@
+{
+  "itemGroup.kaleidoscope_ranch": "Kaleidoscope Ranch",
+
+  "block.kaleidoscope_ranch.salt_block": "Salt Block",
+  "block.kaleidoscope_ranch.feces": "Feces",
+
+  "config.jade.plugin_kaleidoscope_ranch.animal_mood": "Animal Mood",
+  "jade.plugin_kaleidoscope_ranch.animal_mood": "Mood: %s",
+  "jade.plugin_kaleidoscope_ranch.pet_status": "Petted: %s",
+  "jade.plugin_kaleidoscope_ranch.pet_status_yes": "Yes",
+  "jade.plugin_kaleidoscope_ranch.pet_status_no": "No"
+}

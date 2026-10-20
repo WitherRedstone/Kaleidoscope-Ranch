@@ -1,0 +1,12 @@
+{
+  "itemGroup.kaleidoscope_ranch": "森罗物语：牧场",
+
+  "block.kaleidoscope_ranch.salt_block": "盐块",
+  "block.kaleidoscope_ranch.feces": "粪便",
+  
+  "config.jade.plugin_kaleidoscope_ranch.animal_mood": "动物心情值",
+  "jade.plugin_kaleidoscope_ranch.animal_mood": "心情值: %s",
+  "jade.plugin_kaleidoscope_ranch.pet_status": "抚摸: %s",
+  "jade.plugin_kaleidoscope_ranch.pet_status_yes": "是",
+  "jade.plugin_kaleidoscope_ranch.pet_status_no": "否"
+}
