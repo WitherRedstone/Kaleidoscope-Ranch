@@ -1,6 +1,7 @@
 package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
@@ -101,15 +102,21 @@ public class AnimalMoodEventHandler {
 
                 int currentMood = data.getAnimalMoodScore(animal.getUUID());
 
-                int moodDelta = MoodDecline.calcTickPenalty(level, animal, tickCount);
-                moodDelta += MoodRise.calcTickBonus(level, animal, currentMood, tickCount);
+                int bonusDelta = MoodRise.calcTickBonus(level, animal, currentMood, tickCount);
+                int moodDelta = MoodDecline.calcTickPenalty(level, animal, tickCount) + bonusDelta;
 
                 if (recovery && moodDelta == 0) {
                     moodDelta += MoodDecline.calcRecovery(level, animal, currentMood);
                 }
 
+                if (moodDelta == 0) continue;
+
                 data.applyMoodDelta(animal.getUUID(), moodDelta);
                 syncMoodToTrackingPlayers(animal, data);
+
+                if (bonusDelta > 0) {
+                    AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcMoodRiseFavor(bonusDelta));
+                }
             }
         }
     }
@@ -143,6 +150,8 @@ public class AnimalMoodEventHandler {
         data.setLastPetDay(animal.getUUID(), gameDay);
         syncMoodToTrackingPlayers(animal, data);
 
+        AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcPetFavor());
+
         spawnHeartParticles(level, animal);
 
         player.swing(hand);
@@ -168,8 +177,9 @@ public class AnimalMoodEventHandler {
         AnimalMoodSavedData data = getAnimalMoodData(level);
         if (!data.hasAnimalMoodData(animal.getUUID())) return;
 
-        data.addAnimalMoodScore(animal.getUUID(), -MoodDecline.calcHurtPenalty());
-        syncMoodToTrackingPlayers(animal, data);
+        if (data.applyMoodDelta(animal.getUUID(), -MoodDecline.calcHurtPenalty())) {
+            syncMoodToTrackingPlayers(animal, data);
+        }
     }
 
     /**
@@ -218,6 +228,7 @@ public class AnimalMoodEventHandler {
         PacketDistributor.sendToPlayer(player, payload);
 
         AnimalHungerEventHandler.syncHungerToPlayer(player, animal, AnimalHungerEventHandler.getAnimalHungerData(level));
+        AnimalFavorEventHandler.syncFavorToPlayer(player, animal, AnimalFavorEventHandler.getAnimalFavorData(level));
     }
 
     /**
@@ -237,8 +248,6 @@ public class AnimalMoodEventHandler {
 
     /**
      * 获取指定世界的动物心情存档数据。
-     * <p>
-     * 若不存在则创建新的存档数据。
      *
      * @param level 服务端世界
      * @return 动物心情存档数据

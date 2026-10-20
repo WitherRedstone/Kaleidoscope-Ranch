@@ -107,6 +107,12 @@ public class AnimalHungerSavedData extends SavedData {
         lastFeedGameTimeMap.put(uuid, gameTime);
         setDirty();
     }
+    
+    public long getFeedCooldownExpire(UUID uuid) {
+        Long lastFeedTime = lastFeedGameTimeMap.get(uuid);
+        if (lastFeedTime == null) return 0L;
+        return lastFeedTime + HungerRise.FEED_COOLDOWN_TICKS;
+    }
 
     public boolean wasFedToday(UUID uuid, long currentGameTime) {
         Long lastFeedTime = lastFeedGameTimeMap.get(uuid);

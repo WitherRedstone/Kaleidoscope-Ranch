@@ -1,11 +1,13 @@
 package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KRTemptGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalHungerSyncPayload;
@@ -15,7 +17,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import com.chinaex123.kaleidoscope_ranch.entity.ai.KRTemptGoal;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
@@ -168,6 +169,8 @@ public class AnimalHungerEventHandler {
             syncHungerToTrackingPlayers(animal, hungerData);
             spawnHappyParticles(level, animal);
 
+            AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcHungerRiseFavor(gain));
+
             player.swing(hand);
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
@@ -200,20 +203,16 @@ public class AnimalHungerEventHandler {
     public static void syncHungerToTrackingPlayers(Animal animal, AnimalHungerSavedData data) {
         UUID uuid = animal.getUUID();
         Map<UUID, Float> hungerEntry = Map.of(uuid, data.getAnimalHungerValue(uuid));
-        long currentGameTime = animal.level().getGameTime();
-        long cooldownRemaining = data.getFeedCooldownRemaining(uuid, currentGameTime);
-        Map<UUID, Long> cooldownEntry = Map.of(uuid, cooldownRemaining);
-        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, cooldownEntry);
+        Map<UUID, Long> expireEntry = Map.of(uuid, data.getFeedCooldownExpire(uuid));
+        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, expireEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
     public static void syncHungerToPlayer(ServerPlayer player, Animal animal, AnimalHungerSavedData data) {
         UUID uuid = animal.getUUID();
         Map<UUID, Float> hungerEntry = Map.of(uuid, data.getAnimalHungerValue(uuid));
-        long currentGameTime = animal.level().getGameTime();
-        long cooldownRemaining = data.getFeedCooldownRemaining(uuid, currentGameTime);
-        Map<UUID, Long> cooldownEntry = Map.of(uuid, cooldownRemaining);
-        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, cooldownEntry);
+        Map<UUID, Long> expireEntry = Map.of(uuid, data.getFeedCooldownExpire(uuid));
+        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, expireEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }
 

@@ -10,7 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap, Map<UUID, Long> feedCooldownMap) implements CustomPacketPayload {
+public record AnimalHungerSyncPayload(
+        Map<UUID, Float> animalHungerMap,
+        Map<UUID, Long> feedCooldownExpireMap
+) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalHungerSyncPayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, "animal_hunger_sync"));
@@ -31,11 +34,11 @@ public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap, Map<UUID
                     UUID_STREAM_CODEC.encode(buf, uuid);
                     buf.writeFloat(hunger);
                 });
-                Map<UUID, Long> cooldownMap = payload.feedCooldownMap();
-                buf.writeVarInt(cooldownMap.size());
-                cooldownMap.forEach((uuid, remaining) -> {
+                Map<UUID, Long> expireMap = payload.feedCooldownExpireMap();
+                buf.writeVarInt(expireMap.size());
+                expireMap.forEach((uuid, expire) -> {
                     UUID_STREAM_CODEC.encode(buf, uuid);
-                    buf.writeVarLong(remaining);
+                    buf.writeVarLong(expire);
                 });
             },
             buf -> {
@@ -46,14 +49,14 @@ public record AnimalHungerSyncPayload(Map<UUID, Float> animalHungerMap, Map<UUID
                     float hunger = buf.readFloat();
                     hungerMap.put(uuid, hunger);
                 }
-                int cooldownSize = buf.readVarInt();
-                Map<UUID, Long> cooldownMap = new HashMap<>(cooldownSize);
-                for (int i = 0; i < cooldownSize; i++) {
+                int expireSize = buf.readVarInt();
+                Map<UUID, Long> expireMap = new HashMap<>(expireSize);
+                for (int i = 0; i < expireSize; i++) {
                     UUID uuid = UUID_STREAM_CODEC.decode(buf);
-                    long remaining = buf.readVarLong();
-                    cooldownMap.put(uuid, remaining);
+                    long expire = buf.readVarLong();
+                    expireMap.put(uuid, expire);
                 }
-                return new AnimalHungerSyncPayload(hungerMap, cooldownMap);
+                return new AnimalHungerSyncPayload(hungerMap, expireMap);
             }
     );
 

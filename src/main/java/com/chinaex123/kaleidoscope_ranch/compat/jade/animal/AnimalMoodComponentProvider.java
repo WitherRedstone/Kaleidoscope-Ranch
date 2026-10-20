@@ -1,10 +1,12 @@
 package com.chinaex123.kaleidoscope_ranch.compat.jade.animal;
 
 import com.chinaex123.kaleidoscope_ranch.compat.jade.KRJadePlugin;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
-import com.chinaex123.kaleidoscope_ranch.network.ClientAnimalMoodData;
+import com.chinaex123.kaleidoscope_ranch.network.ClientAnimalData;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Animal;
@@ -24,7 +26,7 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         if (!KREntityTags.isManagedAnimal(animal)) return;
 
         UUID uuid = accessor.getEntity().getUUID();
-        ClientAnimalMoodData clientData = ClientAnimalMoodData.getInstance();
+        ClientAnimalData clientData = ClientAnimalData.getInstance();
         int moodScore = clientData.getAnimalMoodScore(uuid);
         int color = AnimalMood.getDisplayColor(moodScore);
 
@@ -35,20 +37,31 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         String hungerText = String.format("%.1f", hungerValue);
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_hunger", hungerText).withStyle(style -> style.withColor(hungerColor)));
 
+        float favorValue = clientData.getAnimalFavorValue(uuid);
+        int favorColor = AnimalFavor.getDisplayColor(favorValue);
+        String favorText = String.format("%.2f", favorValue);
+        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_favor", favorText).withStyle(style -> style.withColor(favorColor)));
+
         boolean petToday = clientData.hasBeenPetToday(uuid);
         String petKey = petToday
                 ? "jade.plugin_kaleidoscope_ranch.pet_status_yes"
                 : "jade.plugin_kaleidoscope_ranch.pet_status_no";
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.pet_status", Component.translatable(petKey)));
 
-        if (clientData.hasFeedCooldown(uuid)) {
-            long remainingTicks = clientData.getFeedCooldownRemaining(uuid);
+        long currentGameTime = getClientGameTime();
+        if (clientData.hasFeedCooldown(uuid, currentGameTime)) {
+            long remainingTicks = clientData.getFeedCooldownRemaining(uuid, currentGameTime);
             long remainingSeconds = remainingTicks / 20;
             long minutes = remainingSeconds / 60;
             long seconds = remainingSeconds % 60;
             String timeStr = String.format("%d:%02d", minutes, seconds);
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.feed_cooldown", timeStr).withStyle(style -> style.withColor(0xAAAAAA)));
         }
+    }
+
+    private static long getClientGameTime() {
+        Minecraft mc = Minecraft.getInstance();
+        return mc.level != null ? mc.level.getGameTime() : 0L;
     }
 
     @Override

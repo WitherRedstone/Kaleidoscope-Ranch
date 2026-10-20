@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.network;
 
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
 
@@ -7,15 +8,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class ClientAnimalMoodData {
+public class ClientAnimalData {
 
-    private static final ClientAnimalMoodData INSTANCE = new ClientAnimalMoodData();
+    private static final ClientAnimalData INSTANCE = new ClientAnimalData();
     private final Map<UUID, Integer> clientMoodMap = new HashMap<>();
     private final Map<UUID, Boolean> clientPetTodayMap = new HashMap<>();
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
-    private final Map<UUID, Long> clientFeedCooldownMap = new HashMap<>();
+    private final Map<UUID, Long> clientFeedCooldownExpireMap = new HashMap<>();
+    private final Map<UUID, Float> clientFavorMap = new HashMap<>();
 
-    public static ClientAnimalMoodData getInstance() {
+    public static ClientAnimalData getInstance() {
         return INSTANCE;
     }
 
@@ -24,9 +26,9 @@ public class ClientAnimalMoodData {
         clientPetTodayMap.putAll(petTodayMap);
     }
 
-    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownMap) {
+    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownExpireMap) {
         clientHungerMap.putAll(hungerMap);
-        clientFeedCooldownMap.putAll(feedCooldownMap);
+        clientFeedCooldownExpireMap.putAll(feedCooldownExpireMap);
     }
 
     public int getAnimalMoodScore(UUID uuid) {
@@ -49,11 +51,24 @@ public class ClientAnimalMoodData {
         return clientHungerMap.containsKey(uuid);
     }
 
-    public long getFeedCooldownRemaining(UUID uuid) {
-        return clientFeedCooldownMap.getOrDefault(uuid, 0L);
+    public long getFeedCooldownRemaining(UUID uuid, long currentGameTime) {
+        long expire = clientFeedCooldownExpireMap.getOrDefault(uuid, 0L);
+        return Math.max(expire - currentGameTime, 0L);
     }
 
-    public boolean hasFeedCooldown(UUID uuid) {
-        return clientFeedCooldownMap.getOrDefault(uuid, 0L) > 0;
+    public boolean hasFeedCooldown(UUID uuid, long currentGameTime) {
+        return getFeedCooldownRemaining(uuid, currentGameTime) > 0;
+    }
+
+    public void updateFavorData(Map<UUID, Float> favorMap) {
+        clientFavorMap.putAll(favorMap);
+    }
+
+    public float getAnimalFavorValue(UUID uuid) {
+        return clientFavorMap.getOrDefault(uuid, AnimalFavor.INITIAL_FAVOR);
+    }
+
+    public boolean hasAnimalFavorData(UUID uuid) {
+        return clientFavorMap.containsKey(uuid);
     }
 }

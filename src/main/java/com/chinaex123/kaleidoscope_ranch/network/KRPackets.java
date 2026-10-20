@@ -22,17 +22,28 @@ public class KRPackets {
                 AnimalHungerSyncPayload.STREAM_CODEC,
                 KRPackets::handleAnimalHungerSyncOnClient
         );
+        registrar.playToClient(
+                AnimalFavorSyncPayload.TYPE,
+                AnimalFavorSyncPayload.STREAM_CODEC,
+                KRPackets::handleAnimalFavorSyncOnClient
+        );
     }
 
     private static void handleAnimalMoodSyncOnClient(AnimalMoodSyncPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            ClientAnimalMoodData.getInstance().updateMoodData(payload.animalMoodMap(), payload.petTodayMap());
-        });
+        context.enqueueWork(() ->
+                ClientAnimalData.getInstance().updateMoodData(payload.animalMoodMap(), payload.petTodayMap())
+        );
     }
 
     private static void handleAnimalHungerSyncOnClient(AnimalHungerSyncPayload payload, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            ClientAnimalMoodData.getInstance().updateHungerData(payload.animalHungerMap(), payload.feedCooldownMap());
-        });
+        context.enqueueWork(() ->
+                ClientAnimalData.getInstance().updateHungerData(payload.animalHungerMap(), payload.feedCooldownExpireMap())
+        );
+    }
+
+    private static void handleAnimalFavorSyncOnClient(AnimalFavorSyncPayload payload, IPayloadContext context) {
+        context.enqueueWork(() ->
+                ClientAnimalData.getInstance().updateFavorData(payload.animalFavorMap())
+        );
     }
 }
