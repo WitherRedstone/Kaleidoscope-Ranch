@@ -1,8 +1,8 @@
 package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
-import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMood;
-import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMoodSavedData;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
@@ -108,9 +108,8 @@ public class AnimalMoodEventHandler {
                     moodDelta += MoodDecline.calcRecovery(level, animal, currentMood);
                 }
 
-                if (data.applyMoodDelta(animal.getUUID(), moodDelta) || (recovery && moodDelta == 0)) {
-                    syncMoodToTrackingPlayers(animal, data);
-                }
+                data.applyMoodDelta(animal.getUUID(), moodDelta);
+                syncMoodToTrackingPlayers(animal, data);
             }
         }
     }
@@ -217,6 +216,8 @@ public class AnimalMoodEventHandler {
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
         AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry);
         PacketDistributor.sendToPlayer(player, payload);
+
+        AnimalHungerEventHandler.syncHungerToPlayer(player, animal, AnimalHungerEventHandler.getAnimalHungerData(level));
     }
 
     /**

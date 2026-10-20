@@ -1,6 +1,5 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.mood;
 
-import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMood;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import net.minecraft.core.BlockPos;

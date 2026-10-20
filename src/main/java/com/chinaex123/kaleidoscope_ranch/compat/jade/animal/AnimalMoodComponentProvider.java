@@ -1,7 +1,8 @@
 package com.chinaex123.kaleidoscope_ranch.compat.jade.animal;
 
 import com.chinaex123.kaleidoscope_ranch.compat.jade.KRJadePlugin;
-import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMood;
+import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.ClientAnimalMoodData;
 import net.minecraft.network.chat.Component;
@@ -28,6 +29,11 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         int color = AnimalMood.getDisplayColor(moodScore);
 
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_mood", moodScore).withStyle(style -> style.withColor(color)));
+
+        float hungerValue = clientData.getAnimalHungerValue(uuid);
+        int hungerColor = AnimalHunger.getDisplayColor(hungerValue);
+        String hungerText = String.format("%.1f", hungerValue);
+        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_hunger", hungerText).withStyle(style -> style.withColor(hungerColor)));
 
         boolean petToday = clientData.hasBeenPetToday(uuid);
         String petKey = petToday

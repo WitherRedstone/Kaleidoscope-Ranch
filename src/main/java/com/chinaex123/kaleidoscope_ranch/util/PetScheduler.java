@@ -1,6 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.util;
 
-import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMoodSavedData;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
 

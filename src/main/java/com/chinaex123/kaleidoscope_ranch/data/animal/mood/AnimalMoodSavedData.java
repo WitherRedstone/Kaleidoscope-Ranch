@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.data.animal;
+package com.chinaex123.kaleidoscope_ranch.data.animal.mood;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

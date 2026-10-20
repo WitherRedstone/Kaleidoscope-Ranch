@@ -17,11 +17,22 @@ public class KRPackets {
                 AnimalMoodSyncPayload.STREAM_CODEC,
                 KRPackets::handleAnimalMoodSyncOnClient
         );
+        registrar.playToClient(
+                AnimalHungerSyncPayload.TYPE,
+                AnimalHungerSyncPayload.STREAM_CODEC,
+                KRPackets::handleAnimalHungerSyncOnClient
+        );
     }
 
     private static void handleAnimalMoodSyncOnClient(AnimalMoodSyncPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> {
             ClientAnimalMoodData.getInstance().updateMoodData(payload.animalMoodMap(), payload.petTodayMap());
+        });
+    }
+
+    private static void handleAnimalHungerSyncOnClient(AnimalHungerSyncPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            ClientAnimalMoodData.getInstance().updateHungerData(payload.animalHungerMap());
         });
     }
 }

@@ -2,13 +2,19 @@
   "itemGroup.kaleidoscope_ranch": "Kaleidoscope Ranch",
 
   "item.kaleidoscope_ranch.feces": "Feces",
+  "item.kaleidoscope_ranch.salt": "Salt",
+  "item.kaleidoscope_ranch.poultry_feed": "Poultry Feed",
+  "item.kaleidoscope_ranch.livestock_feed": "Livestock Feed",
 
   "block.kaleidoscope_ranch.salt_block": "Salt Block",
   "block.kaleidoscope_ranch.feces": "Feces",
+  "block.kaleidoscope_ranch.feeding_trough": "Feeding Trough",
+  "block.kaleidoscope_ranch.haystack_hollow": "Haystack Hollow",
 
   "config.jade.plugin_kaleidoscope_ranch.animal_mood": "Animal Mood",
   "jade.plugin_kaleidoscope_ranch.animal_mood": "Mood: %s",
   "jade.plugin_kaleidoscope_ranch.pet_status": "Petted: %s",
   "jade.plugin_kaleidoscope_ranch.pet_status_yes": "Yes",
-  "jade.plugin_kaleidoscope_ranch.pet_status_no": "No"
+  "jade.plugin_kaleidoscope_ranch.pet_status_no": "No",
+  "jade.plugin_kaleidoscope_ranch.animal_hunger": "Hunger: %s"
 }
