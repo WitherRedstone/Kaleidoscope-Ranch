@@ -20,8 +20,14 @@ public interface KRBlocks {
     DeferredBlock<Block> SALT_BLOCK = registerBlocks("salt_block", () -> new Block(BlockBehaviour.Properties.of()
             .strength(1.5F, 6.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     /** 粪便 */
-    DeferredBlock<Block> FECES = registerBlocks("feces", () -> new Block(BlockBehaviour.Properties.of()
-            .strength(1.5F, 6.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    DeferredBlock<Block> FECES = BLOCKS.register("feces", () -> new Block(BlockBehaviour.Properties.of()
+            .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    /** 喂食槽 */
+    DeferredBlock<Block> FEEDING_TROUGH = registerBlocks("feeding_trough", () -> new Block(BlockBehaviour.Properties.of()
+            .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    /** 干草窝 */
+    DeferredBlock<Block> HAYSTACK_HOLLOW = registerBlocks("haystack_hollow", () -> new Block(BlockBehaviour.Properties.of()
+            .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
 
 
     static <T extends Block> void registerBlockItems(String name, DeferredBlock<T> block) {

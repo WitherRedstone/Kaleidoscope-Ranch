@@ -2,6 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.data.animal.mood;
 
 import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMood;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
+import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
@@ -45,7 +46,7 @@ public class MoodDecline {
     public static final int RAIN_PENALTY_AMOUNT = 1;
 
     /** 受伤惩罚量 */
-    public static final int HURT_PENALTY_AMOUNT = 5;
+    public static final int HURT_PENALTY_AMOUNT = 10;
 
     /** 心情恢复的 tick 检查间隔 */
     public static final int MOOD_RECOVERY_TICK_INTERVAL = 3600;
@@ -115,7 +116,7 @@ public class MoodDecline {
         List<? extends Animal> nearbyAnimals = level.getEntitiesOfClass(
                 Animal.class,
                 animal.getBoundingBox().inflate(DIVERSE_SPECIES_CHECK_RADIUS),
-                other -> other != animal
+                other -> other != animal && KREntityTags.isManagedAnimal(other)
         );
         Set<Class<? extends Animal>> speciesTypes = new HashSet<>();
         for (Animal nearby : nearbyAnimals) {

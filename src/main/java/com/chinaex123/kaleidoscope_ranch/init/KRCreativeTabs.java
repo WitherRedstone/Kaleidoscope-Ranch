@@ -21,7 +21,13 @@ public class KRCreativeTabs {
                     .displayItems((parameters, output) -> {
 
                         output.accept(KRBlocks.SALT_BLOCK.get());
-                        output.accept(KRBlocks.FECES.get());
+                        output.accept(KRBlocks.FEEDING_TROUGH.get());
+                        output.accept(KRBlocks.HAYSTACK_HOLLOW.get());
+
+                        output.accept(KRItems.SALT.get());
+                        output.accept(KRItems.FECES.get());
+                        output.accept(KRItems.POULTRY_FEED.get());
+                        output.accept(KRItems.LIVESTOCK_FEED.get());
 
                     })
                     .build());

@@ -2,6 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.compat.jade.animal;
 
 import com.chinaex123.kaleidoscope_ranch.compat.jade.KRJadePlugin;
 import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMood;
+import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.ClientAnimalMoodData;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +19,8 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
 
     @Override
     public void appendTooltip(ITooltip tooltip, EntityAccessor accessor, IPluginConfig pluginConfig) {
-        if (!(accessor.getEntity() instanceof Animal)) return;
+        if (!(accessor.getEntity() instanceof Animal animal)) return;
+        if (!KREntityTags.isManagedAnimal(animal)) return;
 
         UUID uuid = accessor.getEntity().getUUID();
         ClientAnimalMoodData clientData = ClientAnimalMoodData.getInstance();

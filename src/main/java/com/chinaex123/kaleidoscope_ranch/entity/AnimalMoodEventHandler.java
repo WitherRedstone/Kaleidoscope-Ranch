@@ -5,6 +5,7 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMood;
 import com.chinaex123.kaleidoscope_ranch.data.animal.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
+import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalMoodSyncPayload;
 import com.chinaex123.kaleidoscope_ranch.util.PetScheduler;
 import net.minecraft.core.particles.ParticleTypes;
@@ -51,7 +52,7 @@ public class AnimalMoodEventHandler {
     @SubscribeEvent
     public static void onAnimalJoinLevel(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide()) return;
-        if (event.getEntity() instanceof Animal animal) {
+        if (event.getEntity() instanceof Animal animal && KREntityTags.isManagedAnimal(animal)) {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalMoodSavedData data = getAnimalMoodData(level);
             if (!data.hasAnimalMoodData(animal.getUUID())) {
@@ -89,7 +90,11 @@ public class AnimalMoodEventHandler {
                     border.getMinX(), level.getMinBuildHeight(), border.getMinZ(),
                     border.getMaxX(), level.getMaxBuildHeight(), border.getMaxZ()
             );
-            List<? extends Animal> animals = level.getEntitiesOfClass(Animal.class, worldBounds);
+            List<? extends Animal> allAnimals = level.getEntitiesOfClass(Animal.class, worldBounds);
+            List<Animal> animals = allAnimals.stream()
+                    .filter(KREntityTags::isManagedAnimal)
+                    .map(a -> (Animal) a)
+                    .toList();
 
             for (Animal animal : animals) {
                 if (!data.hasAnimalMoodData(animal.getUUID())) continue;
@@ -103,7 +108,7 @@ public class AnimalMoodEventHandler {
                     moodDelta += MoodDecline.calcRecovery(level, animal, currentMood);
                 }
 
-                if (data.applyMoodDelta(animal.getUUID(), moodDelta)) {
+                if (data.applyMoodDelta(animal.getUUID(), moodDelta) || (recovery && moodDelta == 0)) {
                     syncMoodToTrackingPlayers(animal, data);
                 }
             }
@@ -122,6 +127,7 @@ public class AnimalMoodEventHandler {
     public static void onAnimalInteract(PlayerInteractEvent.EntityInteract event) {
         if (event.getLevel().isClientSide()) return;
         if (!(event.getTarget() instanceof Animal animal)) return;
+        if (!KREntityTags.isManagedAnimal(animal)) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.isShiftKeyDown()) return;
 
@@ -157,6 +163,7 @@ public class AnimalMoodEventHandler {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide()) return;
         if (!(entity instanceof Animal animal)) return;
+        if (!KREntityTags.isManagedAnimal(animal)) return;
 
         ServerLevel level = (ServerLevel) entity.level();
         AnimalMoodSavedData data = getAnimalMoodData(level);
@@ -197,6 +204,7 @@ public class AnimalMoodEventHandler {
     public static void onStartTracking(PlayerEvent.StartTracking event) {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getTarget() instanceof Animal animal)) return;
+        if (!KREntityTags.isManagedAnimal(animal)) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
 
         ServerLevel level = (ServerLevel) animal.level();
@@ -253,6 +261,7 @@ public class AnimalMoodEventHandler {
     public static void onAnimalDeath(LivingDeathEvent event) {
         if (event.getEntity().level().isClientSide()) return;
         if (!(event.getEntity() instanceof Animal animal)) return;
+        if (!KREntityTags.isManagedAnimal(animal)) return;
 
         ServerLevel level = (ServerLevel) animal.level();
         AnimalMoodSavedData data = getAnimalMoodData(level);
