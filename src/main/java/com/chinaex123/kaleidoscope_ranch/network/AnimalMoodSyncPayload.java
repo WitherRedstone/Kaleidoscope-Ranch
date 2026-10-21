@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalMoodSyncPayload(Map<UUID, Integer> animalMoodMap, Map<UUID, Boolean> petTodayMap) implements CustomPacketPayload {
+public record AnimalMoodSyncPayload(Map<UUID, Integer> animalMoodMap, Map<UUID, Boolean> petTodayMap, Map<UUID, Boolean> wildMap) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalMoodSyncPayload> TYPE =
             new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, "animal_mood_sync"));
@@ -37,6 +37,12 @@ public record AnimalMoodSyncPayload(Map<UUID, Integer> animalMoodMap, Map<UUID, 
                     UUID_STREAM_CODEC.encode(buf, uuid);
                     buf.writeBoolean(petted);
                 });
+                Map<UUID, Boolean> wildMap = payload.wildMap();
+                buf.writeVarInt(wildMap.size());
+                wildMap.forEach((uuid, wild) -> {
+                    UUID_STREAM_CODEC.encode(buf, uuid);
+                    buf.writeBoolean(wild);
+                });
             },
             buf -> {
                 int moodSize = buf.readVarInt();
@@ -53,7 +59,14 @@ public record AnimalMoodSyncPayload(Map<UUID, Integer> animalMoodMap, Map<UUID, 
                     boolean petted = buf.readBoolean();
                     petMap.put(uuid, petted);
                 }
-                return new AnimalMoodSyncPayload(moodMap, petMap);
+                int wildSize = buf.readVarInt();
+                Map<UUID, Boolean> wildMap = new HashMap<>(wildSize);
+                for (int i = 0; i < wildSize; i++) {
+                    UUID uuid = UUID_STREAM_CODEC.decode(buf);
+                    boolean wild = buf.readBoolean();
+                    wildMap.put(uuid, wild);
+                }
+                return new AnimalMoodSyncPayload(moodMap, petMap, wildMap);
             }
     );
 

@@ -46,14 +46,14 @@ public class AnimalHungerEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalHungerSavedData data = getAnimalHungerData(level);
             if (!data.hasAnimalHungerData(animal.getUUID())) {
-                data.setAnimalHungerValue(animal.getUUID(), AnimalHunger.INITIAL_HUNGER);
+                float initialHunger = 3.0f + level.random.nextFloat() * 4.0f;
+                data.setAnimalHungerValue(animal.getUUID(), initialHunger);
             }
             syncHungerToTrackingPlayers(animal, data);
-            replaceTemptGoal(animal);
         }
     }
 
-    private static void replaceTemptGoal(Animal animal) {
+    public static void replaceTemptGoal(Animal animal) {
         Item feedItem = getFeedForAnimal(animal);
         if (feedItem == null) return;
 
@@ -126,25 +126,16 @@ public class AnimalHungerEventHandler {
         if (feedItem == null || heldItem.getItem() != feedItem) return;
 
         ServerLevel level = (ServerLevel) event.getLevel();
+        AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
+
         AnimalHungerSavedData hungerData = getAnimalHungerData(level);
         if (!hungerData.hasAnimalHungerData(animal.getUUID())) return;
 
-        if (player.isShiftKeyDown()) {
-            AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
-            int mood = moodData.getAnimalMoodScore(animal.getUUID());
-            float hunger = hungerData.getAnimalHungerValue(animal.getUUID());
+        boolean isWild = moodData.isWild(animal.getUUID());
 
-            if (HungerRise.canBreed(mood, hunger)) {
-                if (!player.hasInfiniteMaterials()) {
-                    heldItem.shrink(1);
-                }
-                animal.setInLove(player);
-                spawnHeartParticles(level, animal);
-                player.swing(hand);
-                event.setCancellationResult(InteractionResult.SUCCESS);
-                event.setCanceled(true);
-            }
-        } else {
+        if (isWild) {
+            if (!player.isShiftKeyDown()) return;
+
             float currentHunger = hungerData.getAnimalHungerValue(animal.getUUID());
             long currentGameTime = level.getGameTime();
             UUID uuid = animal.getUUID();
@@ -174,6 +165,52 @@ public class AnimalHungerEventHandler {
             player.swing(hand);
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);
+        } else {
+            if (player.isShiftKeyDown()) {
+                int mood = moodData.getAnimalMoodScore(animal.getUUID());
+                float hunger = hungerData.getAnimalHungerValue(animal.getUUID());
+
+                if (HungerRise.canBreed(mood, hunger)) {
+                    if (!player.hasInfiniteMaterials()) {
+                        heldItem.shrink(1);
+                    }
+                    animal.setInLove(player);
+                    spawnHeartParticles(level, animal);
+                    player.swing(hand);
+                    event.setCancellationResult(InteractionResult.SUCCESS);
+                    event.setCanceled(true);
+                }
+            } else {
+                float currentHunger = hungerData.getAnimalHungerValue(animal.getUUID());
+                long currentGameTime = level.getGameTime();
+                UUID uuid = animal.getUUID();
+
+                boolean cooldownExpired = hungerData.isFeedCooldownExpired(uuid, currentGameTime);
+                int resolvedCount = HungerRise.resolveConsecutiveCount(
+                        cooldownExpired, hungerData.getConsecutiveFeedCount(uuid));
+
+                float gain = HungerRise.calcFeedGain(currentHunger, resolvedCount);
+                if (gain <= 0) return;
+
+                if (cooldownExpired) {
+                    hungerData.resetConsecutiveFeedCount(uuid);
+                }
+
+                hungerData.addAnimalHungerValue(uuid, gain);
+                hungerData.incrementConsecutiveFeedCount(uuid);
+                hungerData.setLastFeedGameTime(uuid, currentGameTime);
+                if (!player.hasInfiniteMaterials()) {
+                    heldItem.shrink(1);
+                }
+                syncHungerToTrackingPlayers(animal, hungerData);
+                spawnHappyParticles(level, animal);
+
+                AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcHungerRiseFavor(gain));
+
+                player.swing(hand);
+                event.setCancellationResult(InteractionResult.SUCCESS);
+                event.setCanceled(true);
+            }
         }
     }
 

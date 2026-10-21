@@ -4,6 +4,8 @@ import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalFavorSyncPayload;
 import net.minecraft.server.level.ServerLevel;
@@ -45,12 +47,7 @@ public class AnimalFavorEventHandler {
         if (!KREntityTags.isManagedAnimal(animal)) return;
 
         ServerLevel level = (ServerLevel) entity.level();
-        AnimalFavorSavedData data = getAnimalFavorData(level);
-        if (!data.hasAnimalFavorData(animal.getUUID())) return;
-
-        if (data.applyFavorDelta(animal.getUUID(), -FavorDecline.calcHurtPenalty())) {
-            syncFavorToTrackingPlayers(animal, data);
-        }
+        addFavor(level, animal, -FavorDecline.calcHurtPenalty());
     }
 
     @SubscribeEvent
@@ -90,7 +87,25 @@ public class AnimalFavorEventHandler {
         if (!data.hasAnimalFavorData(animal.getUUID())) return;
         if (data.applyFavorDelta(animal.getUUID(), delta)) {
             syncFavorToTrackingPlayers(animal, data);
+            checkTameFromWild(level, animal, data);
         }
+    }
+
+    private static void checkTameFromWild(ServerLevel level, Animal animal, AnimalFavorSavedData favorData) {
+        UUID uuid = animal.getUUID();
+        float favorValue = favorData.getAnimalFavorValue(uuid);
+        if (favorValue < 6.0f) return;
+
+        AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
+        if (!moodData.isWild(uuid)) return;
+
+        moodData.setWild(uuid, false);
+        AnimalMoodEventHandler.syncMoodToTrackingPlayers(animal, moodData);
+
+        animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
+                wrappedGoal.getGoal() instanceof KRFleeFromPlayerGoal
+        );
+        AnimalHungerEventHandler.replaceTemptGoal(animal);
     }
 
     public static void syncFavorToTrackingPlayers(Animal animal, AnimalFavorSavedData data) {

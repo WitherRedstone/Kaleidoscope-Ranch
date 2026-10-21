@@ -3,9 +3,11 @@ package com.chinaex123.kaleidoscope_ranch.entity;
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
+import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalMoodSyncPayload;
 import com.chinaex123.kaleidoscope_ranch.util.PetScheduler;
@@ -42,6 +44,8 @@ import java.util.UUID;
 @EventBusSubscriber(modid = KaleidoscopeRanch.MODID)
 public class AnimalMoodEventHandler {
 
+    private static long lastSyncedGameDay = -1;
+
     /**
      * 处理动物加入世界事件。
      * <p>
@@ -57,9 +61,21 @@ public class AnimalMoodEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalMoodSavedData data = getAnimalMoodData(level);
             if (!data.hasAnimalMoodData(animal.getUUID())) {
-                data.setAnimalMoodScore(animal.getUUID(), AnimalMood.INITIAL_MOOD);
+                data.setWild(animal.getUUID(), true);
+                int initialMood = 70 + level.random.nextInt(31);
+                data.setAnimalMoodScore(animal.getUUID(), initialMood);
             }
             syncMoodToTrackingPlayers(animal, data);
+
+            AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
+            if (data.isWild(animal.getUUID())) {
+                animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
+                        wrappedGoal.getGoal() instanceof KRFleeFromPlayerGoal
+                );
+                animal.goalSelector.addGoal(0, new KRFleeFromPlayerGoal(animal));
+            } else if (hungerData.hasAnimalHungerData(animal.getUUID())) {
+                AnimalHungerEventHandler.replaceTemptGoal(animal);
+            }
         }
     }
 
@@ -82,9 +98,16 @@ public class AnimalMoodEventHandler {
         boolean anyBonus = tickCount % MoodRise.SALT_BLOCK_MOOD_BONUS_TICK_INTERVAL == 0;
         boolean recovery = tickCount % MoodDecline.MOOD_RECOVERY_TICK_INTERVAL == 0;
 
-        if (!anyPenalty && !anyBonus && !recovery) return;
-
         for (ServerLevel level : server.getAllLevels()) {
+            long currentGameDay = level.getDayTime() / 24000L;
+            boolean dayChanged = currentGameDay != lastSyncedGameDay;
+
+            if (!anyPenalty && !anyBonus && !recovery && !dayChanged) continue;
+
+            if (dayChanged) {
+                lastSyncedGameDay = currentGameDay;
+            }
+
             AnimalMoodSavedData data = getAnimalMoodData(level);
             WorldBorder border = level.getWorldBorder();
             AABB worldBounds = new AABB(
@@ -109,13 +132,16 @@ public class AnimalMoodEventHandler {
                     moodDelta += MoodDecline.calcRecovery(level, animal, currentMood);
                 }
 
-                if (moodDelta == 0) continue;
+                if (moodDelta != 0) {
+                    data.applyMoodDelta(animal.getUUID(), moodDelta);
 
-                data.applyMoodDelta(animal.getUUID(), moodDelta);
-                syncMoodToTrackingPlayers(animal, data);
+                    if (bonusDelta > 0) {
+                        AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcMoodRiseFavor(bonusDelta));
+                    }
+                }
 
-                if (bonusDelta > 0) {
-                    AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcMoodRiseFavor(bonusDelta));
+                if (moodDelta != 0 || dayChanged) {
+                    syncMoodToTrackingPlayers(animal, data);
                 }
             }
         }
@@ -224,7 +250,8 @@ public class AnimalMoodEventHandler {
         long gameDay = level.getDayTime() / 24000L;
         Map<UUID, Integer> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
-        AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry);
+        Map<UUID, Boolean> wildEntry = data.isWild(uuid) ? Map.of(uuid, true) : Map.of();
+        AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry, wildEntry);
         PacketDistributor.sendToPlayer(player, payload);
 
         AnimalHungerEventHandler.syncHungerToPlayer(player, animal, AnimalHungerEventHandler.getAnimalHungerData(level));
@@ -242,7 +269,8 @@ public class AnimalMoodEventHandler {
         long gameDay = ((ServerLevel) animal.level()).getDayTime() / 24000L;
         Map<UUID, Integer> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
-        AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry);
+        Map<UUID, Boolean> wildEntry = data.isWild(uuid) ? Map.of(uuid, true) : Map.of();
+        AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry, wildEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 

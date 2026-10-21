@@ -27,6 +27,9 @@ public class AnimalMoodSavedData extends SavedData {
     /** 动物 UUID 到最近抚摸日期的映射 */
     private final Map<UUID, Long> lastPetDayMap = new HashMap<>();
 
+    /** 动物 UUID 到野生标记的映射 */
+    private final Map<UUID, Boolean> wildMap = new HashMap<>();
+
     /**
      * 构造空的动物心情存档数据。
      */
@@ -54,6 +57,9 @@ public class AnimalMoodSavedData extends SavedData {
             this.animalMoodMap.put(uuid, new AnimalMood(mood));
             if (lastPetDay >= 0) {
                 this.lastPetDayMap.put(uuid, lastPetDay);
+            }
+            if (entry.getBoolean("kr_wild")) {
+                this.wildMap.put(uuid, true);
             }
         }
     }
@@ -116,6 +122,7 @@ public class AnimalMoodSavedData extends SavedData {
     public void removeAnimalMood(UUID uuid) {
         animalMoodMap.remove(uuid);
         lastPetDayMap.remove(uuid);
+        wildMap.remove(uuid);
         setDirty();
     }
 
@@ -175,6 +182,19 @@ public class AnimalMoodSavedData extends SavedData {
         return animalMoodMap;
     }
 
+    public boolean isWild(UUID uuid) {
+        return wildMap.getOrDefault(uuid, false);
+    }
+
+    public void setWild(UUID uuid, boolean wild) {
+        if (wild) {
+            wildMap.put(uuid, true);
+        } else {
+            wildMap.remove(uuid);
+        }
+        setDirty();
+    }
+
     /**
      * 将动物心情数据保存到 NBT。
      * <p>
@@ -193,6 +213,7 @@ public class AnimalMoodSavedData extends SavedData {
             entryTag.putUUID("kr_animal_id", entry.getKey());
             entryTag.putInt("kr_mood_score", entry.getValue().getMoodScore());
             entryTag.putLong("kr_last_pet_day", lastPetDayMap.getOrDefault(entry.getKey(), -1L));
+            entryTag.putBoolean("kr_wild", wildMap.getOrDefault(entry.getKey(), false));
             list.add(entryTag);
         }
         tag.put("kr_animal_mood_list", list);

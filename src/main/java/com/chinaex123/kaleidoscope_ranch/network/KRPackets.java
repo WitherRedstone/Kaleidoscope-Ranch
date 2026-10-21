@@ -31,7 +31,7 @@ public class KRPackets {
 
     private static void handleAnimalMoodSyncOnClient(AnimalMoodSyncPayload payload, IPayloadContext context) {
         context.enqueueWork(() ->
-                ClientAnimalData.getInstance().updateMoodData(payload.animalMoodMap(), payload.petTodayMap())
+                ClientAnimalData.getInstance().updateMoodData(payload.animalMoodMap(), payload.petTodayMap(), payload.wildMap())
         );
     }
 

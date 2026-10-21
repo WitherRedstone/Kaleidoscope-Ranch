@@ -16,14 +16,16 @@ public class ClientAnimalData {
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
     private final Map<UUID, Long> clientFeedCooldownExpireMap = new HashMap<>();
     private final Map<UUID, Float> clientFavorMap = new HashMap<>();
+    private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
 
     public static ClientAnimalData getInstance() {
         return INSTANCE;
     }
 
-    public void updateMoodData(Map<UUID, Integer> moodMap, Map<UUID, Boolean> petTodayMap) {
+    public void updateMoodData(Map<UUID, Integer> moodMap, Map<UUID, Boolean> petTodayMap, Map<UUID, Boolean> wildMap) {
         clientMoodMap.putAll(moodMap);
         clientPetTodayMap.putAll(petTodayMap);
+        clientWildMap.putAll(wildMap);
     }
 
     public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownExpireMap) {
@@ -70,5 +72,9 @@ public class ClientAnimalData {
 
     public boolean hasAnimalFavorData(UUID uuid) {
         return clientFavorMap.containsKey(uuid);
+    }
+
+    public boolean isWild(UUID uuid) {
+        return clientWildMap.getOrDefault(uuid, false);
     }
 }

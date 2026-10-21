@@ -1,6 +1,7 @@
 package com.chinaex123.kaleidoscope_ranch.init;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
+import com.chinaex123.kaleidoscope_ranch.block.FeedingTroughBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -23,8 +24,8 @@ public interface KRBlocks {
     DeferredBlock<Block> FECES = BLOCKS.register("feces", () -> new Block(BlockBehaviour.Properties.of()
             .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     /** 喂食槽 */
-    DeferredBlock<Block> FEEDING_TROUGH = registerBlocks("feeding_trough", () -> new Block(BlockBehaviour.Properties.of()
-            .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+    DeferredBlock<FeedingTroughBlock> FEEDING_TROUGH = registerBlocks("feeding_trough", () -> new FeedingTroughBlock(BlockBehaviour.Properties.of()
+            .strength(0.5F, 3.0F).mapColor(MapColor.WOOD).sound(SoundType.WOOD).requiresCorrectToolForDrops()));
     /** 干草窝 */
     DeferredBlock<Block> HAYSTACK_HOLLOW = registerBlocks("haystack_hollow", () -> new Block(BlockBehaviour.Properties.of()
             .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));

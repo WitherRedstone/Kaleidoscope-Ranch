@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch;
 
+import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
 import com.chinaex123.kaleidoscope_ranch.init.KRCreativeTabs;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
@@ -21,6 +22,7 @@ public class KaleidoscopeRanch {
         KRBlocks.register(modEventBus);
         KRItems.register(modEventBus);
         KRCreativeTabs.register(modEventBus);
+        KRBlockEntityTypes.register(modEventBus);
         modEventBus.register(KRPackets.class);
     }
 }

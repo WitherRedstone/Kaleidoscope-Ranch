@@ -18,5 +18,9 @@
   "jade.plugin_kaleidoscope_ranch.pet_status_no": "否",
   "jade.plugin_kaleidoscope_ranch.animal_hunger": "饥饿度: %s",
   "jade.plugin_kaleidoscope_ranch.feed_cooldown": "喂食冷却: %s",
-  "jade.plugin_kaleidoscope_ranch.animal_favor": "好感度: %s"
+  "jade.plugin_kaleidoscope_ranch.animal_favor": "好感度: %s",
+  "jade.plugin_kaleidoscope_ranch.wild_status": "[野生]",
+  "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "喂食槽内容",
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_empty": "空",
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_count": "饲料: %s"
 }

@@ -18,5 +18,9 @@
   "jade.plugin_kaleidoscope_ranch.pet_status_no": "No",
   "jade.plugin_kaleidoscope_ranch.animal_hunger": "Hunger: %s",
   "jade.plugin_kaleidoscope_ranch.feed_cooldown": "Feed Cooldown: %s",
-  "jade.plugin_kaleidoscope_ranch.animal_favor": "Favor: %s"
+  "jade.plugin_kaleidoscope_ranch.animal_favor": "Favor: %s",
+  "jade.plugin_kaleidoscope_ranch.wild_status": "[Wild]",
+  "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "Feeding Trough",
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_empty": "Empty",
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_count": "Feed: %s"
 }
