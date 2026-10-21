@@ -3,8 +3,13 @@
   "package": "com.chinaex123.kaleidoscope_ranch.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "client.ChickenModelAccessor",
+    "client.QuadrupedModelAccessor",
+    "client.ChickenModelEatingMixin",
+    "client.QuadrupedModelEatingMixin",
     "AnimalBreedMixin",
-    "TemptGoalAccessor"
+    "TemptGoalAccessor",
+    "AnimalEatingAnimationMixin"
   ],
   "injectors": {
     "defaultRequire": 1

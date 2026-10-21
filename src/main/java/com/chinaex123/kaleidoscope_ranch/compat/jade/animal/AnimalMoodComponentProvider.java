@@ -67,6 +67,15 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.feed_cooldown", timeStr)
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
+        if (clientData.hasTroughFeedCooldown(uuid, currentGameTime)) {
+            long remainingTicks = clientData.getTroughFeedCooldownRemaining(uuid, currentGameTime);
+            long remainingSeconds = remainingTicks / 20;
+            long minutes = remainingSeconds / 60;
+            long seconds = remainingSeconds % 60;
+            String timeStr = String.format("%d:%02d", minutes, seconds);
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.trough_feed_cooldown", timeStr)
+                    .withStyle(style -> style.withColor(0xAAAAAA)));
+        }
     }
 
     private static long getClientGameTime() {

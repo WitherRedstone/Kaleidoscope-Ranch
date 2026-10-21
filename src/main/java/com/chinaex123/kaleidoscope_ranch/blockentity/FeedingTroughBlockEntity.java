@@ -8,6 +8,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -76,6 +77,20 @@ public class FeedingTroughBlockEntity extends BlockEntity {
     public ItemStack consumeOneFeed() {
         for (int i = 0; i < SLOT_COUNT; i++) {
             if (!items[i].isEmpty()) {
+                ItemStack result = items[i].split(1);
+                if (items[i].isEmpty()) {
+                    items[i] = ItemStack.EMPTY;
+                }
+                setChanged();
+                return result;
+            }
+        }
+        return ItemStack.EMPTY;
+    }
+
+    public ItemStack consumeOneFeed(Item feedItem) {
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            if (!items[i].isEmpty() && items[i].is(feedItem)) {
                 ItemStack result = items[i].split(1);
                 if (items[i].isEmpty()) {
                     items[i] = ItemStack.EMPTY;

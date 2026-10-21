@@ -15,6 +15,7 @@ public class ClientAnimalData {
     private final Map<UUID, Boolean> clientPetTodayMap = new HashMap<>();
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
     private final Map<UUID, Long> clientFeedCooldownExpireMap = new HashMap<>();
+    private final Map<UUID, Long> clientTroughCooldownExpireMap = new HashMap<>();
     private final Map<UUID, Float> clientFavorMap = new HashMap<>();
     private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
 
@@ -28,9 +29,10 @@ public class ClientAnimalData {
         clientWildMap.putAll(wildMap);
     }
 
-    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownExpireMap) {
+    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownExpireMap, Map<UUID, Long> troughCooldownExpireMap) {
         clientHungerMap.putAll(hungerMap);
         clientFeedCooldownExpireMap.putAll(feedCooldownExpireMap);
+        clientTroughCooldownExpireMap.putAll(troughCooldownExpireMap);
     }
 
     public int getAnimalMoodScore(UUID uuid) {
@@ -60,6 +62,15 @@ public class ClientAnimalData {
 
     public boolean hasFeedCooldown(UUID uuid, long currentGameTime) {
         return getFeedCooldownRemaining(uuid, currentGameTime) > 0;
+    }
+
+    public long getTroughFeedCooldownRemaining(UUID uuid, long currentGameTime) {
+        long expire = clientTroughCooldownExpireMap.getOrDefault(uuid, 0L);
+        return Math.max(expire - currentGameTime, 0L);
+    }
+
+    public boolean hasTroughFeedCooldown(UUID uuid, long currentGameTime) {
+        return getTroughFeedCooldownRemaining(uuid, currentGameTime) > 0;
     }
 
     public void updateFavorData(Map<UUID, Float> favorMap) {

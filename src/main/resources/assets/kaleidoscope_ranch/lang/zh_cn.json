@@ -13,11 +13,12 @@
 
   "config.jade.plugin_kaleidoscope_ranch.animal_mood": "动物心情值",
   "jade.plugin_kaleidoscope_ranch.animal_mood": "心情值: %s",
-  "jade.plugin_kaleidoscope_ranch.pet_status": "抚摸: %s",
+  "jade.plugin_kaleidoscope_ranch.pet_status": "是否抚摸: %s",
   "jade.plugin_kaleidoscope_ranch.pet_status_yes": "是",
   "jade.plugin_kaleidoscope_ranch.pet_status_no": "否",
   "jade.plugin_kaleidoscope_ranch.animal_hunger": "饥饿度: %s",
   "jade.plugin_kaleidoscope_ranch.feed_cooldown": "喂食冷却: %s",
+  "jade.plugin_kaleidoscope_ranch.trough_feed_cooldown": "槽食冷却: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor": "好感度: %s",
   "jade.plugin_kaleidoscope_ranch.wild_status": "[野生]",
   "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "喂食槽内容",

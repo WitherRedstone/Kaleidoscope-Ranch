@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.hunger;
 
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -17,6 +18,7 @@ public class AnimalHungerSavedData extends SavedData {
     private final Map<UUID, AnimalHunger> animalHungerMap = new HashMap<>();
     private final Map<UUID, Integer> consecutiveFeedCountMap = new HashMap<>();
     private final Map<UUID, Long> lastFeedGameTimeMap = new HashMap<>();
+    private final Map<UUID, Long> lastTroughFeedGameTimeMap = new HashMap<>();
 
     public AnimalHungerSavedData() {
         super();
@@ -31,10 +33,14 @@ public class AnimalHungerSavedData extends SavedData {
             float hunger = entry.getFloat("kr_hunger_value");
             int feedCount = entry.getInt("kr_consecutive_feed_count");
             long lastFeedGameTime = entry.getLong("kr_last_feed_game_time");
+            long lastTroughFeedGameTime = entry.getLong("kr_last_trough_feed_game_time");
             this.animalHungerMap.put(uuid, new AnimalHunger(hunger));
             this.consecutiveFeedCountMap.put(uuid, feedCount);
             if (lastFeedGameTime >= 0) {
                 this.lastFeedGameTimeMap.put(uuid, lastFeedGameTime);
+            }
+            if (lastTroughFeedGameTime >= 0) {
+                this.lastTroughFeedGameTimeMap.put(uuid, lastTroughFeedGameTime);
             }
         }
     }
@@ -64,6 +70,7 @@ public class AnimalHungerSavedData extends SavedData {
         animalHungerMap.remove(uuid);
         consecutiveFeedCountMap.remove(uuid);
         lastFeedGameTimeMap.remove(uuid);
+        lastTroughFeedGameTimeMap.remove(uuid);
         setDirty();
     }
 
@@ -134,6 +141,35 @@ public class AnimalHungerSavedData extends SavedData {
         return Math.max(remaining, 0);
     }
 
+    public long getLastTroughFeedGameTime(UUID uuid) {
+        return lastTroughFeedGameTimeMap.getOrDefault(uuid, -1L);
+    }
+
+    public void setLastTroughFeedGameTime(UUID uuid, long gameTime) {
+        lastTroughFeedGameTimeMap.put(uuid, gameTime);
+        setDirty();
+    }
+
+    public long getTroughFeedCooldownExpire(UUID uuid) {
+        Long lastTroughFeedTime = lastTroughFeedGameTimeMap.get(uuid);
+        if (lastTroughFeedTime == null) return 0L;
+        return lastTroughFeedTime + KREatFromTroughGoal.TROUGH_FEED_COOLDOWN_TICKS;
+    }
+
+    public boolean isTroughFeedCooldownExpired(UUID uuid, long currentGameTime) {
+        Long lastTroughFeedTime = lastTroughFeedGameTimeMap.get(uuid);
+        if (lastTroughFeedTime == null) return true;
+        return (currentGameTime - lastTroughFeedTime) >= KREatFromTroughGoal.TROUGH_FEED_COOLDOWN_TICKS;
+    }
+
+    public long getTroughFeedCooldownRemaining(UUID uuid, long currentGameTime) {
+        Long lastTroughFeedTime = lastTroughFeedGameTimeMap.get(uuid);
+        if (lastTroughFeedTime == null) return 0;
+        long elapsed = currentGameTime - lastTroughFeedTime;
+        long remaining = KREatFromTroughGoal.TROUGH_FEED_COOLDOWN_TICKS - elapsed;
+        return Math.max(remaining, 0);
+    }
+
     @Override
     public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
         ListTag list = new ListTag();
@@ -144,6 +180,7 @@ public class AnimalHungerSavedData extends SavedData {
             entryTag.putFloat("kr_hunger_value", entry.getValue().getHungerValue());
             entryTag.putInt("kr_consecutive_feed_count", consecutiveFeedCountMap.getOrDefault(uuid, 0));
             entryTag.putLong("kr_last_feed_game_time", lastFeedGameTimeMap.getOrDefault(uuid, -1L));
+            entryTag.putLong("kr_last_trough_feed_game_time", lastTroughFeedGameTimeMap.getOrDefault(uuid, -1L));
             list.add(entryTag);
         }
         tag.put("kr_animal_hunger_list", list);

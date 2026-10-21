@@ -12,7 +12,8 @@ import java.util.UUID;
 
 public record AnimalHungerSyncPayload(
         Map<UUID, Float> animalHungerMap,
-        Map<UUID, Long> feedCooldownExpireMap
+        Map<UUID, Long> feedCooldownExpireMap,
+        Map<UUID, Long> troughCooldownExpireMap
 ) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalHungerSyncPayload> TYPE =
@@ -40,6 +41,12 @@ public record AnimalHungerSyncPayload(
                     UUID_STREAM_CODEC.encode(buf, uuid);
                     buf.writeVarLong(expire);
                 });
+                Map<UUID, Long> troughExpireMap = payload.troughCooldownExpireMap();
+                buf.writeVarInt(troughExpireMap.size());
+                troughExpireMap.forEach((uuid, expire) -> {
+                    UUID_STREAM_CODEC.encode(buf, uuid);
+                    buf.writeVarLong(expire);
+                });
             },
             buf -> {
                 int size = buf.readVarInt();
@@ -56,7 +63,14 @@ public record AnimalHungerSyncPayload(
                     long expire = buf.readVarLong();
                     expireMap.put(uuid, expire);
                 }
-                return new AnimalHungerSyncPayload(hungerMap, expireMap);
+                int troughExpireSize = buf.readVarInt();
+                Map<UUID, Long> troughExpireMap = new HashMap<>(troughExpireSize);
+                for (int i = 0; i < troughExpireSize; i++) {
+                    UUID uuid = UUID_STREAM_CODEC.decode(buf);
+                    long expire = buf.readVarLong();
+                    troughExpireMap.put(uuid, expire);
+                }
+                return new AnimalHungerSyncPayload(hungerMap, expireMap, troughExpireMap);
             }
     );
 

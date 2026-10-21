@@ -241,7 +241,8 @@ public class AnimalHungerEventHandler {
         UUID uuid = animal.getUUID();
         Map<UUID, Float> hungerEntry = Map.of(uuid, data.getAnimalHungerValue(uuid));
         Map<UUID, Long> expireEntry = Map.of(uuid, data.getFeedCooldownExpire(uuid));
-        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, expireEntry);
+        Map<UUID, Long> troughExpireEntry = Map.of(uuid, data.getTroughFeedCooldownExpire(uuid));
+        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, expireEntry, troughExpireEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
@@ -249,7 +250,8 @@ public class AnimalHungerEventHandler {
         UUID uuid = animal.getUUID();
         Map<UUID, Float> hungerEntry = Map.of(uuid, data.getAnimalHungerValue(uuid));
         Map<UUID, Long> expireEntry = Map.of(uuid, data.getFeedCooldownExpire(uuid));
-        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, expireEntry);
+        Map<UUID, Long> troughExpireEntry = Map.of(uuid, data.getTroughFeedCooldownExpire(uuid));
+        AnimalHungerSyncPayload payload = new AnimalHungerSyncPayload(hungerEntry, expireEntry, troughExpireEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }
 

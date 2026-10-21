@@ -7,6 +7,7 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedDat
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalMoodSyncPayload;
@@ -76,6 +77,11 @@ public class AnimalMoodEventHandler {
             } else if (hungerData.hasAnimalHungerData(animal.getUUID())) {
                 AnimalHungerEventHandler.replaceTemptGoal(animal);
             }
+
+            animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
+                    wrappedGoal.getGoal() instanceof KREatFromTroughGoal
+            );
+            animal.goalSelector.addGoal(3, new KREatFromTroughGoal(animal));
         }
     }
 
