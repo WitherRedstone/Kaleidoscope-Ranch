@@ -22,5 +22,6 @@
   "jade.plugin_kaleidoscope_ranch.wild_status": "[野生]",
   "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "喂食槽内容",
   "jade.plugin_kaleidoscope_ranch.feeding_trough_empty": "空",
-  "jade.plugin_kaleidoscope_ranch.feeding_trough_count": "饲料: %s"
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_livestock": "家畜饲料: %s",
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_poultry": "家禽饲料: %s"
 }

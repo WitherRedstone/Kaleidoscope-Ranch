@@ -2,7 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.block;
 
 import com.chinaex123.kaleidoscope_ranch.blockentity.FeedingTroughBlockEntity;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
-import com.chinaex123.kaleidoscope_ranch.init.KRItems;
+import com.chinaex123.kaleidoscope_ranch.init.KRItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -104,9 +104,9 @@ public class FeedingTroughBlock extends BaseEntityBlock {
         ItemStack offHand = player.getOffhandItem();
         ItemStack feedStack = null;
 
-        if (mainHand.is(KRItems.LIVESTOCK_FEED.get())) {
+        if (mainHand.is(KRItemTags.ANIMAL_FEED)) {
             feedStack = mainHand;
-        } else if (offHand.is(KRItems.LIVESTOCK_FEED.get())) {
+        } else if (offHand.is(KRItemTags.ANIMAL_FEED)) {
             feedStack = offHand;
         }
 
