@@ -15,6 +15,8 @@ public interface KREntityTags {
     TagKey<EntityType<?>> POULTRY = modTag("poultry");
     /** 家畜 */
     TagKey<EntityType<?>> LIVESTOCK = modTag("livestock");
+    /** 好感度_泥巴 */
+    TagKey<EntityType<?>> FAVOR_MUD = modTag("favor_mud");
 
     private static TagKey<EntityType<?>> modTag(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, name));

@@ -57,7 +57,7 @@ public class AnimalMood {
     public static int getDisplayColor(int moodScore) {
         if (moodScore > getInitialMood()) {
             return 0xFFAA00;
-        } else if (moodScore >= 61) {
+        } else if (moodScore >= 71) {
             return 0xFFFFFF;
         } else if (moodScore >= 30) {
             return 0x5599FF;

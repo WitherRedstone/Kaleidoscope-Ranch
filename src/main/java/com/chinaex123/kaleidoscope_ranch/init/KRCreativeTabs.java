@@ -28,6 +28,7 @@ public class KRCreativeTabs {
                         output.accept(KRItems.FECES.get());
                         output.accept(KRItems.POULTRY_FEED.get());
                         output.accept(KRItems.LIVESTOCK_FEED.get());
+                        output.accept(KRItems.CREATIVE_FEED.get());
 
                     })
                     .build());

@@ -47,11 +47,9 @@ public class AnimalHunger {
     }
 
     public static int getDisplayColor(float hungerValue) {
-        if (hungerValue >= getMaxHunger()) {
-            return 0xFFAA00;
-        } else if (hungerValue >= 7.0f) {
+        if (hungerValue >= 7.0f) {
             return 0xFFFFFF;
-        } else if (hungerValue >= 4.0f) {
+        } else if (hungerValue >= 3.0f) {
             return 0x5599FF;
         } else {
             return 0xFF5555;

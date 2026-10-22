@@ -20,6 +20,8 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_BONUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_RADIUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue MOOD_RISE_MUD_BONUS;
+    public static final ModConfigSpec.IntValue MOOD_RISE_MUD_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_RADIUS;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_REQUIRED;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_TICK_INTERVAL;
@@ -39,10 +41,12 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_FECES_AMOUNT;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_RADIUS;
+    public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_RAIN_AMOUNT;
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_MOOD_FACTOR;
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_HUNGER_FACTOR;
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_PET_BONUS;
     public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_HURT_AMOUNT;
+    public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_RAIN_AMOUNT;
     public static final ModConfigSpec.IntValue WILD_INITIAL_MOOD_MIN;
     public static final ModConfigSpec.IntValue WILD_INITIAL_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MIN;
@@ -94,6 +98,14 @@ public class KRConfig {
                 .comment("盐块加成tick间隔")
                 .comment("Salt block bonus tick interval")
                 .defineInRange("saltBlockTickInterval", 4800, 100, Integer.MAX_VALUE);
+        MOOD_RISE_MUD_BONUS = builder
+                .comment("泥巴心情恢复量(仅favor_mud标签生物)")
+                .comment("Mud mood recovery amount (only for favor_mud tagged entities)")
+                .defineInRange("mudBonus", 1, 0, Integer.MAX_VALUE);
+        MOOD_RISE_MUD_TICK_INTERVAL = builder
+                .comment("泥巴心情恢复tick间隔(仅favor_mud标签生物)")
+                .comment("Mud mood recovery tick interval (only for favor_mud tagged entities)")
+                .defineInRange("mudTickInterval", 2400, 100, Integer.MAX_VALUE);
         builder.pop();
 
         builder.comment("心情下降").push("Mood Decline");
@@ -196,6 +208,10 @@ public class KRConfig {
                 .comment("粪便饥饿检测半径")
                 .comment("Feces hunger detection radius")
                 .defineInRange("fecesRadius", 8, 1, 32);
+        HUNGER_DECLINE_RAIN_AMOUNT = builder
+                .comment("雨天饥饿下降量")
+                .comment("Rain hunger decline amount")
+                .defineInRange("rainAmount", 0.1, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
@@ -239,6 +255,10 @@ public class KRConfig {
                 .comment("受伤好感惩罚量")
                 .comment("Hurt favor penalty amount")
                 .defineInRange("hurtAmount", 4.0, 0.0, Integer.MAX_VALUE);
+        FAVOR_DECLINE_RAIN_AMOUNT = builder
+                .comment("雨天好感下降量")
+                .comment("Rain favor decline amount")
+                .defineInRange("rainAmount", 0.1, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();

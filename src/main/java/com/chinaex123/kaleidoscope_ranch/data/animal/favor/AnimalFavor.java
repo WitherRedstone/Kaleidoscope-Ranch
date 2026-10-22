@@ -70,7 +70,7 @@ public class AnimalFavor {
             return 0xFFAA00;
         } else if (favorValue >= 7.0f) {
             return 0xFFFFFF;
-        } else if (favorValue >= 4.0f) {
+        } else if (favorValue >= 3.0f) {
             return 0x5599FF;
         } else {
             return 0xFF5555;

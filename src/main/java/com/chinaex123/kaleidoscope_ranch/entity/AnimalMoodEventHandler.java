@@ -81,7 +81,8 @@ public class AnimalMoodEventHandler {
         boolean anyPenalty = tickCount % MoodDecline.getDiverseSpeciesPenaltyTickInterval() == 0
                 || tickCount % MoodDecline.getFecesPenaltyTickInterval() == 0
                 || tickCount % MoodDecline.getRainPenaltyTickInterval() == 0;
-        boolean anyBonus = tickCount % MoodRise.getSaltBlockMoodBonusTickInterval() == 0;
+        boolean anyBonus = tickCount % MoodRise.getSaltBlockMoodBonusTickInterval() == 0
+                || tickCount % MoodRise.getMudMoodBonusTickInterval() == 0;
         boolean recovery = tickCount % MoodDecline.getMoodRecoveryTickInterval() == 0;
 
         for (ServerLevel level : server.getAllLevels()) {
@@ -112,6 +113,9 @@ public class AnimalMoodEventHandler {
                 int currentMood = data.getAnimalMoodScore(animal.getUUID());
 
                 int bonusDelta = MoodRise.calcTickBonus(level, animal, currentMood, tickCount);
+                if (tickCount % MoodRise.getMudMoodBonusTickInterval() == 0) {
+                    bonusDelta += MoodRise.calcMudBonus(level, animal, currentMood);
+                }
                 int moodDelta = MoodDecline.calcTickPenalty(level, animal, tickCount) + bonusDelta;
 
                 if (recovery && moodDelta == 0) {
@@ -123,6 +127,18 @@ public class AnimalMoodEventHandler {
 
                     if (bonusDelta > 0) {
                         AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcMoodRiseFavor(bonusDelta));
+                    }
+                }
+
+                if (tickCount % MoodDecline.getRainPenaltyTickInterval() == 0) {
+                    int rainPenalty = MoodDecline.calcRainPenalty(level, animal);
+                    if (rainPenalty > 0) {
+                        AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
+                        if (hungerData.hasAnimalHungerData(animal.getUUID())) {
+                            hungerData.addAnimalHungerValue(animal.getUUID(), -KRConfig.HUNGER_DECLINE_RAIN_AMOUNT.get().floatValue());
+                            AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);
+                        }
+                        AnimalFavorEventHandler.addFavor(level, animal, -KRConfig.FAVOR_DECLINE_RAIN_AMOUNT.get().floatValue());
                     }
                 }
 
@@ -208,7 +224,7 @@ public class AnimalMoodEventHandler {
         long gameDay = level.getDayTime() / 24000L;
         Map<UUID, Integer> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
-        Map<UUID, Boolean> wildEntry = data.isWild(uuid) ? Map.of(uuid, true) : Map.of();
+        Map<UUID, Boolean> wildEntry = Map.of(uuid, data.isWild(uuid));
         AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry, wildEntry);
         PacketDistributor.sendToPlayer(player, payload);
 
@@ -221,7 +237,7 @@ public class AnimalMoodEventHandler {
         long gameDay = ((ServerLevel) animal.level()).getDayTime() / 24000L;
         Map<UUID, Integer> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
-        Map<UUID, Boolean> wildEntry = data.isWild(uuid) ? Map.of(uuid, true) : Map.of();
+        Map<UUID, Boolean> wildEntry = Map.of(uuid, data.isWild(uuid));
         AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry, wildEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
