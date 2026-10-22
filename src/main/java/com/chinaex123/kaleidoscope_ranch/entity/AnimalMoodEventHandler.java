@@ -49,9 +49,9 @@ public class AnimalMoodEventHandler {
             AnimalMoodSavedData data = getAnimalMoodData(level);
             if (!data.hasAnimalMoodData(animal.getUUID())) {
                 data.setWild(animal.getUUID(), true);
-                int minMood = KRConfig.WILD_INITIAL_MOOD_MIN.get();
-                int maxMood = KRConfig.WILD_INITIAL_MOOD_MAX.get();
-                int initialMood = minMood + level.random.nextInt(Math.max(1, maxMood - minMood + 1));
+                double minMood = KRConfig.WILD_INITIAL_MOOD_MIN.get();
+                double maxMood = KRConfig.WILD_INITIAL_MOOD_MAX.get();
+                double initialMood = minMood + level.random.nextDouble() * (maxMood - minMood);
                 data.setAnimalMoodScore(animal.getUUID(), initialMood);
             }
             syncMoodToTrackingPlayers(animal, data);
@@ -110,13 +110,13 @@ public class AnimalMoodEventHandler {
             for (Animal animal : animals) {
                 if (!data.hasAnimalMoodData(animal.getUUID())) continue;
 
-                int currentMood = data.getAnimalMoodScore(animal.getUUID());
+                double currentMood = data.getAnimalMoodScore(animal.getUUID());
 
-                int bonusDelta = MoodRise.calcTickBonus(level, animal, currentMood, tickCount);
+                double bonusDelta = MoodRise.calcTickBonus(level, animal, currentMood, tickCount);
                 if (tickCount % MoodRise.getMudMoodBonusTickInterval() == 0) {
                     bonusDelta += MoodRise.calcMudBonus(level, animal, currentMood);
                 }
-                int moodDelta = MoodDecline.calcTickPenalty(level, animal, tickCount) + bonusDelta;
+                double moodDelta = MoodDecline.calcTickPenalty(level, animal, tickCount) + bonusDelta;
 
                 if (recovery && moodDelta == 0) {
                     moodDelta += MoodDecline.calcRecovery(level, animal, currentMood);
@@ -131,7 +131,7 @@ public class AnimalMoodEventHandler {
                 }
 
                 if (tickCount % MoodDecline.getRainPenaltyTickInterval() == 0) {
-                    int rainPenalty = MoodDecline.calcRainPenalty(level, animal);
+                    double rainPenalty = MoodDecline.calcRainPenalty(level, animal);
                     if (rainPenalty > 0) {
                         AnimalFavorEventHandler.addFavor(level, animal, -KRConfig.FAVOR_DECLINE_RAIN_AMOUNT.get().floatValue());
                     }
@@ -217,7 +217,7 @@ public class AnimalMoodEventHandler {
 
         UUID uuid = animal.getUUID();
         long gameDay = level.getDayTime() / 24000L;
-        Map<UUID, Integer> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
+        Map<UUID, Double> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
         Map<UUID, Boolean> wildEntry = Map.of(uuid, data.isWild(uuid));
         AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry, wildEntry);
@@ -230,7 +230,7 @@ public class AnimalMoodEventHandler {
     public static void syncMoodToTrackingPlayers(Animal animal, AnimalMoodSavedData data) {
         UUID uuid = animal.getUUID();
         long gameDay = ((ServerLevel) animal.level()).getDayTime() / 24000L;
-        Map<UUID, Integer> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
+        Map<UUID, Double> moodEntry = Map.of(uuid, data.getAnimalMoodScore(uuid));
         Map<UUID, Boolean> petEntry = Map.of(uuid, data.hasBeenPetToday(uuid, gameDay));
         Map<UUID, Boolean> wildEntry = Map.of(uuid, data.isWild(uuid));
         AnimalMoodSyncPayload payload = new AnimalMoodSyncPayload(moodEntry, petEntry, wildEntry);

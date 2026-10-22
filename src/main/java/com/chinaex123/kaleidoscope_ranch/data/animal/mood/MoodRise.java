@@ -18,18 +18,18 @@ public class MoodRise {
         return KRConfig.MOOD_RISE_MUD_TICK_INTERVAL.get();
     }
 
-    public static int calcTickBonus(ServerLevel level, Animal animal, int currentMood, long tickCount) {
+    public static double calcTickBonus(ServerLevel level, Animal animal, double currentMood, long tickCount) {
         if (tickCount % KRConfig.MOOD_RISE_SALT_BLOCK_TICK_INTERVAL.get() == 0) {
             return calcSaltBlockBonus(level, animal, currentMood);
         }
         return 0;
     }
 
-    public static int calcPetBonus() {
+    public static double calcPetBonus() {
         return KRConfig.MOOD_RISE_PET_BONUS.get();
     }
 
-    public static int calcSaltBlockBonus(ServerLevel level, Animal animal, int currentMood) {
+    public static double calcSaltBlockBonus(ServerLevel level, Animal animal, double currentMood) {
         if (currentMood >= AnimalMood.getInitialMood()) return 0;
 
         Block saltBlock = KRBlocks.SALT_BLOCK.get();
@@ -45,7 +45,7 @@ public class MoodRise {
         return 0;
     }
 
-    public static int calcMudBonus(ServerLevel level, Animal animal, int currentMood) {
+    public static double calcMudBonus(ServerLevel level, Animal animal, double currentMood) {
         if (!animal.getType().is(KREntityTags.FAVOR_MUD)) return 0;
         if (currentMood >= AnimalMood.getInitialMood()) return 0;
         if (level.getBlockState(animal.blockPosition()).getBlock() == net.minecraft.world.level.block.Blocks.MUD

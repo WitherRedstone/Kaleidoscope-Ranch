@@ -5,10 +5,10 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class KRConfig {
     public static final ModConfigSpec SPEC;
 
-    public static final ModConfigSpec.IntValue MOOD_INITIAL;
-    public static final ModConfigSpec.IntValue MOOD_MIN;
-    public static final ModConfigSpec.IntValue MOOD_MAX;
-    public static final ModConfigSpec.IntValue MOOD_ABSOLUTE_MAX;
+    public static final ModConfigSpec.DoubleValue MOOD_INITIAL;
+    public static final ModConfigSpec.DoubleValue MOOD_MIN;
+    public static final ModConfigSpec.DoubleValue MOOD_MAX;
+    public static final ModConfigSpec.DoubleValue MOOD_ABSOLUTE_MAX;
     public static final ModConfigSpec.DoubleValue HUNGER_INITIAL;
     public static final ModConfigSpec.DoubleValue HUNGER_MIN;
     public static final ModConfigSpec.DoubleValue HUNGER_MAX;
@@ -16,24 +16,24 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue FAVOR_MIN;
     public static final ModConfigSpec.DoubleValue FAVOR_MAX;
     public static final ModConfigSpec.DoubleValue FAVOR_ABSOLUTE_MAX;
-    public static final ModConfigSpec.IntValue MOOD_RISE_PET_BONUS;
-    public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_BONUS;
+    public static final ModConfigSpec.DoubleValue MOOD_RISE_PET_BONUS;
+    public static final ModConfigSpec.DoubleValue MOOD_RISE_SALT_BLOCK_BONUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_RADIUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_TICK_INTERVAL;
-    public static final ModConfigSpec.IntValue MOOD_RISE_MUD_BONUS;
+    public static final ModConfigSpec.DoubleValue MOOD_RISE_MUD_BONUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_MUD_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_RADIUS;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_REQUIRED;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_TICK_INTERVAL;
-    public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT;
+    public static final ModConfigSpec.DoubleValue MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_FECES_RADIUS;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_FECES_TICK_INTERVAL;
-    public static final ModConfigSpec.IntValue MOOD_DECLINE_FECES_AMOUNT;
+    public static final ModConfigSpec.DoubleValue MOOD_DECLINE_FECES_AMOUNT;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_RAIN_TICK_INTERVAL;
-    public static final ModConfigSpec.IntValue MOOD_DECLINE_RAIN_AMOUNT;
-    public static final ModConfigSpec.IntValue MOOD_DECLINE_HURT_AMOUNT;
+    public static final ModConfigSpec.DoubleValue MOOD_DECLINE_RAIN_AMOUNT;
+    public static final ModConfigSpec.DoubleValue MOOD_DECLINE_HURT_AMOUNT;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_RECOVERY_TICK_INTERVAL;
-    public static final ModConfigSpec.IntValue MOOD_DECLINE_RECOVERY_AMOUNT;
+    public static final ModConfigSpec.DoubleValue MOOD_DECLINE_RECOVERY_AMOUNT;
     public static final ModConfigSpec.DoubleValue HUNGER_RISE_BASE_BONUS;
     public static final ModConfigSpec.DoubleValue HUNGER_RISE_BONUS_DECAY;
     public static final ModConfigSpec.IntValue HUNGER_RISE_FEED_COOLDOWN_TICKS;
@@ -46,8 +46,8 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_PET_BONUS;
     public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_HURT_AMOUNT;
     public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_RAIN_AMOUNT;
-    public static final ModConfigSpec.IntValue WILD_INITIAL_MOOD_MIN;
-    public static final ModConfigSpec.IntValue WILD_INITIAL_MOOD_MAX;
+    public static final ModConfigSpec.DoubleValue WILD_INITIAL_MOOD_MIN;
+    public static final ModConfigSpec.DoubleValue WILD_INITIAL_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MIN;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MAX;
     public static final ModConfigSpec.DoubleValue WILD_TAME_FAVOR_THRESHOLD;
@@ -68,29 +68,29 @@ public class KRConfig {
         MOOD_INITIAL = builder
                 .comment("初始心情值")
                 .comment("Initial mood value")
-                .defineInRange("initial", 100, 0, Integer.MAX_VALUE);
+                .defineInRange("initial", 100.0, 0.0, Integer.MAX_VALUE);
         MOOD_MIN = builder
                 .comment("最低心情值")
                 .comment("Minimum mood value")
-                .defineInRange("min", 0, 0, Integer.MAX_VALUE);
+                .defineInRange("min", 0.0, 0.0, Integer.MAX_VALUE);
         MOOD_MAX = builder
                 .comment("最高心情值")
                 .comment("Maximum mood value")
-                .defineInRange("max", 100, 0, Integer.MAX_VALUE);
+                .defineInRange("max", 100.0, 0.0, Integer.MAX_VALUE);
         MOOD_ABSOLUTE_MAX = builder
                 .comment("极限最高心情值")
                 .comment("Absolute maximum mood value")
-                .defineInRange("absoluteMax", 120, 0, Integer.MAX_VALUE);
+                .defineInRange("absoluteMax", 120.0, 0.0, Integer.MAX_VALUE);
 
         builder.comment("心情值提升").push("Mood Rise");
         MOOD_RISE_PET_BONUS = builder
                 .comment("抚摸心情加成")
                 .comment("Petting mood bonus")
-                .defineInRange("petBonus", 1, 0, Integer.MAX_VALUE);
+                .defineInRange("petBonus", 1.0, 0.0, Integer.MAX_VALUE);
         MOOD_RISE_SALT_BLOCK_BONUS = builder
                 .comment("盐块心情加成")
                 .comment("Salt block mood bonus")
-                .defineInRange("saltBlockBonus", 1, 0, Integer.MAX_VALUE);
+                .defineInRange("saltBlockBonus", 0.5, 0.0, Integer.MAX_VALUE);
         MOOD_RISE_SALT_BLOCK_RADIUS = builder
                 .comment("盐块检测半径")
                 .comment("Salt block detection radius")
@@ -98,11 +98,11 @@ public class KRConfig {
         MOOD_RISE_SALT_BLOCK_TICK_INTERVAL = builder
                 .comment("盐块加成tick间隔")
                 .comment("Salt block bonus tick interval")
-                .defineInRange("saltBlockTickInterval", 6000, 100, Integer.MAX_VALUE);
+                .defineInRange("saltBlockTickInterval", 3000, 100, Integer.MAX_VALUE);
         MOOD_RISE_MUD_BONUS = builder
                 .comment("泥巴心情恢复量(仅favor_mud标签生物)")
                 .comment("Mud mood recovery amount (only for favor_mud tagged entities)")
-                .defineInRange("mudBonus", 1, 0, Integer.MAX_VALUE);
+                .defineInRange("mudBonus", 1.0, 0.0, Integer.MAX_VALUE);
         MOOD_RISE_MUD_TICK_INTERVAL = builder
                 .comment("泥巴心情恢复tick间隔(仅favor_mud标签生物)")
                 .comment("Mud mood recovery tick interval (only for favor_mud tagged entities)")
@@ -114,7 +114,7 @@ public class KRConfig {
         MOOD_DECLINE_RECOVERY_AMOUNT = builder
                 .comment("自然心情恢复量")
                 .comment("Mood recovery amount")
-                .defineInRange("recoveryAmount", 1, 0, Integer.MAX_VALUE);
+                .defineInRange("recoveryAmount", 1.0, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.comment("心情下降").push("Mood Decline");
@@ -133,7 +133,7 @@ public class KRConfig {
         MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT = builder
                 .comment("物种多样性惩罚量")
                 .comment("Diverse species penalty amount")
-                .defineInRange("diverseSpeciesAmount", 1, 0, Integer.MAX_VALUE);
+                .defineInRange("diverseSpeciesAmount", 1.0, 0.0, Integer.MAX_VALUE);
         MOOD_DECLINE_FECES_RADIUS = builder
                 .comment("粪便检测半径")
                 .comment("Feces detection radius")
@@ -145,7 +145,7 @@ public class KRConfig {
         MOOD_DECLINE_FECES_AMOUNT = builder
                 .comment("每份粪便惩罚量")
                 .comment("Penalty amount per feces")
-                .defineInRange("fecesAmount", 2, 0, Integer.MAX_VALUE);
+                .defineInRange("fecesAmount", 2.0, 0.0, Integer.MAX_VALUE);
         MOOD_DECLINE_RAIN_TICK_INTERVAL = builder
                 .comment("雨天惩罚tick间隔")
                 .comment("Rain penalty tick interval")
@@ -153,11 +153,11 @@ public class KRConfig {
         MOOD_DECLINE_RAIN_AMOUNT = builder
                 .comment("雨天惩罚量")
                 .comment("Rain penalty amount")
-                .defineInRange("rainAmount", 1, 0, Integer.MAX_VALUE);
+                .defineInRange("rainAmount", 1.0, 0.0, Integer.MAX_VALUE);
         MOOD_DECLINE_HURT_AMOUNT = builder
                 .comment("受伤惩罚量")
                 .comment("Hurt penalty amount")
-                .defineInRange("hurtAmount", 10, 0, Integer.MAX_VALUE);
+                .defineInRange("hurtAmount", 10.0, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
@@ -265,11 +265,11 @@ public class KRConfig {
         WILD_INITIAL_MOOD_MIN = builder
                 .comment("野生初始心情最小值")
                 .comment("Wild initial mood minimum")
-                .defineInRange("initialMoodMin", 50, 0, Integer.MAX_VALUE);
+                .defineInRange("initialMoodMin", 50.0, 0.0, Integer.MAX_VALUE);
         WILD_INITIAL_MOOD_MAX = builder
                 .comment("野生初始心情最大值")
                 .comment("Wild initial mood maximum")
-                .defineInRange("initialMoodMax", 100, 0, Integer.MAX_VALUE);
+                .defineInRange("initialMoodMax", 100.0, 0.0, Integer.MAX_VALUE);
         WILD_INITIAL_HUNGER_MIN = builder
                 .comment("野生初始饥饿最小值")
                 .comment("Wild initial hunger minimum")

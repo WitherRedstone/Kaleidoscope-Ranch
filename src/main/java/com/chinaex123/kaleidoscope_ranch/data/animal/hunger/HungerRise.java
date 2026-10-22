@@ -24,7 +24,7 @@ public class HungerRise {
         return cooldownExpired ? 0 : currentCount;
     }
 
-    public static boolean canBreed(int mood, float hunger) {
+    public static boolean canBreed(double mood, float hunger) {
         return mood >= AnimalMood.getInitialMood() && hunger >= AnimalHunger.getMaxHunger();
     }
 }

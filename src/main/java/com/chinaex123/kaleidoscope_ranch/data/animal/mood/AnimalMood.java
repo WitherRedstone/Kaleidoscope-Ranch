@@ -4,41 +4,41 @@ import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 
 public class AnimalMood {
 
-    public static int getInitialMood() {
+    public static double getInitialMood() {
         return KRConfig.MOOD_INITIAL.get();
     }
 
-    public static int getMinMood() {
+    public static double getMinMood() {
         return KRConfig.MOOD_MIN.get();
     }
 
-    public static int getMaxMood() {
+    public static double getMaxMood() {
         return KRConfig.MOOD_MAX.get();
     }
 
-    public static int getAbsoluteMaxMood() {
+    public static double getAbsoluteMaxMood() {
         return KRConfig.MOOD_ABSOLUTE_MAX.get();
     }
 
-    private int moodScore;
+    private double moodScore;
 
     public AnimalMood() {
         this(getInitialMood());
     }
 
-    public AnimalMood(int moodScore) {
+    public AnimalMood(double moodScore) {
         this.moodScore = clamp(moodScore);
     }
 
-    public int getMoodScore() {
+    public double getMoodScore() {
         return moodScore;
     }
 
-    public void setMoodScore(int moodScore) {
+    public void setMoodScore(double moodScore) {
         this.moodScore = clamp(moodScore);
     }
 
-    public void addMoodScore(int delta) {
+    public void addMoodScore(double delta) {
         this.moodScore = clamp(this.moodScore + delta);
     }
 
@@ -46,20 +46,20 @@ public class AnimalMood {
         return moodScore > getInitialMood();
     }
 
-    public boolean isBelowThreshold(int threshold) {
+    public boolean isBelowThreshold(double threshold) {
         return moodScore < threshold;
     }
 
-    public static int clamp(int value) {
+    public static double clamp(double value) {
         return Math.clamp(value, getMinMood(), getMaxMood());
     }
 
-    public static int getDisplayColor(int moodScore) {
+    public static int getDisplayColor(double moodScore) {
         if (moodScore > getInitialMood()) {
             return 0xFFAA00;
-        } else if (moodScore >= 71) {
+        } else if (moodScore >= 71.0) {
             return 0xFFFFFF;
-        } else if (moodScore >= 30) {
+        } else if (moodScore >= 30.0) {
             return 0x5599FF;
         } else {
             return 0xFF5555;

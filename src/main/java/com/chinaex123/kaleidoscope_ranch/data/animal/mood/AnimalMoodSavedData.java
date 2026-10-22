@@ -27,7 +27,7 @@ public class AnimalMoodSavedData extends SavedData {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag entry = list.getCompound(i);
             UUID uuid = entry.getUUID("kr_animal_id");
-            int mood = entry.getInt("kr_mood_score");
+            double mood = entry.getDouble("kr_mood_score");
             long lastPetDay = entry.getLong("kr_last_pet_day");
             this.animalMoodMap.put(uuid, new AnimalMood(mood));
             if (lastPetDay >= 0) {
@@ -39,22 +39,22 @@ public class AnimalMoodSavedData extends SavedData {
         }
     }
 
-    public int getAnimalMoodScore(UUID uuid) {
+    public double getAnimalMoodScore(UUID uuid) {
         AnimalMood mood = animalMoodMap.get(uuid);
         return mood != null ? mood.getMoodScore() : AnimalMood.getInitialMood();
     }
 
-    public void setAnimalMoodScore(UUID uuid, int moodScore) {
+    public void setAnimalMoodScore(UUID uuid, double moodScore) {
         animalMoodMap.computeIfAbsent(uuid, k -> new AnimalMood()).setMoodScore(moodScore);
         setDirty();
     }
 
-    public void addAnimalMoodScore(UUID uuid, int delta) {
+    public void addAnimalMoodScore(UUID uuid, double delta) {
         animalMoodMap.computeIfAbsent(uuid, k -> new AnimalMood()).addMoodScore(delta);
         setDirty();
     }
 
-    public boolean applyMoodDelta(UUID uuid, int delta) {
+    public boolean applyMoodDelta(UUID uuid, double delta) {
         if (delta == 0) return false;
         addAnimalMoodScore(uuid, delta);
         return true;
@@ -109,7 +109,7 @@ public class AnimalMoodSavedData extends SavedData {
         for (Map.Entry<UUID, AnimalMood> entry : animalMoodMap.entrySet()) {
             CompoundTag entryTag = new CompoundTag();
             entryTag.putUUID("kr_animal_id", entry.getKey());
-            entryTag.putInt("kr_mood_score", entry.getValue().getMoodScore());
+            entryTag.putDouble("kr_mood_score", entry.getValue().getMoodScore());
             entryTag.putLong("kr_last_pet_day", lastPetDayMap.getOrDefault(entry.getKey(), -1L));
             entryTag.putBoolean("kr_wild", wildMap.getOrDefault(entry.getKey(), false));
             list.add(entryTag);

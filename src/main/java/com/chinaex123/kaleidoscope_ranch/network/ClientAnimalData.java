@@ -11,7 +11,7 @@ import java.util.UUID;
 public class ClientAnimalData {
 
     private static final ClientAnimalData INSTANCE = new ClientAnimalData();
-    private final Map<UUID, Integer> clientMoodMap = new HashMap<>();
+    private final Map<UUID, Double> clientMoodMap = new HashMap<>();
     private final Map<UUID, Boolean> clientPetTodayMap = new HashMap<>();
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
     private final Map<UUID, Long> clientFeedCooldownExpireMap = new HashMap<>();
@@ -23,7 +23,7 @@ public class ClientAnimalData {
         return INSTANCE;
     }
 
-    public void updateMoodData(Map<UUID, Integer> moodMap, Map<UUID, Boolean> petTodayMap, Map<UUID, Boolean> wildMap) {
+    public void updateMoodData(Map<UUID, Double> moodMap, Map<UUID, Boolean> petTodayMap, Map<UUID, Boolean> wildMap) {
         clientMoodMap.putAll(moodMap);
         clientPetTodayMap.putAll(petTodayMap);
         clientWildMap.putAll(wildMap);
@@ -35,7 +35,7 @@ public class ClientAnimalData {
         clientTroughCooldownExpireMap.putAll(troughCooldownExpireMap);
     }
 
-    public int getAnimalMoodScore(UUID uuid) {
+    public double getAnimalMoodScore(UUID uuid) {
         return clientMoodMap.getOrDefault(uuid, AnimalMood.getInitialMood());
     }
 

@@ -170,7 +170,7 @@ public class AnimalHungerEventHandler {
             event.setCanceled(true);
         } else {
             if (player.isShiftKeyDown()) {
-                int mood = moodData.getAnimalMoodScore(animal.getUUID());
+                double mood = moodData.getAnimalMoodScore(animal.getUUID());
                 float hunger = hungerData.getAnimalHungerValue(animal.getUUID());
 
                 if (HungerRise.canBreed(mood, hunger)) {

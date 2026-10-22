@@ -48,12 +48,12 @@ public abstract class AnimalBreedMixin {
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
 
-        int selfMood = moodData.getAnimalMoodScore(self.getUUID());
+        double selfMood = moodData.getAnimalMoodScore(self.getUUID());
         float selfHunger = hungerData.getAnimalHungerValue(self.getUUID());
-        int otherMood = moodData.getAnimalMoodScore(mate.getUUID());
+        double otherMood = moodData.getAnimalMoodScore(mate.getUUID());
         float otherHunger = hungerData.getAnimalHungerValue(mate.getUUID());
 
-        if (selfMood < 100 || selfHunger < 10.0f || otherMood < 100 || otherHunger < 10.0f) {
+        if (selfMood < 100.0 || selfHunger < 10.0f || otherMood < 100.0 || otherHunger < 10.0f) {
             self.setAge(6000);
             mate.setAge(6000);
             self.resetLove();

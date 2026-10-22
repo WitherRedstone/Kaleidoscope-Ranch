@@ -30,8 +30,8 @@ public class MoodDecline {
         return KRConfig.MOOD_DECLINE_RECOVERY_TICK_INTERVAL.get();
     }
 
-    public static int calcTickPenalty(ServerLevel level, Animal animal, long tickCount) {
-        int delta = 0;
+    public static double calcTickPenalty(ServerLevel level, Animal animal, long tickCount) {
+        double delta = 0;
         if (tickCount % KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_TICK_INTERVAL.get() == 0) {
             delta -= calcDiverseSpeciesPenalty(level, animal);
         }
@@ -44,18 +44,18 @@ public class MoodDecline {
         return delta;
     }
 
-    public static int calcHurtPenalty() {
+    public static double calcHurtPenalty() {
         return KRConfig.MOOD_DECLINE_HURT_AMOUNT.get();
     }
 
-    public static int calcRecovery(ServerLevel level, Animal animal, int currentMood) {
+    public static double calcRecovery(ServerLevel level, Animal animal, double currentMood) {
         if (currentMood >= AnimalMood.getInitialMood()) return 0;
         if (countNearbyFeces(level, animal.blockPosition()) > 0) return 0;
         if (level.isRaining() && animal.level().canSeeSky(animal.blockPosition())) return 0;
         return KRConfig.MOOD_DECLINE_RECOVERY_AMOUNT.get();
     }
 
-    public static int calcDiverseSpeciesPenalty(ServerLevel level, Animal animal) {
+    public static double calcDiverseSpeciesPenalty(ServerLevel level, Animal animal) {
         List<? extends Animal> nearbyAnimals = level.getEntitiesOfClass(
                 Animal.class,
                 animal.getBoundingBox().inflate(KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_RADIUS.get()),
@@ -69,7 +69,7 @@ public class MoodDecline {
                 ? KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT.get() : 0;
     }
 
-    public static int calcFecesPenalty(ServerLevel level, Animal animal) {
+    public static double calcFecesPenalty(ServerLevel level, Animal animal) {
         int fecesCount = countNearbyFeces(level, animal.blockPosition());
         return fecesCount * KRConfig.MOOD_DECLINE_FECES_AMOUNT.get();
     }
@@ -88,7 +88,7 @@ public class MoodDecline {
         return count;
     }
 
-    public static int calcRainPenalty(ServerLevel level, Animal animal) {
+    public static double calcRainPenalty(ServerLevel level, Animal animal) {
         if (level.isRaining() && animal.level().canSeeSky(animal.blockPosition())) {
             return KRConfig.MOOD_DECLINE_RAIN_AMOUNT.get();
         }

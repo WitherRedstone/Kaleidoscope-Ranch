@@ -27,27 +27,28 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
 
         UUID uuid = accessor.getEntity().getUUID();
         ClientAnimalData clientData = ClientAnimalData.getInstance();
-        int moodScore = clientData.getAnimalMoodScore(uuid);
+        double moodScore = clientData.getAnimalMoodScore(uuid);
         int color = AnimalMood.getDisplayColor(moodScore);
 
         if (clientData.isWild(uuid)) {
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.wild_status")
                     .withStyle(style -> style.withColor(0xFF5555)));
         }
-        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_mood", moodScore)
-                .withStyle(style -> style.withColor(color)));
+        String moodText = String.format("%.1f", moodScore);
+        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_mood", Component.literal(moodText).withStyle(style -> style.withColor(color)))
+                .withStyle(style -> style.withColor(0xAAAAAA)));
 
         float hungerValue = clientData.getAnimalHungerValue(uuid);
         int hungerColor = AnimalHunger.getDisplayColor(hungerValue);
         String hungerText = String.format("%.1f", hungerValue);
-        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_hunger", hungerText)
-                .withStyle(style -> style.withColor(hungerColor)));
+        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_hunger", Component.literal(hungerText).withStyle(style -> style.withColor(hungerColor)))
+                .withStyle(style -> style.withColor(0xAAAAAA)));
 
         float favorValue = clientData.getAnimalFavorValue(uuid);
         int favorColor = AnimalFavor.getDisplayColor(favorValue);
         String favorText = String.format("%.2f", favorValue);
-        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_favor", favorText)
-                .withStyle(style -> style.withColor(favorColor)));
+        tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_favor", Component.literal(favorText).withStyle(style -> style.withColor(favorColor)))
+                .withStyle(style -> style.withColor(0xAAAAAA)));
 
         boolean petToday = clientData.hasBeenPetToday(uuid);
         String petKey = petToday
@@ -61,13 +62,13 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         if (clientData.hasFeedCooldown(uuid, currentGameTime)) {
             long remainingTicks = clientData.getFeedCooldownRemaining(uuid, currentGameTime);
             String timeStr = formatTickTime(remainingTicks);
-            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.feed_cooldown", timeStr)
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.feed_cooldown", Component.literal(timeStr).withStyle(style -> style.withColor(0xFFFFFF)))
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
         if (clientData.hasTroughFeedCooldown(uuid, currentGameTime)) {
             long remainingTicks = clientData.getTroughFeedCooldownRemaining(uuid, currentGameTime);
             String timeStr = formatTickTime(remainingTicks);
-            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.trough_feed_cooldown", timeStr)
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.trough_feed_cooldown", Component.literal(timeStr).withStyle(style -> style.withColor(0xFFFFFF)))
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
     }

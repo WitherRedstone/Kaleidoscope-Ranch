@@ -4,9 +4,9 @@ import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 
 public class FavorRise {
 
-    public static float calcMoodRiseFavor(int moodDelta) {
+    public static float calcMoodRiseFavor(double moodDelta) {
         if (moodDelta <= 0) return 0f;
-        return moodDelta * KRConfig.FAVOR_RISE_MOOD_FACTOR.get().floatValue();
+        return (float) moodDelta * KRConfig.FAVOR_RISE_MOOD_FACTOR.get().floatValue();
     }
 
     public static float calcHungerRiseFavor(float hungerDelta) {
