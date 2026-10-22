@@ -32,10 +32,7 @@ public class FeedingTroughBlock extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    private static final VoxelShape NORTH_SHAPE = Block.box(0, 0, 2, 16, 10, 16);
-    private static final VoxelShape SOUTH_SHAPE = Block.box(0, 0, 0, 16, 10, 14);
-    private static final VoxelShape EAST_SHAPE = Block.box(0, 0, 0, 14, 10, 16);
-    private static final VoxelShape WEST_SHAPE = Block.box(2, 0, 0, 16, 10, 16);
+
 
     public FeedingTroughBlock(Properties properties) {
         super(properties);
@@ -54,13 +51,7 @@ public class FeedingTroughBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return switch (state.getValue(FACING)) {
-            case NORTH -> NORTH_SHAPE;
-            case SOUTH -> SOUTH_SHAPE;
-            case EAST -> EAST_SHAPE;
-            case WEST -> WEST_SHAPE;
-            default -> NORTH_SHAPE;
-        };
+        return BlockShapeUtil.getHorizontalFacingShape(state.getValue(FACING));
     }
 
     @Override

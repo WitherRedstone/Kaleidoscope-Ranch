@@ -56,6 +56,8 @@ public class CreativeFeed extends Item {
 
         level.sendParticles(ParticleTypes.HEART, animal.getX(), animal.getY() + animal.getBbHeight() + 0.5, animal.getZ(),
                 8, 0.5, 0.5, 0.5, 0.1);
+        level.sendParticles(ParticleTypes.HAPPY_VILLAGER, animal.getX(), animal.getY() + animal.getBbHeight() * 0.5, animal.getZ(),
+                6, 0.4, 0.3, 0.4, 0.2);
 
         if (!player.hasInfiniteMaterials()) {
             stack.shrink(1);

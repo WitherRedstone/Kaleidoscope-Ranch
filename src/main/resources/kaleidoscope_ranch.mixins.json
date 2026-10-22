@@ -8,8 +8,10 @@
     "client.ChickenModelEatingMixin",
     "client.QuadrupedModelEatingMixin",
     "AnimalBreedMixin",
-    "TemptGoalAccessor",
-    "AnimalEatingAnimationMixin"
+    "AnimalEatingAnimationMixin",
+    "ChickenLayEggMixin",
+    "MobGoalSelectorAccessor",
+    "TemptGoalAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

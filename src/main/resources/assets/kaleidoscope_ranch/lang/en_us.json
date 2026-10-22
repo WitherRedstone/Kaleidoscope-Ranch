@@ -5,6 +5,7 @@
   "item.kaleidoscope_ranch.salt": "Salt",
   "item.kaleidoscope_ranch.poultry_feed": "Poultry Feed",
   "item.kaleidoscope_ranch.livestock_feed": "Livestock Feed",
+  "item.kaleidoscope_ranch.creative_feed": "Creative Feed",
 
   "block.kaleidoscope_ranch.salt_block": "Salt Block",
   "block.kaleidoscope_ranch.feces": "Feces",
@@ -24,5 +25,7 @@
   "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "Feeding Trough",
   "jade.plugin_kaleidoscope_ranch.feeding_trough_empty": "Empty",
   "jade.plugin_kaleidoscope_ranch.feeding_trough_livestock": "Livestock Feed: %s",
-  "jade.plugin_kaleidoscope_ranch.feeding_trough_poultry": "Poultry Feed: %s"
+  "jade.plugin_kaleidoscope_ranch.feeding_trough_poultry": "Poultry Feed: %s",
+  "config.jade.plugin_kaleidoscope_ranch.haystack_hollow": "Haystack Hollow",
+  "jade.plugin_kaleidoscope_ranch.haystack_hollow_empty": "Empty"
 }

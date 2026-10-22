@@ -56,9 +56,11 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue FLEE_SPEED;
     public static final ModConfigSpec.DoubleValue FLEE_DISTANCE;
     public static final ModConfigSpec.DoubleValue FLEE_DISTANCE_VARIANCE;
+    public static final ModConfigSpec.IntValue HAYSTACK_DETECT_RADIUS;
+    public static final ModConfigSpec.IntValue HAYSTACK_COLLECT_RADIUS;
+    public static final ModConfigSpec.IntValue HAYSTACK_COLLECT_INTERVAL;
     public static final ModConfigSpec.DoubleValue TROUGH_DETECT_RADIUS;
     public static final ModConfigSpec.IntValue TROUGH_FEED_COOLDOWN_TICKS;
-
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -305,6 +307,22 @@ public class KRConfig {
                 .comment("逃跑距离随机偏移")
                 .comment("Flee distance random variance")
                 .defineInRange("distanceVariance", 5.0, 0.0, 32.0);
+        builder.pop();
+
+
+        builder.comment("干草窝配置").push("Haystack Hollow");
+        HAYSTACK_DETECT_RADIUS = builder
+                .comment("干草窝搜索半径(禽类寻找干草窝下蛋的范围)")
+                .comment("Haystack detection radius (range for poultry to find haystack for laying eggs)")
+                .defineInRange("detectRadius", 16, 1, 32);
+        HAYSTACK_COLLECT_RADIUS = builder
+                .comment("干草窝收集蛋半径(干草窝主动吸收地面蛋物品的范围)")
+                .comment("Haystack egg collect radius (range for haystack to absorb egg items on the ground)")
+                .defineInRange("collectRadius", 8, 1, 32);
+        HAYSTACK_COLLECT_INTERVAL = builder
+                .comment("干草窝收集蛋频率(tick)")
+                .comment("Haystack egg collect interval (tick)")
+                .defineInRange("collectInterval", 200, 1, Integer.MAX_VALUE);
         builder.pop();
 
 
