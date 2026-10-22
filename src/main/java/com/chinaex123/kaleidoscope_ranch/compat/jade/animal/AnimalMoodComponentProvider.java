@@ -60,22 +60,28 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         long currentGameTime = getClientGameTime();
         if (clientData.hasFeedCooldown(uuid, currentGameTime)) {
             long remainingTicks = clientData.getFeedCooldownRemaining(uuid, currentGameTime);
-            long remainingSeconds = remainingTicks / 20;
-            long minutes = remainingSeconds / 60;
-            long seconds = remainingSeconds % 60;
-            String timeStr = String.format("%d:%02d", minutes, seconds);
+            String timeStr = formatTickTime(remainingTicks);
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.feed_cooldown", timeStr)
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
         if (clientData.hasTroughFeedCooldown(uuid, currentGameTime)) {
             long remainingTicks = clientData.getTroughFeedCooldownRemaining(uuid, currentGameTime);
-            long remainingSeconds = remainingTicks / 20;
-            long minutes = remainingSeconds / 60;
-            long seconds = remainingSeconds % 60;
-            String timeStr = String.format("%d:%02d", minutes, seconds);
+            String timeStr = formatTickTime(remainingTicks);
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.trough_feed_cooldown", timeStr)
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
+    }
+
+    private static String formatTickTime(long ticks) {
+        long totalSeconds = ticks / 20;
+        long hours = totalSeconds / 3600;
+        long minutes = (totalSeconds % 3600) / 60;
+        long seconds = totalSeconds % 60;
+        StringBuilder sb = new StringBuilder();
+        if (hours > 0) sb.append(Component.translatable("jade.plugin_kaleidoscope_ranch.time_hour", hours).getString());
+        if (minutes > 0 || hours > 0) sb.append(Component.translatable("jade.plugin_kaleidoscope_ranch.time_minute", minutes).getString());
+        sb.append(Component.translatable("jade.plugin_kaleidoscope_ranch.time_second", seconds).getString());
+        return sb.toString();
     }
 
     private static long getClientGameTime() {

@@ -41,7 +41,6 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_FECES_AMOUNT;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_RADIUS;
-    public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_RAIN_AMOUNT;
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_MOOD_FACTOR;
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_HUNGER_FACTOR;
     public static final ModConfigSpec.DoubleValue FAVOR_RISE_PET_BONUS;
@@ -99,7 +98,7 @@ public class KRConfig {
         MOOD_RISE_SALT_BLOCK_TICK_INTERVAL = builder
                 .comment("盐块加成tick间隔")
                 .comment("Salt block bonus tick interval")
-                .defineInRange("saltBlockTickInterval", 4800, 100, Integer.MAX_VALUE);
+                .defineInRange("saltBlockTickInterval", 6000, 100, Integer.MAX_VALUE);
         MOOD_RISE_MUD_BONUS = builder
                 .comment("泥巴心情恢复量(仅favor_mud标签生物)")
                 .comment("Mud mood recovery amount (only for favor_mud tagged entities)")
@@ -107,7 +106,15 @@ public class KRConfig {
         MOOD_RISE_MUD_TICK_INTERVAL = builder
                 .comment("泥巴心情恢复tick间隔(仅favor_mud标签生物)")
                 .comment("Mud mood recovery tick interval (only for favor_mud tagged entities)")
-                .defineInRange("mudTickInterval", 2400, 100, Integer.MAX_VALUE);
+                .defineInRange("mudTickInterval", 3600, 100, Integer.MAX_VALUE);
+        MOOD_DECLINE_RECOVERY_TICK_INTERVAL = builder
+                .comment("自然心情恢复tick间隔")
+                .comment("Mood recovery tick interval")
+                .defineInRange("recoveryTickInterval", 3000, 100, Integer.MAX_VALUE);
+        MOOD_DECLINE_RECOVERY_AMOUNT = builder
+                .comment("自然心情恢复量")
+                .comment("Mood recovery amount")
+                .defineInRange("recoveryAmount", 1, 0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.comment("心情下降").push("Mood Decline");
@@ -122,7 +129,7 @@ public class KRConfig {
         MOOD_DECLINE_DIVERSE_SPECIES_TICK_INTERVAL = builder
                 .comment("物种多样性惩罚tick间隔")
                 .comment("Diverse species penalty tick interval")
-                .defineInRange("diverseSpeciesTickInterval", 3600, 100, Integer.MAX_VALUE);
+                .defineInRange("diverseSpeciesTickInterval", 6000, 100, Integer.MAX_VALUE);
         MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT = builder
                 .comment("物种多样性惩罚量")
                 .comment("Diverse species penalty amount")
@@ -130,11 +137,11 @@ public class KRConfig {
         MOOD_DECLINE_FECES_RADIUS = builder
                 .comment("粪便检测半径")
                 .comment("Feces detection radius")
-                .defineInRange("fecesRadius", 8, 1, 32);
+                .defineInRange("fecesRadius", 6, 1, 32);
         MOOD_DECLINE_FECES_TICK_INTERVAL = builder
                 .comment("粪便惩罚tick间隔")
                 .comment("Feces penalty tick interval")
-                .defineInRange("fecesTickInterval", 3600, 100, Integer.MAX_VALUE);
+                .defineInRange("fecesTickInterval", 4800, 100, Integer.MAX_VALUE);
         MOOD_DECLINE_FECES_AMOUNT = builder
                 .comment("每份粪便惩罚量")
                 .comment("Penalty amount per feces")
@@ -142,7 +149,7 @@ public class KRConfig {
         MOOD_DECLINE_RAIN_TICK_INTERVAL = builder
                 .comment("雨天惩罚tick间隔")
                 .comment("Rain penalty tick interval")
-                .defineInRange("rainTickInterval", 400, 100, Integer.MAX_VALUE);
+                .defineInRange("rainTickInterval", 600, 100, Integer.MAX_VALUE);
         MOOD_DECLINE_RAIN_AMOUNT = builder
                 .comment("雨天惩罚量")
                 .comment("Rain penalty amount")
@@ -151,14 +158,6 @@ public class KRConfig {
                 .comment("受伤惩罚量")
                 .comment("Hurt penalty amount")
                 .defineInRange("hurtAmount", 10, 0, Integer.MAX_VALUE);
-        MOOD_DECLINE_RECOVERY_TICK_INTERVAL = builder
-                .comment("心情恢复tick间隔")
-                .comment("Mood recovery tick interval")
-                .defineInRange("recoveryTickInterval", 3600, 100, Integer.MAX_VALUE);
-        MOOD_DECLINE_RECOVERY_AMOUNT = builder
-                .comment("心情恢复量")
-                .comment("Mood recovery amount")
-                .defineInRange("recoveryAmount", 1, 0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
@@ -197,11 +196,11 @@ public class KRConfig {
         HUNGER_DECLINE_DAILY_AMOUNT = builder
                 .comment("每日饥饿下降量")
                 .comment("Daily hunger decline amount")
-                .defineInRange("dailyAmount", 3.0, 0.0, Integer.MAX_VALUE);
+                .defineInRange("dailyAmount", 2.0, 0.0, Integer.MAX_VALUE);
         HUNGER_DECLINE_FECES_AMOUNT = builder
                 .comment("每份粪便饥饿下降量")
                 .comment("Hunger decline amount per feces")
-                .defineInRange("fecesAmount", 0.1, 0.0, Integer.MAX_VALUE);
+                .defineInRange("fecesAmount", 0.2, 0.0, Integer.MAX_VALUE);
         HUNGER_DECLINE_FECES_TICK_INTERVAL = builder
                 .comment("粪便饥饿下降tick间隔")
                 .comment("Feces hunger decline tick interval")
@@ -210,10 +209,6 @@ public class KRConfig {
                 .comment("粪便饥饿检测半径")
                 .comment("Feces hunger detection radius")
                 .defineInRange("fecesRadius", 8, 1, 32);
-        HUNGER_DECLINE_RAIN_AMOUNT = builder
-                .comment("雨天饥饿下降量")
-                .comment("Rain hunger decline amount")
-                .defineInRange("rainAmount", 0.1, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
@@ -249,7 +244,7 @@ public class KRConfig {
         FAVOR_RISE_PET_BONUS = builder
                 .comment("抚摸好感加成")
                 .comment("Petting favor bonus")
-                .defineInRange("petBonus", 2.0, 0.0, Integer.MAX_VALUE);
+                .defineInRange("petBonus", 2.5, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.comment("好感下降配置").push("Favor Decline");

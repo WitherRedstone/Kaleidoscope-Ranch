@@ -133,11 +133,6 @@ public class AnimalMoodEventHandler {
                 if (tickCount % MoodDecline.getRainPenaltyTickInterval() == 0) {
                     int rainPenalty = MoodDecline.calcRainPenalty(level, animal);
                     if (rainPenalty > 0) {
-                        AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
-                        if (hungerData.hasAnimalHungerData(animal.getUUID())) {
-                            hungerData.addAnimalHungerValue(animal.getUUID(), -KRConfig.HUNGER_DECLINE_RAIN_AMOUNT.get().floatValue());
-                            AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);
-                        }
                         AnimalFavorEventHandler.addFavor(level, animal, -KRConfig.FAVOR_DECLINE_RAIN_AMOUNT.get().floatValue());
                     }
                 }

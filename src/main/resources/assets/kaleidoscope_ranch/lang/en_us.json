@@ -27,5 +27,8 @@
   "jade.plugin_kaleidoscope_ranch.feeding_trough_livestock": "Livestock Feed: %s",
   "jade.plugin_kaleidoscope_ranch.feeding_trough_poultry": "Poultry Feed: %s",
   "config.jade.plugin_kaleidoscope_ranch.haystack_hollow": "Haystack Hollow",
-  "jade.plugin_kaleidoscope_ranch.haystack_hollow_empty": "Empty"
+  "jade.plugin_kaleidoscope_ranch.haystack_hollow_empty": "Empty",
+  "jade.plugin_kaleidoscope_ranch.time_hour": "%sh",
+  "jade.plugin_kaleidoscope_ranch.time_minute": "%sm",
+  "jade.plugin_kaleidoscope_ranch.time_second": "%ss"
 }

@@ -27,5 +27,8 @@
   "jade.plugin_kaleidoscope_ranch.feeding_trough_livestock": "家畜饲料: %s",
   "jade.plugin_kaleidoscope_ranch.feeding_trough_poultry": "家禽饲料: %s",
   "config.jade.plugin_kaleidoscope_ranch.haystack_hollow": "干草窝内容",
-  "jade.plugin_kaleidoscope_ranch.haystack_hollow_empty": "空"
+  "jade.plugin_kaleidoscope_ranch.haystack_hollow_empty": "空",
+  "jade.plugin_kaleidoscope_ranch.time_hour": "%s时",
+  "jade.plugin_kaleidoscope_ranch.time_minute": "%s分",
+  "jade.plugin_kaleidoscope_ranch.time_second": "%s秒"
 }
