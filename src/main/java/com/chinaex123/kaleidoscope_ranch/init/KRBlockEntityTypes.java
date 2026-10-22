@@ -13,10 +13,8 @@ public interface KRBlockEntityTypes {
     DeferredRegister<BlockEntityType<?>> BLOCK_ENTITY_TYPES =
             DeferredRegister.create(Registries.BLOCK_ENTITY_TYPE, KaleidoscopeRanch.MODID);
 
-    DeferredHolder<BlockEntityType<?>, BlockEntityType<FeedingTroughBlockEntity>> FEEDING_TROUGH =
-            BLOCK_ENTITY_TYPES.register("feeding_trough", () ->
-                    BlockEntityType.Builder.of(FeedingTroughBlockEntity::new, KRBlocks.FEEDING_TROUGH.get())
-                            .build(null));
+    DeferredHolder<BlockEntityType<?>, BlockEntityType<FeedingTroughBlockEntity>> FEEDING_TROUGH = BLOCK_ENTITY_TYPES.register("feeding_trough",
+            () -> BlockEntityType.Builder.of(FeedingTroughBlockEntity::new, KRBlocks.FEEDING_TROUGH.get()).build(null));
 
     static void register(IEventBus eventBus) {
         BLOCK_ENTITY_TYPES.register(eventBus);

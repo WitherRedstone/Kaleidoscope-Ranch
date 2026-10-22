@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.entity.ai;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
@@ -8,10 +9,21 @@ import java.util.EnumSet;
 
 public class KRFleeFromPlayerGoal extends Goal {
 
-    public static final float DETECT_RADIUS = 4.0f;
-    public static final double FLEE_SPEED = 1.1;
-    public static final double FLEE_DISTANCE = 4.0;
-    public static final double FLEE_DISTANCE_VARIANCE = 4.0;
+    public static float getDetectRadius() {
+        return (float) KRConfig.FLEE_DETECT_RADIUS.get().doubleValue();
+    }
+
+    public static double getFleeSpeed() {
+        return KRConfig.FLEE_SPEED.get();
+    }
+
+    public static double getFleeDistance() {
+        return KRConfig.FLEE_DISTANCE.get();
+    }
+
+    public static double getFleeDistanceVariance() {
+        return KRConfig.FLEE_DISTANCE_VARIANCE.get();
+    }
 
     private final PathfinderMob mob;
     private Player fleeTarget;
@@ -24,8 +36,9 @@ public class KRFleeFromPlayerGoal extends Goal {
     @Override
     public boolean canUse() {
         fleeTarget = null;
-        for (Player player : mob.level().getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(DETECT_RADIUS))) {
-            if (!player.isShiftKeyDown() && player.distanceTo(mob) <= DETECT_RADIUS) {
+        float radius = getDetectRadius();
+        for (Player player : mob.level().getEntitiesOfClass(Player.class, mob.getBoundingBox().inflate(radius))) {
+            if (!player.isShiftKeyDown() && player.distanceTo(mob) <= radius) {
                 fleeTarget = player;
                 return true;
             }
@@ -52,11 +65,11 @@ public class KRFleeFromPlayerGoal extends Goal {
             dist = 1.0;
         }
 
-        double fleeDist = FLEE_DISTANCE + mob.getRandom().nextDouble() * FLEE_DISTANCE_VARIANCE;
+        double fleeDist = getFleeDistance() + mob.getRandom().nextDouble() * getFleeDistanceVariance();
         double fleeX = mob.getX() + (dx / dist) * fleeDist;
         double fleeY = mob.getY();
         double fleeZ = mob.getZ() + (dz / dist) * fleeDist;
-        mob.getNavigation().moveTo(fleeX, fleeY, fleeZ, FLEE_SPEED);
+        mob.getNavigation().moveTo(fleeX, fleeY, fleeZ, getFleeSpeed());
     }
 
     @Override

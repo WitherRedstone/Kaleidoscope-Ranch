@@ -1,12 +1,15 @@
 package com.chinaex123.kaleidoscope_ranch.entity.ai;
 
 import com.chinaex123.kaleidoscope_ranch.blockentity.FeedingTroughBlockEntity;
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerRise;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.animation.KREatingAnimation;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
@@ -25,10 +28,16 @@ import java.util.UUID;
 
 public class KREatFromTroughGoal extends Goal {
 
-    public static final float DETECT_RADIUS = 8.0f;
+    public static float getDetectRadius() {
+        return KRConfig.TROUGH_DETECT_RADIUS.get().floatValue();
+    }
+
+    public static long getTroughFeedCooldownTicks() {
+        return (long) KRConfig.TROUGH_FEED_COOLDOWN_TICKS.get();
+    }
+
     private static final int EAT_DURATION = 40;
     private static final double REACH_DISTANCE = 1.8;
-    public static final long TROUGH_FEED_COOLDOWN_TICKS = 3000L;
 
     private final Mob mob;
     private final Animal animal;
@@ -49,6 +58,10 @@ public class KREatFromTroughGoal extends Goal {
         if (mob.level().isClientSide()) return false;
 
         ServerLevel level = (ServerLevel) mob.level();
+
+        AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
+        if (moodData.isWild(animal.getUUID())) return false;
+
         long now = level.getGameTime();
         if (now < nextScanTime) return false;
         nextScanTime = now + 20;
@@ -61,7 +74,7 @@ public class KREatFromTroughGoal extends Goal {
         if (!hungerData.hasAnimalHungerData(uuid)) return false;
 
         float currentHunger = hungerData.getAnimalHungerValue(uuid);
-        if (currentHunger >= AnimalHunger.MAX_HUNGER) return false;
+        if (currentHunger >= AnimalHunger.getMaxHunger()) return false;
 
         if (!hungerData.isFeedCooldownExpired(uuid, now)) return false;
 
@@ -103,7 +116,6 @@ public class KREatFromTroughGoal extends Goal {
                     targetTroughPos.getZ() + 0.5);
             mob.getNavigation().stop();
 
-            // 剩余 4 tick 时真正吃掉（对齐羊吃草节奏）
             if (eatTimer == 4) {
                 performEat();
             }
@@ -127,7 +139,7 @@ public class KREatFromTroughGoal extends Goal {
             mob.getNavigation().stop();
 
             if (mob instanceof KREatingAnimation anim) {
-                anim.kaleidoscopeRanch$startEatingAnimation();
+                anim.KR$startEatingAnimation();
                 if (mob.level() instanceof ServerLevel sl) {
                     sl.broadcastEntityEvent(mob, (byte) 60);
                 }
@@ -216,7 +228,7 @@ public class KREatFromTroughGoal extends Goal {
 
     private BlockPos findNearbyTroughWithFeed(Item feedItem) {
         BlockPos animalPos = mob.blockPosition();
-        int r = (int) DETECT_RADIUS;
+        int r = (int) getDetectRadius();
 
         for (int dx = -r; dx <= r; dx++) {
             for (int dy = -3; dy <= 3; dy++) {

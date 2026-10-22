@@ -1,10 +1,10 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.favor;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
+
 public class FavorDecline {
 
-    public static final float HURT_FAVOR_PENALTY = 3.0f;
-
     public static float calcHurtPenalty() {
-        return HURT_FAVOR_PENALTY;
+        return KRConfig.FAVOR_DECLINE_HURT_AMOUNT.get().floatValue();
     }
 }

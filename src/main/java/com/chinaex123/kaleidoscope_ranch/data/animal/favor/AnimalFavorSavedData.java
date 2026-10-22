@@ -33,7 +33,7 @@ public class AnimalFavorSavedData extends SavedData {
 
     public float getAnimalFavorValue(UUID uuid) {
         AnimalFavor favor = animalFavorMap.get(uuid);
-        return favor != null ? favor.getFavorValue() : AnimalFavor.INITIAL_FAVOR;
+        return favor != null ? favor.getFavorValue() : AnimalFavor.getInitialFavor();
     }
 
     public void setAnimalFavorValue(UUID uuid, float favorValue) {
@@ -66,7 +66,7 @@ public class AnimalFavorSavedData extends SavedData {
     }
 
     @Override
-    public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         ListTag list = new ListTag();
         for (Map.Entry<UUID, AnimalFavor> entry : animalFavorMap.entrySet()) {
             CompoundTag entryTag = new CompoundTag();

@@ -1,6 +1,7 @@
 package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
@@ -33,7 +34,7 @@ public class AnimalFavorEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalFavorSavedData data = getAnimalFavorData(level);
             if (!data.hasAnimalFavorData(animal.getUUID())) {
-                data.setAnimalFavorValue(animal.getUUID(), AnimalFavor.INITIAL_FAVOR);
+                data.setAnimalFavorValue(animal.getUUID(), AnimalFavor.getInitialFavor());
             }
             syncFavorToTrackingPlayers(animal, data);
         }
@@ -77,10 +78,6 @@ public class AnimalFavorEventHandler {
         syncFavorToPlayer(player, animal, data);
     }
 
-    /**
-     * 统一的好感变更入口，供其他系统（抚摸、喂食等）调用。
-     * 会做数据存在性检查、0 值短路、脏标记与同步。
-     */
     public static void addFavor(ServerLevel level, Animal animal, float delta) {
         if (delta == 0) return;
         AnimalFavorSavedData data = getAnimalFavorData(level);
@@ -94,7 +91,7 @@ public class AnimalFavorEventHandler {
     private static void checkTameFromWild(ServerLevel level, Animal animal, AnimalFavorSavedData favorData) {
         UUID uuid = animal.getUUID();
         float favorValue = favorData.getAnimalFavorValue(uuid);
-        if (favorValue < 6.0f) return;
+        if (favorValue < KRConfig.WILD_TAME_FAVOR_THRESHOLD.get().floatValue()) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         if (!moodData.isWild(uuid)) return;

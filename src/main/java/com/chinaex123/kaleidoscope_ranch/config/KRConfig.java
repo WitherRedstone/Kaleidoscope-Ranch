@@ -5,12 +5,300 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public class KRConfig {
     public static final ModConfigSpec SPEC;
 
-    static {
-    ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+    public static final ModConfigSpec.IntValue MOOD_INITIAL;
+    public static final ModConfigSpec.IntValue MOOD_MIN;
+    public static final ModConfigSpec.IntValue MOOD_MAX;
+    public static final ModConfigSpec.IntValue MOOD_ABSOLUTE_MAX;
+    public static final ModConfigSpec.DoubleValue HUNGER_INITIAL;
+    public static final ModConfigSpec.DoubleValue HUNGER_MIN;
+    public static final ModConfigSpec.DoubleValue HUNGER_MAX;
+    public static final ModConfigSpec.DoubleValue FAVOR_INITIAL;
+    public static final ModConfigSpec.DoubleValue FAVOR_MIN;
+    public static final ModConfigSpec.DoubleValue FAVOR_MAX;
+    public static final ModConfigSpec.DoubleValue FAVOR_ABSOLUTE_MAX;
+    public static final ModConfigSpec.IntValue MOOD_RISE_PET_BONUS;
+    public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_BONUS;
+    public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_RADIUS;
+    public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_RADIUS;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_REQUIRED;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_FECES_RADIUS;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_FECES_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_FECES_AMOUNT;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_RAIN_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_RAIN_AMOUNT;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_HURT_AMOUNT;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_RECOVERY_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue MOOD_DECLINE_RECOVERY_AMOUNT;
+    public static final ModConfigSpec.DoubleValue HUNGER_RISE_BASE_BONUS;
+    public static final ModConfigSpec.DoubleValue HUNGER_RISE_BONUS_DECAY;
+    public static final ModConfigSpec.IntValue HUNGER_RISE_FEED_COOLDOWN_TICKS;
+    public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_DAILY_AMOUNT;
+    public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_FECES_AMOUNT;
+    public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_TICK_INTERVAL;
+    public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_RADIUS;
+    public static final ModConfigSpec.DoubleValue FAVOR_RISE_MOOD_FACTOR;
+    public static final ModConfigSpec.DoubleValue FAVOR_RISE_HUNGER_FACTOR;
+    public static final ModConfigSpec.DoubleValue FAVOR_RISE_PET_BONUS;
+    public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_HURT_AMOUNT;
+    public static final ModConfigSpec.IntValue WILD_INITIAL_MOOD_MIN;
+    public static final ModConfigSpec.IntValue WILD_INITIAL_MOOD_MAX;
+    public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MIN;
+    public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MAX;
+    public static final ModConfigSpec.DoubleValue WILD_TAME_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue FLEE_DETECT_RADIUS;
+    public static final ModConfigSpec.DoubleValue FLEE_SPEED;
+    public static final ModConfigSpec.DoubleValue FLEE_DISTANCE;
+    public static final ModConfigSpec.DoubleValue FLEE_DISTANCE_VARIANCE;
+    public static final ModConfigSpec.DoubleValue TROUGH_DETECT_RADIUS;
+    public static final ModConfigSpec.IntValue TROUGH_FEED_COOLDOWN_TICKS;
 
-        builder.comment("通用配置").push("Common Config");
+
+    static {
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+
+        builder.comment("心情值").push("Mood");
+        MOOD_INITIAL = builder
+                .comment("初始心情值")
+                .comment("Initial mood value")
+                .defineInRange("initial", 100, 0, Integer.MAX_VALUE);
+        MOOD_MIN = builder
+                .comment("最低心情值")
+                .comment("Minimum mood value")
+                .defineInRange("min", 0, 0, Integer.MAX_VALUE);
+        MOOD_MAX = builder
+                .comment("最高心情值")
+                .comment("Maximum mood value")
+                .defineInRange("max", 100, 0, Integer.MAX_VALUE);
+        MOOD_ABSOLUTE_MAX = builder
+                .comment("极限最高心情值")
+                .comment("Absolute maximum mood value")
+                .defineInRange("absoluteMax", 120, 0, Integer.MAX_VALUE);
+
+        builder.comment("心情值提升").push("Mood Rise");
+        MOOD_RISE_PET_BONUS = builder
+                .comment("抚摸心情加成")
+                .comment("Petting mood bonus")
+                .defineInRange("petBonus", 1, 0, Integer.MAX_VALUE);
+        MOOD_RISE_SALT_BLOCK_BONUS = builder
+                .comment("盐块心情加成")
+                .comment("Salt block mood bonus")
+                .defineInRange("saltBlockBonus", 1, 0, Integer.MAX_VALUE);
+        MOOD_RISE_SALT_BLOCK_RADIUS = builder
+                .comment("盐块检测半径")
+                .comment("Salt block detection radius")
+                .defineInRange("saltBlockRadius", 4, 1, 32);
+        MOOD_RISE_SALT_BLOCK_TICK_INTERVAL = builder
+                .comment("盐块加成tick间隔")
+                .comment("Salt block bonus tick interval")
+                .defineInRange("saltBlockTickInterval", 4800, 100, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.comment("心情下降").push("Mood Decline");
+        MOOD_DECLINE_DIVERSE_SPECIES_RADIUS = builder
+                .comment("物种多样性检测半径")
+                .comment("Diverse species detection radius")
+                .defineInRange("diverseSpeciesRadius", 4, 1, 32);
+        MOOD_DECLINE_DIVERSE_SPECIES_REQUIRED = builder
+                .comment("触发物种多样性惩罚所需物种数")
+                .comment("Required species count to trigger diverse species penalty")
+                .defineInRange("diverseSpeciesRequired", 3, 1, Integer.MAX_VALUE);
+        MOOD_DECLINE_DIVERSE_SPECIES_TICK_INTERVAL = builder
+                .comment("物种多样性惩罚tick间隔")
+                .comment("Diverse species penalty tick interval")
+                .defineInRange("diverseSpeciesTickInterval", 3600, 100, Integer.MAX_VALUE);
+        MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT = builder
+                .comment("物种多样性惩罚量")
+                .comment("Diverse species penalty amount")
+                .defineInRange("diverseSpeciesAmount", 1, 0, Integer.MAX_VALUE);
+        MOOD_DECLINE_FECES_RADIUS = builder
+                .comment("粪便检测半径")
+                .comment("Feces detection radius")
+                .defineInRange("fecesRadius", 8, 1, 32);
+        MOOD_DECLINE_FECES_TICK_INTERVAL = builder
+                .comment("粪便惩罚tick间隔")
+                .comment("Feces penalty tick interval")
+                .defineInRange("fecesTickInterval", 3600, 100, Integer.MAX_VALUE);
+        MOOD_DECLINE_FECES_AMOUNT = builder
+                .comment("每份粪便惩罚量")
+                .comment("Penalty amount per feces")
+                .defineInRange("fecesAmount", 2, 0, Integer.MAX_VALUE);
+        MOOD_DECLINE_RAIN_TICK_INTERVAL = builder
+                .comment("雨天惩罚tick间隔")
+                .comment("Rain penalty tick interval")
+                .defineInRange("rainTickInterval", 400, 100, Integer.MAX_VALUE);
+        MOOD_DECLINE_RAIN_AMOUNT = builder
+                .comment("雨天惩罚量")
+                .comment("Rain penalty amount")
+                .defineInRange("rainAmount", 1, 0, Integer.MAX_VALUE);
+        MOOD_DECLINE_HURT_AMOUNT = builder
+                .comment("受伤惩罚量")
+                .comment("Hurt penalty amount")
+                .defineInRange("hurtAmount", 10, 0, Integer.MAX_VALUE);
+        MOOD_DECLINE_RECOVERY_TICK_INTERVAL = builder
+                .comment("心情恢复tick间隔")
+                .comment("Mood recovery tick interval")
+                .defineInRange("recoveryTickInterval", 3600, 100, Integer.MAX_VALUE);
+        MOOD_DECLINE_RECOVERY_AMOUNT = builder
+                .comment("心情恢复量")
+                .comment("Mood recovery amount")
+                .defineInRange("recoveryAmount", 1, 0, Integer.MAX_VALUE);
+        builder.pop();
 
         builder.pop();
+
+
+        builder.comment("饥饿值配置").push("Hunger");
+        HUNGER_INITIAL = builder
+                .comment("初始饥饿值")
+                .comment("Initial hunger value")
+                .defineInRange("initial", 0.0, 0.0, Integer.MAX_VALUE);
+        HUNGER_MIN = builder
+                .comment("最低饥饿值")
+                .comment("Minimum hunger value")
+                .defineInRange("min", 0.0, 0.0, Integer.MAX_VALUE);
+        HUNGER_MAX = builder
+                .comment("最高饥饿值")
+                .comment("Maximum hunger value")
+                .defineInRange("max", 10.0, 0.0, Integer.MAX_VALUE);
+
+        builder.comment("饥饿提升配置").push("Hunger Rise");
+        HUNGER_RISE_BASE_BONUS = builder
+                .comment("基础喂食增益")
+                .comment("Base feeding bonus")
+                .defineInRange("baseBonus", 1.0, 0.0, Integer.MAX_VALUE);
+        HUNGER_RISE_BONUS_DECAY = builder
+                .comment("连续喂食增益衰减")
+                .comment("Consecutive feeding bonus decay")
+                .defineInRange("bonusDecay", 0.2, 0.0, Integer.MAX_VALUE);
+        HUNGER_RISE_FEED_COOLDOWN_TICKS = builder
+                .comment("手动喂食冷却(tick)")
+                .comment("Manual feeding cooldown (ticks)")
+                .defineInRange("feedCooldownTicks", 9600, 0, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.comment("饥饿下降配置").push("Hunger Decline");
+        HUNGER_DECLINE_DAILY_AMOUNT = builder
+                .comment("每日饥饿下降量")
+                .comment("Daily hunger decline amount")
+                .defineInRange("dailyAmount", 3.0, 0.0, Integer.MAX_VALUE);
+        HUNGER_DECLINE_FECES_AMOUNT = builder
+                .comment("每份粪便饥饿下降量")
+                .comment("Hunger decline amount per feces")
+                .defineInRange("fecesAmount", 0.1, 0.0, Integer.MAX_VALUE);
+        HUNGER_DECLINE_FECES_TICK_INTERVAL = builder
+                .comment("粪便饥饿下降tick间隔")
+                .comment("Feces hunger decline tick interval")
+                .defineInRange("fecesTickInterval", 3600, 100, Integer.MAX_VALUE);
+        HUNGER_DECLINE_FECES_RADIUS = builder
+                .comment("粪便饥饿检测半径")
+                .comment("Feces hunger detection radius")
+                .defineInRange("fecesRadius", 8, 1, 32);
+        builder.pop();
+
+        builder.pop();
+
+
+        builder.comment("好感度配置").push("Favor");
+        FAVOR_INITIAL = builder
+                .comment("初始好感度")
+                .comment("Initial favor value")
+                .defineInRange("initial", 0.0, 0.0, Integer.MAX_VALUE);
+        FAVOR_MIN = builder
+                .comment("最低好感度")
+                .comment("Minimum favor value")
+                .defineInRange("min", 0.0, 0.0, Integer.MAX_VALUE);
+        FAVOR_MAX = builder
+                .comment("最高好感度")
+                .comment("Maximum favor value")
+                .defineInRange("max", 10.0, 0.0, Integer.MAX_VALUE);
+        FAVOR_ABSOLUTE_MAX = builder
+                .comment("极限最高好感度")
+                .comment("Absolute maximum favor value")
+                .defineInRange("absoluteMax", 12.0, 0.0, Integer.MAX_VALUE);
+
+        builder.comment("好感提升配置").push("Favor Rise");
+        FAVOR_RISE_MOOD_FACTOR = builder
+                .comment("心情提升好感因数")
+                .comment("Mood-based favor gain factor")
+                .defineInRange("moodFactor", 0.1, 0.0, Integer.MAX_VALUE);
+        FAVOR_RISE_HUNGER_FACTOR = builder
+                .comment("饥饿提升好感因数")
+                .comment("Hunger-based favor gain factor")
+                .defineInRange("hungerFactor", 0.5, 0.0, Integer.MAX_VALUE);
+        FAVOR_RISE_PET_BONUS = builder
+                .comment("抚摸好感加成")
+                .comment("Petting favor bonus")
+                .defineInRange("petBonus", 2.0, 0.0, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.comment("好感下降配置").push("Favor Decline");
+        FAVOR_DECLINE_HURT_AMOUNT = builder
+                .comment("受伤好感惩罚量")
+                .comment("Hurt favor penalty amount")
+                .defineInRange("hurtAmount", 4.0, 0.0, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.pop();
+
+
+        builder.comment("野生系统配置").push("Wild");
+        WILD_INITIAL_MOOD_MIN = builder
+                .comment("野生初始心情最小值")
+                .comment("Wild initial mood minimum")
+                .defineInRange("initialMoodMin", 50, 0, Integer.MAX_VALUE);
+        WILD_INITIAL_MOOD_MAX = builder
+                .comment("野生初始心情最大值")
+                .comment("Wild initial mood maximum")
+                .defineInRange("initialMoodMax", 100, 0, Integer.MAX_VALUE);
+        WILD_INITIAL_HUNGER_MIN = builder
+                .comment("野生初始饥饿最小值")
+                .comment("Wild initial hunger minimum")
+                .defineInRange("initialHungerMin", 0.0, 0.0, Integer.MAX_VALUE);
+        WILD_INITIAL_HUNGER_MAX = builder
+                .comment("野生初始饥饿最大值")
+                .comment("Wild initial hunger maximum")
+                .defineInRange("initialHungerMax", 9.0, 0.0, Integer.MAX_VALUE);
+        WILD_TAME_FAVOR_THRESHOLD = builder
+                .comment("驯化好感度阈值")
+                .comment("Taming favor threshold")
+                .defineInRange("tameFavorThreshold", 5.0, 0.0, Integer.MAX_VALUE);
+        builder.pop();
+
+
+        builder.comment("逃跑AI配置").push("Flee AI");
+        FLEE_DETECT_RADIUS = builder
+                .comment("逃跑检测半径")
+                .comment("Flee detection radius")
+                .defineInRange("detectRadius", 5.0, 1.0, 32.0);
+        FLEE_SPEED = builder
+                .comment("逃跑速度")
+                .comment("Flee speed")
+                .defineInRange("speed", 1.2, 0.1, Integer.MAX_VALUE);
+        FLEE_DISTANCE = builder
+                .comment("逃跑距离")
+                .comment("Flee distance")
+                .defineInRange("distance", 5.0, 1.0, 32.0);
+        FLEE_DISTANCE_VARIANCE = builder
+                .comment("逃跑距离随机偏移")
+                .comment("Flee distance random variance")
+                .defineInRange("distanceVariance", 5.0, 0.0, 32.0);
+        builder.pop();
+
+
+        builder.comment("喂食槽配置").push("Feeding Trough");
+        TROUGH_DETECT_RADIUS = builder
+                .comment("喂食槽检测半径")
+                .comment("Trough detection radius")
+                .defineInRange("detectRadius", 8.0, 1.0, 32.0);
+        TROUGH_FEED_COOLDOWN_TICKS = builder
+                .comment("喂食槽喂食冷却(tick)")
+                .comment("Trough feeding cooldown (ticks)")
+                .defineInRange("feedCooldownTicks", 3000, 0, Integer.MAX_VALUE);
+        builder.pop();
+
 
         SPEC = builder.build();
     }

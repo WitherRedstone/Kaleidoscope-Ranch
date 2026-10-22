@@ -13,8 +13,8 @@ import snownee.jade.api.WailaPlugin;
 
 @WailaPlugin
 public class KRJadePlugin implements IWailaPlugin {
-    public static final ResourceLocation ANIMAL_MOOD = ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, "animal_mood");
-    public static final ResourceLocation FEEDING_TROUGH = ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, "feeding_trough");
+    public static final ResourceLocation ANIMAL_MOOD = KaleidoscopeRanch.id("animal_mood");
+    public static final ResourceLocation FEEDING_TROUGH = KaleidoscopeRanch.id("feeding_trough");
 
     @Override
     public void registerClient(IWailaClientRegistration registration) {

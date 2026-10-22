@@ -4,7 +4,6 @@ import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.UUID;
 public record AnimalMoodSyncPayload(Map<UUID, Integer> animalMoodMap, Map<UUID, Boolean> petTodayMap, Map<UUID, Boolean> wildMap) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalMoodSyncPayload> TYPE =
-            new CustomPacketPayload.Type<>(ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, "animal_mood_sync"));
+            new CustomPacketPayload.Type<>(KaleidoscopeRanch.id("animal_mood_sync"));
 
     private static final StreamCodec<FriendlyByteBuf, UUID> UUID_STREAM_CODEC = StreamCodec.of(
             (buf, uuid) -> {

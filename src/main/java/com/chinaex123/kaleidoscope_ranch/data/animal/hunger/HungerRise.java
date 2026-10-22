@@ -1,21 +1,22 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.hunger;
 
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
 
 public class HungerRise {
 
-    public static final long FEED_COOLDOWN_TICKS = 12000L;
-    public static final float BASE_FEED_BONUS = 1.0f;
-    public static final float FEED_BONUS_DECAY = 0.2f;
+    public static long getFeedCooldownTicks() {
+        return (long) KRConfig.HUNGER_RISE_FEED_COOLDOWN_TICKS.get();
+    }
 
     public static float calcFeedBonus(int consecutiveCount) {
-        float bonus = BASE_FEED_BONUS - FEED_BONUS_DECAY * consecutiveCount;
+        float bonus = KRConfig.HUNGER_RISE_BASE_BONUS.get().floatValue() - KRConfig.HUNGER_RISE_BONUS_DECAY.get().floatValue() * consecutiveCount;
         return Math.max(bonus, 0.0f);
     }
 
     public static float calcFeedGain(float currentHunger, int consecutiveCount) {
-        if (currentHunger >= AnimalHunger.MAX_HUNGER) return 0f;
+        if (currentHunger >= AnimalHunger.getMaxHunger()) return 0f;
         return calcFeedBonus(consecutiveCount);
     }
 
@@ -24,6 +25,6 @@ public class HungerRise {
     }
 
     public static boolean canBreed(int mood, float hunger) {
-        return mood >= AnimalMood.INITIAL_MOOD && hunger >= AnimalHunger.MAX_HUNGER;
+        return mood >= AnimalMood.getInitialMood() && hunger >= AnimalHunger.getMaxHunger();
     }
 }

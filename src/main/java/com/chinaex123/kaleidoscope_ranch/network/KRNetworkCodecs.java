@@ -5,6 +5,8 @@ import net.minecraft.network.codec.StreamCodec;
 
 import java.util.UUID;
 
+/** @deprecated */
+@Deprecated
 public final class KRNetworkCodecs {
     public static final StreamCodec<FriendlyByteBuf, UUID> UUID_STREAM_CODEC = StreamCodec.of(
             (buf, uuid) -> {

@@ -1,15 +1,25 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.hunger;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
+
 public class AnimalHunger {
 
-    public static final float INITIAL_HUNGER = 0.0f;
-    public static final float MIN_HUNGER = 0.0f;
-    public static final float MAX_HUNGER = 10.0f;
+    public static float getInitialHunger() {
+        return KRConfig.HUNGER_INITIAL.get().floatValue();
+    }
+
+    public static float getMinHunger() {
+        return KRConfig.HUNGER_MIN.get().floatValue();
+    }
+
+    public static float getMaxHunger() {
+        return KRConfig.HUNGER_MAX.get().floatValue();
+    }
 
     private float hungerValue;
 
     public AnimalHunger() {
-        this(INITIAL_HUNGER);
+        this(getInitialHunger());
     }
 
     public AnimalHunger(float hungerValue) {
@@ -29,15 +39,15 @@ public class AnimalHunger {
     }
 
     public boolean isFull() {
-        return hungerValue >= MAX_HUNGER;
+        return hungerValue >= getMaxHunger();
     }
 
     public static float clamp(float value) {
-        return Math.clamp(value, MIN_HUNGER, MAX_HUNGER);
+        return Math.clamp(value, getMinHunger(), getMaxHunger());
     }
 
     public static int getDisplayColor(float hungerValue) {
-        if (hungerValue >= MAX_HUNGER) {
+        if (hungerValue >= getMaxHunger()) {
             return 0xFFAA00;
         } else if (hungerValue >= 7.0f) {
             return 0xFFFFFF;

@@ -15,33 +15,33 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AnimalEatingAnimationMixin extends Entity implements KREatingAnimation {
 
     @Unique
-    private int kaleidoscopeRanch$eatingTicks = 0;
+    private int KR$eatingTicks = 0;
 
     public AnimalEatingAnimationMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
 
     @Override
-    public void kaleidoscopeRanch$startEatingAnimation() {
-        this.kaleidoscopeRanch$eatingTicks = TOTAL_TICKS;
+    public void KR$startEatingAnimation() {
+        this.KR$eatingTicks = TOTAL_TICKS;
     }
 
     @Override
-    public int kaleidoscopeRanch$getEatingAnimationTicks() {
-        return this.kaleidoscopeRanch$eatingTicks;
+    public int KR$getEatingAnimationTicks() {
+        return this.KR$eatingTicks;
     }
 
     @Inject(method = "aiStep", at = @At("TAIL"))
-    private void kaleidoscopeRanch$tickEating(CallbackInfo ci) {
-        if (this.kaleidoscopeRanch$eatingTicks > 0) {
-            this.kaleidoscopeRanch$eatingTicks--;
+    private void KR$tickEating(CallbackInfo ci) {
+        if (this.KR$eatingTicks > 0) {
+            this.KR$eatingTicks--;
         }
     }
 
     @Inject(method = "handleEntityEvent", at = @At("HEAD"))
-    private void kaleidoscopeRanch$onEntityEvent(byte id, CallbackInfo ci) {
+    private void KR$onEntityEvent(byte id, CallbackInfo ci) {
         if (id == 60) {
-            this.kaleidoscopeRanch$startEatingAnimation();
+            this.KR$startEatingAnimation();
         }
     }
 }

@@ -36,7 +36,7 @@ public class ClientAnimalData {
     }
 
     public int getAnimalMoodScore(UUID uuid) {
-        return clientMoodMap.getOrDefault(uuid, AnimalMood.INITIAL_MOOD);
+        return clientMoodMap.getOrDefault(uuid, AnimalMood.getInitialMood());
     }
 
     public boolean hasAnimalMoodData(UUID uuid) {
@@ -48,7 +48,7 @@ public class ClientAnimalData {
     }
 
     public float getAnimalHungerValue(UUID uuid) {
-        return clientHungerMap.getOrDefault(uuid, AnimalHunger.INITIAL_HUNGER);
+        return clientHungerMap.getOrDefault(uuid, AnimalHunger.getInitialHunger());
     }
 
     public boolean hasAnimalHungerData(UUID uuid) {
@@ -78,7 +78,7 @@ public class ClientAnimalData {
     }
 
     public float getAnimalFavorValue(UUID uuid) {
-        return clientFavorMap.getOrDefault(uuid, AnimalFavor.INITIAL_FAVOR);
+        return clientFavorMap.getOrDefault(uuid, AnimalFavor.getInitialFavor());
     }
 
     public boolean hasAnimalFavorData(UUID uuid) {

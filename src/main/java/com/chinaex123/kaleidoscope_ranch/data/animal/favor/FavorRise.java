@@ -1,22 +1,20 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.favor;
 
-public class FavorRise {
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 
-    public static final float MOOD_RISE_FAVOR_BONUS = 0.1f;
-    public static final float HUNGER_RISE_FAVOR_BONUS = 0.5f;
-    public static final float PET_FAVOR_BONUS = 1.5f;
+public class FavorRise {
 
     public static float calcMoodRiseFavor(int moodDelta) {
         if (moodDelta <= 0) return 0f;
-        return moodDelta * MOOD_RISE_FAVOR_BONUS;
+        return moodDelta * KRConfig.FAVOR_RISE_MOOD_FACTOR.get().floatValue();
     }
 
     public static float calcHungerRiseFavor(float hungerDelta) {
         if (hungerDelta <= 0) return 0f;
-        return hungerDelta * HUNGER_RISE_FAVOR_BONUS;
+        return hungerDelta * KRConfig.FAVOR_RISE_HUNGER_FACTOR.get().floatValue();
     }
 
     public static float calcPetFavor() {
-        return PET_FAVOR_BONUS;
+        return KRConfig.FAVOR_RISE_PET_BONUS.get().floatValue();
     }
 }

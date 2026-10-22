@@ -1,16 +1,29 @@
 package com.chinaex123.kaleidoscope_ranch.data.animal.favor;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
+
 public class AnimalFavor {
 
-    public static final float INITIAL_FAVOR = 0.0f;
-    public static final float MIN_FAVOR = 0.0f;
-    public static final float MAX_FAVOR = 10.0f;
-    public static final float ABSOLUTE_MAX_FAVOR = 12.0f;
+    public static float getInitialFavor() {
+        return KRConfig.FAVOR_INITIAL.get().floatValue();
+    }
+
+    public static float getMinFavor() {
+        return KRConfig.FAVOR_MIN.get().floatValue();
+    }
+
+    public static float getMaxFavor() {
+        return KRConfig.FAVOR_MAX.get().floatValue();
+    }
+
+    public static float getAbsoluteMaxFavor() {
+        return KRConfig.FAVOR_ABSOLUTE_MAX.get().floatValue();
+    }
 
     private float favorValue;
 
     public AnimalFavor() {
-        this(INITIAL_FAVOR);
+        this(getInitialFavor());
     }
 
     public AnimalFavor(float favorValue) {
@@ -25,40 +38,31 @@ public class AnimalFavor {
         this.favorValue = clamp(favorValue);
     }
 
-    /**
-     * 普通好感增长：上限为常规上限 MAX_FAVOR。
-     */
     public void addFavorValue(float delta) {
         if (delta <= 0) {
             this.favorValue = clamp(this.favorValue + delta);
             return;
         }
-        if (this.favorValue >= MAX_FAVOR) {
-            // 已到/超过常规上限，普通正增长不再增加
+        if (this.favorValue >= getMaxFavor()) {
             return;
         }
-        this.favorValue = clamp(Math.min(this.favorValue + delta, MAX_FAVOR));
+        this.favorValue = clamp(Math.min(this.favorValue + delta, getMaxFavor()));
     }
 
-    /**
-     * 特殊好感增长：上限为绝对上限 ABSOLUTE_MAX_FAVOR。
-     */
     public void addFavorValueSpecial(float delta) {
         this.favorValue = clamp(this.favorValue + delta);
     }
 
-    /** 是否达到常规上限。 */
     public boolean isMaxed() {
-        return favorValue >= MAX_FAVOR;
+        return favorValue >= getMaxFavor();
     }
 
-    /** 是否达到绝对上限。 */
     public boolean isAbsolutelyMaxed() {
-        return favorValue >= ABSOLUTE_MAX_FAVOR;
+        return favorValue >= getAbsoluteMaxFavor();
     }
 
     public static float clamp(float value) {
-        return Math.clamp(value, MIN_FAVOR, ABSOLUTE_MAX_FAVOR);
+        return Math.clamp(value, getMinFavor(), getAbsoluteMaxFavor());
     }
 
     public static int getDisplayColor(float favorValue) {

@@ -1,6 +1,7 @@
 package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
@@ -46,7 +47,9 @@ public class AnimalHungerEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalHungerSavedData data = getAnimalHungerData(level);
             if (!data.hasAnimalHungerData(animal.getUUID())) {
-                float initialHunger = 3.0f + level.random.nextFloat() * 4.0f;
+                float minHunger = KRConfig.WILD_INITIAL_HUNGER_MIN.get().floatValue();
+                float maxHunger = KRConfig.WILD_INITIAL_HUNGER_MAX.get().floatValue();
+                float initialHunger = minHunger + level.random.nextFloat() * Math.max(0.0f, maxHunger - minHunger);
                 data.setAnimalHungerValue(animal.getUUID(), initialHunger);
             }
             syncHungerToTrackingPlayers(animal, data);
@@ -71,7 +74,7 @@ public class AnimalHungerEventHandler {
         MinecraftServer server = event.getServer();
         long tickCount = server.getTickCount();
 
-        if (tickCount % HungerDecline.FECES_DECAY_TICK_INTERVAL != 0) return;
+        if (tickCount % HungerDecline.getFecesDecayTickInterval() != 0) return;
 
         for (ServerLevel level : server.getAllLevels()) {
             AnimalHungerSavedData data = getAnimalHungerData(level);
@@ -98,7 +101,7 @@ public class AnimalHungerEventHandler {
                 }
 
                 float currentHunger = data.getAnimalHungerValue(uuid);
-                if (currentHunger <= AnimalHunger.MIN_HUNGER) continue;
+                if (currentHunger <= AnimalHunger.getMinHunger()) continue;
 
                 boolean wasFedToday = data.wasFedToday(uuid, currentGameTime);
                 float delta = HungerDecline.calcTickPenalty(level, animal, wasFedToday);

@@ -14,16 +14,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ChickenModelEatingMixin {
 
     @Inject(method = "setupAnim", at = @At("TAIL"))
-    private void kaleidoscopeRanch$applyEating(Entity entity, float limbSwing, float limbSwingAmount,
-                                               float ageInTicks, float netHeadYaw, float headPitch,
-                                               CallbackInfo ci) {
+    private void KR$applyEating(Entity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, CallbackInfo ci) {
         if (!(entity instanceof KREatingAnimation anim)) return;
 
         float progress = anim.kaleidoscopeRanch$getEatingAnimationProgress(
                 Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(false));
         if (progress <= 0.0F) return;
 
-        ModelPart head = ((ChickenModelAccessor) this).kaleidoscopeRanch$getHead();
+        ModelPart head = ((ChickenModelAccessor) this).KR$getHead();
         head.xRot += progress * 0.9F;
     }
 }

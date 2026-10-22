@@ -47,7 +47,7 @@ public class AnimalHungerSavedData extends SavedData {
 
     public float getAnimalHungerValue(UUID uuid) {
         AnimalHunger hunger = animalHungerMap.get(uuid);
-        return hunger != null ? hunger.getHungerValue() : AnimalHunger.INITIAL_HUNGER;
+        return hunger != null ? hunger.getHungerValue() : AnimalHunger.getInitialHunger();
     }
 
     public void setAnimalHungerValue(UUID uuid, float hungerValue) {
@@ -114,11 +114,11 @@ public class AnimalHungerSavedData extends SavedData {
         lastFeedGameTimeMap.put(uuid, gameTime);
         setDirty();
     }
-    
+
     public long getFeedCooldownExpire(UUID uuid) {
         Long lastFeedTime = lastFeedGameTimeMap.get(uuid);
         if (lastFeedTime == null) return 0L;
-        return lastFeedTime + HungerRise.FEED_COOLDOWN_TICKS;
+        return lastFeedTime + HungerRise.getFeedCooldownTicks();
     }
 
     public boolean wasFedToday(UUID uuid, long currentGameTime) {
@@ -130,14 +130,14 @@ public class AnimalHungerSavedData extends SavedData {
     public boolean isFeedCooldownExpired(UUID uuid, long currentGameTime) {
         Long lastFeedTime = lastFeedGameTimeMap.get(uuid);
         if (lastFeedTime == null) return true;
-        return (currentGameTime - lastFeedTime) >= HungerRise.FEED_COOLDOWN_TICKS;
+        return (currentGameTime - lastFeedTime) >= HungerRise.getFeedCooldownTicks();
     }
 
     public long getFeedCooldownRemaining(UUID uuid, long currentGameTime) {
         Long lastFeedTime = lastFeedGameTimeMap.get(uuid);
         if (lastFeedTime == null) return 0;
         long elapsed = currentGameTime - lastFeedTime;
-        long remaining = HungerRise.FEED_COOLDOWN_TICKS - elapsed;
+        long remaining = HungerRise.getFeedCooldownTicks() - elapsed;
         return Math.max(remaining, 0);
     }
 
@@ -153,25 +153,25 @@ public class AnimalHungerSavedData extends SavedData {
     public long getTroughFeedCooldownExpire(UUID uuid) {
         Long lastTroughFeedTime = lastTroughFeedGameTimeMap.get(uuid);
         if (lastTroughFeedTime == null) return 0L;
-        return lastTroughFeedTime + KREatFromTroughGoal.TROUGH_FEED_COOLDOWN_TICKS;
+        return lastTroughFeedTime + KREatFromTroughGoal.getTroughFeedCooldownTicks();
     }
 
     public boolean isTroughFeedCooldownExpired(UUID uuid, long currentGameTime) {
         Long lastTroughFeedTime = lastTroughFeedGameTimeMap.get(uuid);
         if (lastTroughFeedTime == null) return true;
-        return (currentGameTime - lastTroughFeedTime) >= KREatFromTroughGoal.TROUGH_FEED_COOLDOWN_TICKS;
+        return (currentGameTime - lastTroughFeedTime) >= KREatFromTroughGoal.getTroughFeedCooldownTicks();
     }
 
     public long getTroughFeedCooldownRemaining(UUID uuid, long currentGameTime) {
         Long lastTroughFeedTime = lastTroughFeedGameTimeMap.get(uuid);
         if (lastTroughFeedTime == null) return 0;
         long elapsed = currentGameTime - lastTroughFeedTime;
-        long remaining = KREatFromTroughGoal.TROUGH_FEED_COOLDOWN_TICKS - elapsed;
+        long remaining = KREatFromTroughGoal.getTroughFeedCooldownTicks() - elapsed;
         return Math.max(remaining, 0);
     }
 
     @Override
-    public @NotNull CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+    public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         ListTag list = new ListTag();
         for (Map.Entry<UUID, AnimalHunger> entry : animalHungerMap.entrySet()) {
             UUID uuid = entry.getKey();
