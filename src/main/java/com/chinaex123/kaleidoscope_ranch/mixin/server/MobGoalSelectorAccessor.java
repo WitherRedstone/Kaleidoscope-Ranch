@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.mixin;
+package com.chinaex123.kaleidoscope_ranch.mixin.server;
 
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.GoalSelector;

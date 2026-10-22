@@ -1,6 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.entity.ai;
 
-import com.chinaex123.kaleidoscope_ranch.mixin.TemptGoalAccessor;
+import com.chinaex123.kaleidoscope_ranch.mixin.server.TemptGoalAccessor;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
 import net.minecraft.world.item.crafting.Ingredient;

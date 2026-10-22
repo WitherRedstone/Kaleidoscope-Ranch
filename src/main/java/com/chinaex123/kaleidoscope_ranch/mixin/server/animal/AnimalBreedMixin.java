@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.mixin;
+package com.chinaex123.kaleidoscope_ranch.mixin.server.animal;
 
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;

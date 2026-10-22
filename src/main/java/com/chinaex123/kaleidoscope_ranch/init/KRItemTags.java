@@ -12,6 +12,8 @@ public interface KRItemTags {
     TagKey<Item> ANIMAL_FEED = modItemTag("animal_feed");
     /** 盐 */
     TagKey<Item> SALTS = neoforgeItemTag("salts");
+    /** 干草窝蛋 */
+    TagKey<Item> HAYSTACK_HOLLOW_EGG = neoforgeItemTag("haystack_hollow_egg");
 
     private static TagKey<Item> modItemTag(String name) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, name));

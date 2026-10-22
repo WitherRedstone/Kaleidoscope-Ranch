@@ -7,11 +7,11 @@
     "client.QuadrupedModelAccessor",
     "client.ChickenModelEatingMixin",
     "client.QuadrupedModelEatingMixin",
-    "AnimalBreedMixin",
-    "AnimalEatingAnimationMixin",
-    "ChickenLayEggMixin",
-    "MobGoalSelectorAccessor",
-    "TemptGoalAccessor"
+    "server.MobGoalSelectorAccessor",
+    "server.TemptGoalAccessor",
+    "server.animal.AnimalBreedMixin",
+    "server.animal.AnimalEatingAnimationMixin",
+    "server.animal.ChickenLayEggMixin"
   ],
   "injectors": {
     "defaultRequire": 1

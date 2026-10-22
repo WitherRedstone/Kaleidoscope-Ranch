@@ -2,6 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.blockentity;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
+import com.chinaex123.kaleidoscope_ranch.init.KRItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -14,6 +15,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -145,10 +148,11 @@ public class HaystackHollowBlockEntity extends BlockEntity {
         int radiusSq = radius * radius;
 
         for (ItemEntity itemEntity : level.getEntitiesOfClass(ItemEntity.class,
-                net.minecraft.world.phys.AABB.ofSize(net.minecraft.world.phys.Vec3.atCenterOf(pos), radius * 2, radius * 2, radius * 2))) {
+                AABB.ofSize(Vec3.atCenterOf(pos), radius * 2, radius * 2, radius * 2))) {
             if (itemEntity.isRemoved()) continue;
             ItemStack stack = itemEntity.getItem();
             if (stack.isEmpty()) continue;
+            if (!stack.is(KRItemTags.HAYSTACK_HOLLOW_EGG)) continue;
 
             int before = stack.getCount();
             be.insertItem(stack);

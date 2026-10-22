@@ -310,6 +310,18 @@ public class KRConfig {
         builder.pop();
 
 
+        builder.comment("喂食槽配置").push("Feeding Trough");
+        TROUGH_DETECT_RADIUS = builder
+                .comment("喂食槽检测半径")
+                .comment("Trough detection radius")
+                .defineInRange("detectRadius", 8.0, 1.0, 32.0);
+        TROUGH_FEED_COOLDOWN_TICKS = builder
+                .comment("喂食槽喂食冷却(tick)")
+                .comment("Trough feeding cooldown (ticks)")
+                .defineInRange("feedCooldownTicks", 3000, 0, Integer.MAX_VALUE);
+        builder.pop();
+
+
         builder.comment("干草窝配置").push("Haystack Hollow");
         HAYSTACK_DETECT_RADIUS = builder
                 .comment("干草窝搜索半径(禽类寻找干草窝下蛋的范围)")
@@ -323,18 +335,6 @@ public class KRConfig {
                 .comment("干草窝收集蛋频率(tick)")
                 .comment("Haystack egg collect interval (tick)")
                 .defineInRange("collectInterval", 200, 1, Integer.MAX_VALUE);
-        builder.pop();
-
-
-        builder.comment("喂食槽配置").push("Feeding Trough");
-        TROUGH_DETECT_RADIUS = builder
-                .comment("喂食槽检测半径")
-                .comment("Trough detection radius")
-                .defineInRange("detectRadius", 8.0, 1.0, 32.0);
-        TROUGH_FEED_COOLDOWN_TICKS = builder
-                .comment("喂食槽喂食冷却(tick)")
-                .comment("Trough feeding cooldown (ticks)")
-                .defineInRange("feedCooldownTicks", 3000, 0, Integer.MAX_VALUE);
         builder.pop();
 
 

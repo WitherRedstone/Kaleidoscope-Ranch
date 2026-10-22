@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.mixin;
+package com.chinaex123.kaleidoscope_ranch.mixin.server.animal;
 
 import com.chinaex123.kaleidoscope_ranch.entity.animation.KREatingAnimation;
 import net.minecraft.world.entity.Entity;

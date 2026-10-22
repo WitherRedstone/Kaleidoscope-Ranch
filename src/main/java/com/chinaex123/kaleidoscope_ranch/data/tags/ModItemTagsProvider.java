@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,5 +28,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 .add(KRItems.LIVESTOCK_FEED.get());
 
         tag(KRItemTags.SALTS).add(KRItems.SALT.get());
+        tag(KRItemTags.HAYSTACK_HOLLOW_EGG).addTag(Tags.Items.EGGS);
     }
 }
