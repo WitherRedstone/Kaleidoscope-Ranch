@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.Block;
 public class MoodRise {
 
     public static int getSaltBlockMoodBonusTickInterval() {
-        return KRConfig.MOOD_RISE_SALT_BLOCK_TICK_INTERVAL.get();
+        return KRConfig.MOOD_RISE_ROSE_SALT_BLOCK_TICK_INTERVAL.get();
     }
 
     public static int getMudMoodBonusTickInterval() {
@@ -19,7 +19,7 @@ public class MoodRise {
     }
 
     public static double calcTickBonus(ServerLevel level, Animal animal, double currentMood, long tickCount) {
-        if (tickCount % KRConfig.MOOD_RISE_SALT_BLOCK_TICK_INTERVAL.get() == 0) {
+        if (tickCount % KRConfig.MOOD_RISE_ROSE_SALT_BLOCK_TICK_INTERVAL.get() == 0) {
             return calcSaltBlockBonus(level, animal, currentMood);
         }
         return 0;
@@ -34,12 +34,12 @@ public class MoodRise {
 
         Block saltBlock = KRBlocks.SALT_BLOCK.get();
         BlockPos center = animal.blockPosition();
-        int r = KRConfig.MOOD_RISE_SALT_BLOCK_RADIUS.get();
+        int r = KRConfig.MOOD_RISE_ROSE_SALT_BLOCK_RADIUS.get();
         for (BlockPos pos : BlockPos.betweenClosed(
                 center.getX() - r, center.getY() - r, center.getZ() - r,
                 center.getX() + r, center.getY() + r, center.getZ() + r)) {
             if (level.getBlockState(pos).getBlock() == saltBlock) {
-                return KRConfig.MOOD_RISE_SALT_BLOCK_BONUS.get();
+                return KRConfig.MOOD_RISE_ROSE_SALT_BLOCK_BONUS.get();
             }
         }
         return 0;

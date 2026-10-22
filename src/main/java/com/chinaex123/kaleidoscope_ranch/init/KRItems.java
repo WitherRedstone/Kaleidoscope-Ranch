@@ -13,8 +13,8 @@ public interface KRItems {
 
     /** 粪便 */
     DeferredItem<Item> FECES = ITEMS.register("feces", () -> new FecesItem(new Item.Properties()));
-    /** 盐 */
-    DeferredItem<Item> SALT = ITEMS.register("salt", () -> new Item(new Item.Properties()));
+    /** 玫瑰盐 */
+    DeferredItem<Item> SALT = ITEMS.register("rose_salt", () -> new Item(new Item.Properties()));
     /** 家禽饲料 */
     DeferredItem<Item> POULTRY_FEED = ITEMS.register("poultry_feed", () -> new Item(new Item.Properties()));
     /** 家畜饲料 */

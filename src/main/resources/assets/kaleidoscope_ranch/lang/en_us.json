@@ -2,12 +2,12 @@
   "itemGroup.kaleidoscope_ranch": "Kaleidoscope Ranch",
 
   "item.kaleidoscope_ranch.feces": "Feces",
-  "item.kaleidoscope_ranch.salt": "Salt",
+  "item.kaleidoscope_ranch.rose_salt": "Rose Salt",
   "item.kaleidoscope_ranch.poultry_feed": "Poultry Feed",
   "item.kaleidoscope_ranch.livestock_feed": "Livestock Feed",
   "item.kaleidoscope_ranch.creative_feed": "Creative Feed",
 
-  "block.kaleidoscope_ranch.salt_block": "Salt Block",
+  "block.kaleidoscope_ranch.rose_salt_block": "Rose Salt Block",
   "block.kaleidoscope_ranch.feces": "Feces",
   "block.kaleidoscope_ranch.feeding_trough": "Feeding Trough",
   "block.kaleidoscope_ranch.haystack_hollow": "Haystack Hollow",

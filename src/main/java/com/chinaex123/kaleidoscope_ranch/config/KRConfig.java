@@ -17,9 +17,9 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue FAVOR_MAX;
     public static final ModConfigSpec.DoubleValue FAVOR_ABSOLUTE_MAX;
     public static final ModConfigSpec.DoubleValue MOOD_RISE_PET_BONUS;
-    public static final ModConfigSpec.DoubleValue MOOD_RISE_SALT_BLOCK_BONUS;
-    public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_RADIUS;
-    public static final ModConfigSpec.IntValue MOOD_RISE_SALT_BLOCK_TICK_INTERVAL;
+    public static final ModConfigSpec.DoubleValue MOOD_RISE_ROSE_SALT_BLOCK_BONUS;
+    public static final ModConfigSpec.IntValue MOOD_RISE_ROSE_SALT_BLOCK_RADIUS;
+    public static final ModConfigSpec.IntValue MOOD_RISE_ROSE_SALT_BLOCK_TICK_INTERVAL;
     public static final ModConfigSpec.DoubleValue MOOD_RISE_MUD_BONUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_MUD_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue MOOD_DECLINE_DIVERSE_SPECIES_RADIUS;
@@ -87,18 +87,18 @@ public class KRConfig {
                 .comment("抚摸心情加成")
                 .comment("Petting mood bonus")
                 .defineInRange("petBonus", 1.0, 0.0, Integer.MAX_VALUE);
-        MOOD_RISE_SALT_BLOCK_BONUS = builder
-                .comment("盐块心情加成")
-                .comment("Salt block mood bonus")
-                .defineInRange("saltBlockBonus", 0.5, 0.0, Integer.MAX_VALUE);
-        MOOD_RISE_SALT_BLOCK_RADIUS = builder
-                .comment("盐块检测半径")
-                .comment("Salt block detection radius")
-                .defineInRange("saltBlockRadius", 4, 1, 32);
-        MOOD_RISE_SALT_BLOCK_TICK_INTERVAL = builder
-                .comment("盐块加成tick间隔")
-                .comment("Salt block bonus tick interval")
-                .defineInRange("saltBlockTickInterval", 3000, 100, Integer.MAX_VALUE);
+        MOOD_RISE_ROSE_SALT_BLOCK_BONUS = builder
+                .comment("玫瑰盐块心情加成")
+                .comment("Rose salt block mood bonus")
+                .defineInRange("roseSaltBlockBonus", 0.5, 0.0, Integer.MAX_VALUE);
+        MOOD_RISE_ROSE_SALT_BLOCK_RADIUS = builder
+                .comment("玫瑰盐块检测半径")
+                .comment("Rose salt block detection radius")
+                .defineInRange("roseSaltBlockRadius", 4, 1, 32);
+        MOOD_RISE_ROSE_SALT_BLOCK_TICK_INTERVAL = builder
+                .comment("玫瑰盐块加成tick间隔")
+                .comment("Rose salt block bonus tick interval")
+                .defineInRange("roseSaltBlockTickInterval", 3000, 100, Integer.MAX_VALUE);
         MOOD_RISE_MUD_BONUS = builder
                 .comment("泥巴心情恢复量(仅favor_mud标签生物)")
                 .comment("Mud mood recovery amount (only for favor_mud tagged entities)")

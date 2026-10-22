@@ -2,12 +2,12 @@
   "itemGroup.kaleidoscope_ranch": "森罗物语：牧场",
 
   "item.kaleidoscope_ranch.feces": "粪便",
-  "item.kaleidoscope_ranch.salt": "盐",
+  "item.kaleidoscope_ranch.rose_salt": "玫瑰盐",
   "item.kaleidoscope_ranch.poultry_feed": "家禽饲料",
   "item.kaleidoscope_ranch.livestock_feed": "家畜饲料",
   "item.kaleidoscope_ranch.creative_feed": "创造饲料",
 
-  "block.kaleidoscope_ranch.salt_block": "盐块",
+  "block.kaleidoscope_ranch.rose_salt_block": "玫瑰盐块",
   "block.kaleidoscope_ranch.feces": "粪便",
   "block.kaleidoscope_ranch.feeding_trough": "喂食槽",
   "block.kaleidoscope_ranch.haystack_hollow": "干草窝",

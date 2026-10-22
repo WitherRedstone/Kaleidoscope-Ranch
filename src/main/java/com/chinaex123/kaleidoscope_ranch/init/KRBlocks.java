@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 public interface KRBlocks {
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(KaleidoscopeRanch.MODID);
 
-    /** 盐块 */
-    DeferredBlock<Block> SALT_BLOCK = registerBlocks("salt_block", () -> new Block(BlockBehaviour.Properties.of()
+    /** 玫瑰盐块 */
+    DeferredBlock<Block> SALT_BLOCK = registerBlocks("rose_salt_block", () -> new Block(BlockBehaviour.Properties.of()
             .strength(1.5F, 6.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     /** 粪便 */
     DeferredBlock<Block> FECES = BLOCKS.register("feces", () -> new Block(BlockBehaviour.Properties.of()
