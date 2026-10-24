@@ -12,7 +12,8 @@
     "server.TemptGoalAccessor",
     "server.animal.AnimalBreedMixin",
     "server.animal.AnimalEatingAnimationMixin",
-    "server.animal.ChickenLayEggMixin"
+    "server.animal.ChickenLayEggMixin",
+    "server.animal.PigMixin"
   ],
   "injectors": {
     "defaultRequire": 1

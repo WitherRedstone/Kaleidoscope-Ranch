@@ -4,16 +4,19 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerDecline;
+import com.chinaex123.kaleidoscope_ranch.data.animal.milk.AnimalMilkSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.AnimalMilkEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -48,6 +51,7 @@ abstract class MobNeedsMixin {
 
         KR$tickMood(serverLevel, animal, uuid, gameTime);
         KR$tickHunger(serverLevel, animal, uuid, gameTime);
+        KR$tickMilk(serverLevel, animal, uuid, gameTime);
     }
 
     @Unique
@@ -118,5 +122,29 @@ abstract class MobNeedsMixin {
             data.addAnimalHungerValue(uuid, delta);
             AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, data);
         }
+    }
+
+    @Unique
+    private void KR$tickMilk(ServerLevel level, Animal animal, UUID uuid, long gameTime) {
+        if (!(animal instanceof Pig)) return;
+
+        AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
+        AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
+
+        double mood = moodData.getAnimalMoodScore(uuid);
+        float hunger = hungerData.getAnimalHungerValue(uuid);
+
+        if (hunger < 8.0f || mood < 70.0) return;
+
+        AnimalMilkSavedData milkData = AnimalMilkEventHandler.getAnimalMilkData(level);
+        if (!milkData.hasMilkData(uuid)) return;
+
+        int currentMilk = milkData.getMilkAmount(uuid);
+        int maxCapacity = milkData.getMilkMaxCapacity(uuid);
+        if (currentMilk >= maxCapacity) return;
+
+        int rate = 3 + level.random.nextInt(4);
+        milkData.addMilk(uuid, rate);
+        AnimalMilkEventHandler.syncMilkToTrackingPlayers(animal, milkData);
     }
 }

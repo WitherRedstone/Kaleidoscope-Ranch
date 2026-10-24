@@ -27,6 +27,11 @@ public class KRPackets {
                 AnimalFavorSyncPayload.STREAM_CODEC,
                 KRPackets::handleAnimalFavorSyncOnClient
         );
+        registrar.playToClient(
+                AnimalMilkSyncPayload.TYPE,
+                AnimalMilkSyncPayload.STREAM_CODEC,
+                KRPackets::handleAnimalMilkSyncOnClient
+        );
     }
 
     private static void handleAnimalMoodSyncOnClient(AnimalMoodSyncPayload payload, IPayloadContext context) {
@@ -44,6 +49,12 @@ public class KRPackets {
     private static void handleAnimalFavorSyncOnClient(AnimalFavorSyncPayload payload, IPayloadContext context) {
         context.enqueueWork(() ->
                 ClientAnimalData.getInstance().updateFavorData(payload.animalFavorMap())
+        );
+    }
+
+    private static void handleAnimalMilkSyncOnClient(AnimalMilkSyncPayload payload, IPayloadContext context) {
+        context.enqueueWork(() ->
+                ClientAnimalData.getInstance().updateMilkData(payload.milkMap(), payload.dailyMaxMap())
         );
     }
 }

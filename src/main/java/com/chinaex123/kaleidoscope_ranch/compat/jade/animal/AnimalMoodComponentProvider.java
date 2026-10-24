@@ -10,6 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Pig;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -57,6 +58,14 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         int petColor = petToday ? 0x55FF55 : 0xAAAAAA;
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.pet_status", Component.translatable(petKey)
                 .withStyle(style -> style.withColor(petColor))));
+
+        if (animal instanceof Pig && clientData.hasMilkData(uuid)) {
+            int milkAmount = clientData.getAnimalMilkAmount(uuid);
+            int milkMaxCapacity = (int) clientData.getAnimalMilkDailyMax(uuid);
+            int milkColor = milkAmount >= milkMaxCapacity ? 0x55FF55 : 0xAAAAAA;
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_milk", Component.literal(milkAmount + "/" + milkMaxCapacity + "mb").withStyle(style -> style.withColor(milkColor)))
+                    .withStyle(style -> style.withColor(0xAAAAAA)));
+        }
 
         long currentGameTime = getClientGameTime();
         if (clientData.hasFeedCooldown(uuid, currentGameTime)) {

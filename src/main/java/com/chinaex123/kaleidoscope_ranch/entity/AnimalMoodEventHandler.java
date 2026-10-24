@@ -147,6 +147,7 @@ public class AnimalMoodEventHandler {
 
         AnimalHungerEventHandler.syncHungerToPlayer(player, animal, AnimalHungerEventHandler.getAnimalHungerData(level));
         AnimalFavorEventHandler.syncFavorToPlayer(player, animal, AnimalFavorEventHandler.getAnimalFavorData(level));
+        AnimalMilkEventHandler.syncMilkToPlayer(player, animal, AnimalMilkEventHandler.getAnimalMilkData(level));
     }
 
     public static void syncMoodToTrackingPlayers(Animal animal, AnimalMoodSavedData data) {

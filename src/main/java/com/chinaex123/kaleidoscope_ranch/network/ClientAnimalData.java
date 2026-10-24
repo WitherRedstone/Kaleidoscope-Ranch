@@ -18,6 +18,8 @@ public class ClientAnimalData {
     private final Map<UUID, Long> clientTroughCooldownExpireMap = new HashMap<>();
     private final Map<UUID, Float> clientFavorMap = new HashMap<>();
     private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
+    private final Map<UUID, Integer> clientMilkMap = new HashMap<>();
+    private final Map<UUID, Long> clientMilkDailyMaxMap = new HashMap<>();
 
     public static ClientAnimalData getInstance() {
         return INSTANCE;
@@ -87,5 +89,22 @@ public class ClientAnimalData {
 
     public boolean isWild(UUID uuid) {
         return clientWildMap.getOrDefault(uuid, false);
+    }
+
+    public void updateMilkData(Map<UUID, Integer> milkMap, Map<UUID, Long> dailyMaxMap) {
+        clientMilkMap.putAll(milkMap);
+        clientMilkDailyMaxMap.putAll(dailyMaxMap);
+    }
+
+    public int getAnimalMilkAmount(UUID uuid) {
+        return clientMilkMap.getOrDefault(uuid, 0);
+    }
+
+    public boolean hasMilkData(UUID uuid) {
+        return clientMilkMap.containsKey(uuid);
+    }
+
+    public long getAnimalMilkDailyMax(UUID uuid) {
+        return clientMilkDailyMaxMap.getOrDefault(uuid, 0L);
     }
 }
