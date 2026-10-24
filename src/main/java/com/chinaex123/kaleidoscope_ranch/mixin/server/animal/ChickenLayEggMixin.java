@@ -1,8 +1,16 @@
 package com.chinaex123.kaleidoscope_ranch.mixin.server.animal;
 
 import com.chinaex123.kaleidoscope_ranch.blockentity.HaystackHollowBlockEntity;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
+import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
+import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.ChickenEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.LayEggInHaystackGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
+import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.mixin.server.MobGoalSelectorAccessor;
 import com.chinaex123.kaleidoscope_ranch.util.KRHoldEgg;
@@ -21,6 +29,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.UUID;
 
 @Mixin(Chicken.class)
 public abstract class ChickenLayEggMixin implements KRHoldEgg {
@@ -45,6 +55,7 @@ public abstract class ChickenLayEggMixin implements KRHoldEgg {
     private void KR$addLayEggGoal(CallbackInfo ci) {
         Chicken self = (Chicken) (Object) this;
         ((MobGoalSelectorAccessor) self).KR$getGoalSelector().addGoal(3, new LayEggInHaystackGoal(self));
+        ((MobGoalSelectorAccessor) self).KR$getGoalSelector().addGoal(4, new ChickenEatFromGroundGoal(self));
     }
 
     @Inject(method = "aiStep", at = @At("HEAD"))
@@ -57,6 +68,23 @@ public abstract class ChickenLayEggMixin implements KRHoldEgg {
 
         if (this.eggTime > 1 && !KR$holdingEgg) return;
 
+        if (!(self.level() instanceof ServerLevel level)) return;
+
+        AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
+        AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
+        AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+
+        UUID uuid = self.getUUID();
+        float hunger = hungerData.getAnimalHungerValue(uuid);
+        double mood = moodData.getAnimalMoodScore(uuid);
+        float favor = favorData.getAnimalFavorValue(uuid);
+
+        if (hunger < 8 || mood < 70) {
+            KR$holdingEgg = true;
+            this.eggTime = 2;
+            return;
+        }
+
         BlockPos haystackPos = KR$findHaystackHollow(self);
 
         if (haystackPos == null) {
@@ -68,7 +96,6 @@ public abstract class ChickenLayEggMixin implements KRHoldEgg {
         KR$holdingEgg = false;
         this.eggTime = self.getRandom().nextInt(6000) + 6000;
 
-        if (!(self.level() instanceof ServerLevel level)) return;
         BlockEntity be = level.getBlockEntity(haystackPos);
         if (!(be instanceof HaystackHollowBlockEntity hollow)) return;
 
@@ -79,6 +106,21 @@ public abstract class ChickenLayEggMixin implements KRHoldEgg {
             level.playSound(null, self, SoundEvents.CHICKEN_EGG, SoundSource.NEUTRAL, 1.0F,
                     (level.random.nextFloat() - level.random.nextFloat()) * 0.2F + 1.0F);
             self.gameEvent(GameEvent.ENTITY_PLACE);
+        }
+
+        if (mood >= 90 && level.random.nextFloat() < 0.05) {
+            ItemStack goldenEgg = new ItemStack(KRItems.GOLDEN_EGG.get());
+            int goldenInserted = hollow.insertItem(goldenEgg);
+            if (goldenInserted > 0) {
+                hollow.setChanged();
+            }
+        }
+
+        if (hunger >= 8 && mood >= 80 && favor >= 100) {
+            float featherChance = Math.min(0.5f, (favor - 100) / 2000.0f);
+            if (level.random.nextFloat() < featherChance) {
+                self.spawnAtLocation(Items.FEATHER);
+            }
         }
     }
 
