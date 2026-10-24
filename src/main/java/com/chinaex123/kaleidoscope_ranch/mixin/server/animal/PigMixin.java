@@ -6,6 +6,7 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMilkEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.PigChaseAndHurtGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.PigEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.PigMudBoostGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.PigTreasureHuntGoal;
@@ -16,10 +17,11 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.neoforged.neoforge.common.Tags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -49,7 +51,7 @@ public abstract class PigMixin {
         if (self.level().isClientSide()) return;
 
         ItemStack heldItem = player.getItemInHand(hand);
-        if (heldItem.getItem() != Items.BUCKET) return;
+        if (!heldItem.is(Tags.Items.BUCKETS)) return;
 
         ServerLevel level = (ServerLevel) self.level();
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
@@ -59,6 +61,12 @@ public abstract class PigMixin {
         boolean isWild = moodData.isWild(uuid);
 
         if (isWild) {
+            self.goalSelector.getAvailableGoals().stream()
+                    .map(WrappedGoal::getGoal)
+                    .filter(goal -> goal instanceof PigChaseAndHurtGoal)
+                    .toList()
+                    .forEach(self.goalSelector::removeGoal);
+            self.goalSelector.addGoal(2, new PigChaseAndHurtGoal(self, 1.2, 4.0f));
             self.setTarget(player);
             cir.setReturnValue(InteractionResult.FAIL);
             return;
