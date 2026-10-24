@@ -20,13 +20,20 @@ public class ModBlockStatesProvider extends BlockStateProvider {
         simpleBlockWithItem(KRBlocks.ROSE_SALT_ROCK.get(), cubeAll(KRBlocks.ROSE_SALT_ROCK.get()));
         simpleBlockWithItem(KRBlocks.ROSE_SALT_CRYSTAL.get(), cubeAll(KRBlocks.ROSE_SALT_CRYSTAL.get()));
         simpleBlockWithItem(KRBlocks.ROSE_SALT_CRYSTAL_CORE.get(), cubeAll(KRBlocks.ROSE_SALT_CRYSTAL_CORE.get()));
-
         registerClusterBlock(KRBlocks.SMALL_ROSE_SALT_CRYSTAL_BUD.get(), "small_rose_salt_crystal_bud");
         registerClusterBlock(KRBlocks.MEDIUM_ROSE_SALT_CRYSTAL_BUD.get(), "medium_rose_salt_crystal_bud");
         registerClusterBlock(KRBlocks.LARGE_ROSE_SALT_CRYSTAL_BUD.get(), "large_rose_salt_crystal_bud");
         registerClusterBlock(KRBlocks.ROSE_SALT_CLUSTER.get(), "rose_salt_cluster");
-
         simpleBlockWithItem(KRBlocks.ROSE_SALT_BLOCK.get(), cubeAll(KRBlocks.ROSE_SALT_BLOCK.get()));
+
+        ModelFile haystackModel = models().getExistingFile(modLoc("block/haystack_hollow"));
+        getVariantBuilder(KRBlocks.HAYSTACK_HOLLOW.get())
+                .partialState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).modelForState().modelFile(haystackModel).addModel()
+                .partialState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH).modelForState().modelFile(haystackModel).rotationY(180).addModel()
+                .partialState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST).modelForState().modelFile(haystackModel).rotationY(90).addModel()
+                .partialState().with(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST).modelForState().modelFile(haystackModel).rotationY(270).addModel();
+
+        simpleBlockItem(KRBlocks.HAYSTACK_HOLLOW.get(), haystackModel);
     }
 
     private void registerClusterBlock(AmethystClusterBlock block, String name) {

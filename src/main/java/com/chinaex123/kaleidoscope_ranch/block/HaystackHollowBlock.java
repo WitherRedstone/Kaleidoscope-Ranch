@@ -59,7 +59,7 @@ public class HaystackHollowBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return BlockShapeUtil.getHorizontalFacingShape(state.getValue(FACING));
+        return BlockShapeUtil.getHaystackHollowShape(state.getValue(FACING));
     }
 
     @Override

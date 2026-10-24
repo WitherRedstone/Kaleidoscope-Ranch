@@ -52,7 +52,7 @@ public class FeedingTroughBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return BlockShapeUtil.getHorizontalFacingShape(state.getValue(FACING));
+        return BlockShapeUtil.getFeedingTroughShape(state.getValue(FACING));
     }
 
     @Override

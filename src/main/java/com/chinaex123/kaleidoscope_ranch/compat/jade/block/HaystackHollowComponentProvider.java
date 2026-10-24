@@ -4,12 +4,16 @@ import com.chinaex123.kaleidoscope_ranch.blockentity.HaystackHollowBlockEntity;
 import com.chinaex123.kaleidoscope_ranch.compat.jade.KRJadePlugin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import snownee.jade.api.BlockAccessor;
 import snownee.jade.api.IBlockComponentProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public enum HaystackHollowComponentProvider implements IBlockComponentProvider {
     INSTANCE;
@@ -25,10 +29,17 @@ public enum HaystackHollowComponentProvider implements IBlockComponentProvider {
             return;
         }
 
+        Map<Item, Integer> itemCounts = new LinkedHashMap<>();
         for (int i = 0; i < HaystackHollowBlockEntity.SLOT_COUNT; i++) {
             ItemStack stack = hollow.getItem(i);
             if (stack.isEmpty()) continue;
-            tooltip.add(Component.literal(stack.getHoverName().getString() + " x" + stack.getCount())
+            itemCounts.merge(stack.getItem(), stack.getCount(), Integer::sum);
+        }
+
+        for (Map.Entry<Item, Integer> entry : itemCounts.entrySet()) {
+            Item item = entry.getKey();
+            int count = entry.getValue();
+            tooltip.add(Component.literal(new ItemStack(item).getHoverName().getString() + " x" + count)
                     .withStyle(style -> style.withColor(0xFFFFFF)));
         }
     }
