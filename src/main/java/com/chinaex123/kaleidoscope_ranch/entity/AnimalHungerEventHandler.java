@@ -13,7 +13,6 @@ import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalHungerSyncPayload;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -23,17 +22,13 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -67,51 +62,6 @@ public class AnimalHungerEventHandler {
         );
 
         animal.goalSelector.addGoal(3, new KRTemptGoal(animal, 1.0, feedIngredient, false));
-    }
-
-    @SubscribeEvent
-    public static void onServerHungerUpdateTick(ServerTickEvent.Post event) {
-        MinecraftServer server = event.getServer();
-        long tickCount = server.getTickCount();
-
-        if (tickCount % HungerDecline.getFecesDecayTickInterval() != 0) return;
-
-        for (ServerLevel level : server.getAllLevels()) {
-            AnimalHungerSavedData data = getAnimalHungerData(level);
-            long currentGameTime = level.getGameTime();
-            WorldBorder border = level.getWorldBorder();
-            AABB worldBounds = new AABB(
-                    border.getMinX(), level.getMinBuildHeight(), border.getMinZ(),
-                    border.getMaxX(), level.getMaxBuildHeight(), border.getMaxZ()
-            );
-            List<? extends Animal> allAnimals = level.getEntitiesOfClass(Animal.class, worldBounds);
-            List<Animal> animals = allAnimals.stream()
-                    .filter(KREntityTags::isManagedAnimal)
-                    .map(a -> (Animal) a)
-                    .toList();
-
-            for (Animal animal : animals) {
-                if (!data.hasAnimalHungerData(animal.getUUID())) continue;
-
-                UUID uuid = animal.getUUID();
-
-                if (data.isFeedCooldownExpired(uuid, currentGameTime) && data.getConsecutiveFeedCount(uuid) > 0) {
-                    data.resetConsecutiveFeedCount(uuid);
-                    syncHungerToTrackingPlayers(animal, data);
-                }
-
-                float currentHunger = data.getAnimalHungerValue(uuid);
-                if (currentHunger <= AnimalHunger.getMinHunger()) continue;
-
-                boolean wasFedToday = data.wasFedToday(uuid, currentGameTime);
-                float delta = HungerDecline.calcTickPenalty(level, animal, wasFedToday);
-
-                if (delta != 0) {
-                    data.addAnimalHungerValue(uuid, delta);
-                    syncHungerToTrackingPlayers(animal, data);
-                }
-            }
-        }
     }
 
     @SubscribeEvent

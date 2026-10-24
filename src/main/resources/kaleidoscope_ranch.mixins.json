@@ -8,6 +8,7 @@
     "client.ChickenModelEatingMixin",
     "client.QuadrupedModelEatingMixin",
     "server.MobGoalSelectorAccessor",
+    "server.MobNeedsMixin",
     "server.TemptGoalAccessor",
     "server.animal.AnimalBreedMixin",
     "server.animal.AnimalEatingAnimationMixin",

@@ -13,15 +13,12 @@ import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalMoodSyncPayload;
 import com.chinaex123.kaleidoscope_ranch.util.PetScheduler;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
-import net.minecraft.world.level.border.WorldBorder;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -29,17 +26,13 @@ import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import net.neoforged.neoforge.event.tick.ServerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @EventBusSubscriber(modid = KaleidoscopeRanch.MODID)
 public class AnimalMoodEventHandler {
-
-    private static long lastSyncedGameDay = -1;
 
     @SubscribeEvent
     public static void onAnimalJoinLevel(EntityJoinLevelEvent event) {
@@ -70,77 +63,6 @@ public class AnimalMoodEventHandler {
                     wrappedGoal.getGoal() instanceof KREatFromTroughGoal
             );
             animal.goalSelector.addGoal(3, new KREatFromTroughGoal(animal));
-        }
-    }
-
-    @SubscribeEvent
-    public static void onServerMoodUpdateTick(ServerTickEvent.Post event) {
-        MinecraftServer server = event.getServer();
-        long tickCount = server.getTickCount();
-
-        boolean anyPenalty = tickCount % MoodDecline.getDiverseSpeciesPenaltyTickInterval() == 0
-                || tickCount % MoodDecline.getFecesPenaltyTickInterval() == 0
-                || tickCount % MoodDecline.getRainPenaltyTickInterval() == 0;
-        boolean anyBonus = tickCount % MoodRise.getSaltBlockMoodBonusTickInterval() == 0
-                || tickCount % MoodRise.getMudMoodBonusTickInterval() == 0;
-        boolean recovery = tickCount % MoodDecline.getMoodRecoveryTickInterval() == 0;
-
-        for (ServerLevel level : server.getAllLevels()) {
-            long currentGameDay = level.getDayTime() / 24000L;
-            boolean dayChanged = currentGameDay != lastSyncedGameDay;
-
-            if (!anyPenalty && !anyBonus && !recovery && !dayChanged) continue;
-
-            if (dayChanged) {
-                lastSyncedGameDay = currentGameDay;
-            }
-
-            AnimalMoodSavedData data = getAnimalMoodData(level);
-            WorldBorder border = level.getWorldBorder();
-            AABB worldBounds = new AABB(
-                    border.getMinX(), level.getMinBuildHeight(), border.getMinZ(),
-                    border.getMaxX(), level.getMaxBuildHeight(), border.getMaxZ()
-            );
-            List<? extends Animal> allAnimals = level.getEntitiesOfClass(Animal.class, worldBounds);
-            List<Animal> animals = allAnimals.stream()
-                    .filter(KREntityTags::isManagedAnimal)
-                    .map(a -> (Animal) a)
-                    .toList();
-
-            for (Animal animal : animals) {
-                if (!data.hasAnimalMoodData(animal.getUUID())) continue;
-
-                double currentMood = data.getAnimalMoodScore(animal.getUUID());
-
-                double bonusDelta = MoodRise.calcTickBonus(level, animal, currentMood, tickCount);
-                if (tickCount % MoodRise.getMudMoodBonusTickInterval() == 0) {
-                    bonusDelta += MoodRise.calcMudBonus(level, animal, currentMood);
-                }
-                double moodDelta = MoodDecline.calcTickPenalty(level, animal, tickCount) + bonusDelta;
-
-                if (recovery && moodDelta == 0) {
-                    moodDelta += MoodDecline.calcRecovery(level, animal, currentMood);
-                }
-
-                if (moodDelta != 0) {
-                    data.applyMoodDelta(animal.getUUID(), moodDelta);
-
-                    if (bonusDelta > 0) {
-                        AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcMoodRiseFavor(bonusDelta));
-                    }
-                }
-
-                if (tickCount % MoodDecline.getRainPenaltyTickInterval() == 0) {
-                    double rainPenalty = MoodDecline.calcRainPenalty(level, animal);
-                    if (rainPenalty > 0) {
-                        AnimalFavorEventHandler.addFavor(level, animal, -KRConfig.FAVOR_DECLINE_RAIN_AMOUNT.get().floatValue());
-                    }
-                }
-
-                if (moodDelta != 0 || dayChanged) {
-                    syncMoodToTrackingPlayers(animal, data);
-                }
-            }
         }
     }
 
