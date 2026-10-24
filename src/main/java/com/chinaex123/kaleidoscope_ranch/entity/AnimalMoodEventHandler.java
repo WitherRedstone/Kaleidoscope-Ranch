@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -51,17 +52,21 @@ public class AnimalMoodEventHandler {
 
             AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
             if (data.isWild(animal.getUUID())) {
-                animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
-                        wrappedGoal.getGoal() instanceof KRFleeFromPlayerGoal
-                );
+                animal.goalSelector.getAvailableGoals().stream()
+                        .map(WrappedGoal::getGoal)
+                        .filter(goal -> goal instanceof KRFleeFromPlayerGoal)
+                        .toList()
+                        .forEach(animal.goalSelector::removeGoal);
                 animal.goalSelector.addGoal(0, new KRFleeFromPlayerGoal(animal));
             } else if (hungerData.hasAnimalHungerData(animal.getUUID())) {
                 AnimalHungerEventHandler.replaceTemptGoal(animal);
             }
 
-            animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
-                    wrappedGoal.getGoal() instanceof KREatFromTroughGoal
-            );
+            animal.goalSelector.getAvailableGoals().stream()
+                    .map(WrappedGoal::getGoal)
+                    .filter(goal -> goal instanceof KREatFromTroughGoal)
+                    .toList()
+                    .forEach(animal.goalSelector::removeGoal);
             animal.goalSelector.addGoal(3, new KREatFromTroughGoal(animal));
         }
     }

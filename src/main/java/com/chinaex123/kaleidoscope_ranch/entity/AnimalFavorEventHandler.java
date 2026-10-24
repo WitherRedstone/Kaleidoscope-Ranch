@@ -12,6 +12,7 @@ import com.chinaex123.kaleidoscope_ranch.network.AnimalFavorSyncPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -99,9 +100,11 @@ public class AnimalFavorEventHandler {
         moodData.setWild(uuid, false);
         AnimalMoodEventHandler.syncMoodToTrackingPlayers(animal, moodData);
 
-        animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
-                wrappedGoal.getGoal() instanceof KRFleeFromPlayerGoal
-        );
+        animal.goalSelector.getAvailableGoals().stream()
+                .map(WrappedGoal::getGoal)
+                .filter(goal -> goal instanceof KRFleeFromPlayerGoal)
+                .toList()
+                .forEach(animal.goalSelector::removeGoal);
         AnimalHungerEventHandler.replaceTemptGoal(animal);
     }
 

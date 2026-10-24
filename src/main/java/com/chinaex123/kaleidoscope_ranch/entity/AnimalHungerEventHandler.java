@@ -18,6 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -57,9 +58,11 @@ public class AnimalHungerEventHandler {
 
         Ingredient feedIngredient = Ingredient.of(feedItem);
 
-        animal.goalSelector.getAvailableGoals().removeIf(wrappedGoal ->
-                wrappedGoal.getGoal() instanceof TemptGoal
-        );
+        animal.goalSelector.getAvailableGoals().stream()
+                .map(WrappedGoal::getGoal)
+                .filter(goal -> goal instanceof TemptGoal)
+                .toList()
+                .forEach(animal.goalSelector::removeGoal);
 
         animal.goalSelector.addGoal(3, new KRTemptGoal(animal, 1.0, feedIngredient, false));
     }
