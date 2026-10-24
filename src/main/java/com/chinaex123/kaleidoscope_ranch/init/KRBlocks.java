@@ -47,13 +47,13 @@ public interface KRBlocks {
             .strength(1.5F, 6.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
     /** 粪便 */
     DeferredBlock<Block> FECES = BLOCKS.register("feces", () -> new Block(BlockBehaviour.Properties.of()
-            .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.STONE).requiresCorrectToolForDrops()));
+            .strength(0.5F, 3.0F).mapColor(MapColor.STONE).sound(SoundType.SLIME_BLOCK)));
     /** 喂食槽 */
     DeferredBlock<FeedingTroughBlock> FEEDING_TROUGH = registerBlocks("feeding_trough", () -> new FeedingTroughBlock(BlockBehaviour.Properties.of()
-            .strength(0.5F, 3.0F).mapColor(MapColor.WOOD).sound(SoundType.WOOD).requiresCorrectToolForDrops()));
+            .strength(0.5F, 3.0F).mapColor(MapColor.WOOD).sound(SoundType.WOOD)));
     /** 干草窝 */
     DeferredBlock<HaystackHollowBlock> HAYSTACK_HOLLOW = registerBlocks("haystack_hollow", () -> new HaystackHollowBlock(BlockBehaviour.Properties.of()
-            .strength(0.5F, 3.0F).mapColor(MapColor.WOOD).sound(SoundType.WOOD).requiresCorrectToolForDrops()));
+            .strength(0.5F, 3.0F).mapColor(MapColor.WOOD).sound(SoundType.WOOD)));
 
 
     static <T extends Block> void registerBlockItems(String name, DeferredBlock<T> block) {

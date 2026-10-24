@@ -93,6 +93,16 @@ public class HaystackHollowBlockEntity extends BlockEntity {
         return total;
     }
 
+    public java.util.List<ItemStack> getDrops() {
+        java.util.List<ItemStack> drops = new java.util.ArrayList<>();
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            if (!items[i].isEmpty()) {
+                drops.add(items[i].copy());
+            }
+        }
+        return drops;
+    }
+
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);

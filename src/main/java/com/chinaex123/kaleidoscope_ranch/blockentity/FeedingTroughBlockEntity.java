@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.blockentity;
 
+import com.chinaex123.kaleidoscope_ranch.block.FeedingTroughBlock;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -20,6 +21,7 @@ import java.util.Arrays;
 public class FeedingTroughBlockEntity extends BlockEntity {
 
     public static final int SLOT_COUNT = 9;
+    public static final int MAX_FEED_COUNT = SLOT_COUNT * 64;
 
     private final ItemStack[] items = new ItemStack[SLOT_COUNT];
 
@@ -117,6 +119,16 @@ public class FeedingTroughBlockEntity extends BlockEntity {
         return total;
     }
 
+    public java.util.List<ItemStack> getDrops() {
+        java.util.List<ItemStack> drops = new java.util.ArrayList<>();
+        for (int i = 0; i < SLOT_COUNT; i++) {
+            if (!items[i].isEmpty()) {
+                drops.add(items[i].copy());
+            }
+        }
+        return drops;
+    }
+
     @Override
     protected void saveAdditional(@NotNull CompoundTag tag, @NotNull HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
@@ -157,10 +169,22 @@ public class FeedingTroughBlockEntity extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    public int getFillLevel() {
+        int count = getFeedCount();
+        if (count == 0) return 0;
+        if (count >= MAX_FEED_COUNT) return 6;
+        return Math.min(6, (int) Math.ceil(count * 6.0 / MAX_FEED_COUNT));
+    }
+
     @Override
     public void setChanged() {
         super.setChanged();
         if (level != null && !level.isClientSide()) {
+            int newLevel = getFillLevel();
+            BlockState currentState = getBlockState();
+            if (currentState.getValue(FeedingTroughBlock.FILL_LEVEL) != newLevel) {
+                level.setBlockAndUpdate(getBlockPos(), currentState.setValue(FeedingTroughBlock.FILL_LEVEL, newLevel));
+            }
             level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), 3);
         }
     }

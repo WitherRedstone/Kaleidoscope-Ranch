@@ -1,0 +1,109 @@
+{
+  "variants": {
+    "facing=east,fill_level=0": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough",
+      "y": 90
+    },
+    "facing=east,fill_level=1": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill1",
+      "y": 90
+    },
+    "facing=east,fill_level=2": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill2",
+      "y": 90
+    },
+    "facing=east,fill_level=3": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill3",
+      "y": 90
+    },
+    "facing=east,fill_level=4": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill4",
+      "y": 90
+    },
+    "facing=east,fill_level=5": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill5",
+      "y": 90
+    },
+    "facing=east,fill_level=6": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill6",
+      "y": 90
+    },
+    "facing=north,fill_level=0": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough"
+    },
+    "facing=north,fill_level=1": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill1"
+    },
+    "facing=north,fill_level=2": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill2"
+    },
+    "facing=north,fill_level=3": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill3"
+    },
+    "facing=north,fill_level=4": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill4"
+    },
+    "facing=north,fill_level=5": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill5"
+    },
+    "facing=north,fill_level=6": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill6"
+    },
+    "facing=south,fill_level=0": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough",
+      "y": 180
+    },
+    "facing=south,fill_level=1": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill1",
+      "y": 180
+    },
+    "facing=south,fill_level=2": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill2",
+      "y": 180
+    },
+    "facing=south,fill_level=3": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill3",
+      "y": 180
+    },
+    "facing=south,fill_level=4": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill4",
+      "y": 180
+    },
+    "facing=south,fill_level=5": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill5",
+      "y": 180
+    },
+    "facing=south,fill_level=6": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill6",
+      "y": 180
+    },
+    "facing=west,fill_level=0": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough",
+      "y": 270
+    },
+    "facing=west,fill_level=1": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill1",
+      "y": 270
+    },
+    "facing=west,fill_level=2": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill2",
+      "y": 270
+    },
+    "facing=west,fill_level=3": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill3",
+      "y": 270
+    },
+    "facing=west,fill_level=4": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill4",
+      "y": 270
+    },
+    "facing=west,fill_level=5": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill5",
+      "y": 270
+    },
+    "facing=west,fill_level=6": {
+      "model": "kaleidoscope_ranch:block/feeding_trough/feeding_trough_fill6",
+      "y": 270
+    }
+  }
+}
