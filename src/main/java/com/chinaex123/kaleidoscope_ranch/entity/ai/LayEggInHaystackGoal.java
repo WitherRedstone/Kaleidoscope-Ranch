@@ -2,7 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.entity.ai;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.util.KRHoldEgg;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.ai.goal.Goal;

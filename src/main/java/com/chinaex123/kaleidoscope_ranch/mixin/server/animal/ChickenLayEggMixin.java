@@ -3,7 +3,7 @@ package com.chinaex123.kaleidoscope_ranch.mixin.server.animal;
 import com.chinaex123.kaleidoscope_ranch.blockentity.HaystackHollowBlockEntity;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.LayEggInHaystackGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.mixin.server.MobGoalSelectorAccessor;
 import com.chinaex123.kaleidoscope_ranch.util.KRHoldEgg;
 import net.minecraft.core.BlockPos;

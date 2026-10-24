@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "kaleidoscope_ranch:block/small_rose_salt_crystal_bud"
+  }
+}

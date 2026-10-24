@@ -1,0 +1,6 @@
+{
+  "type": "neoforge:add_features",
+  "biomes": "#minecraft:is_mountain",
+  "features": "kaleidoscope_ranch:rose_salt_geode_placed",
+  "step": "underground_structures"
+}

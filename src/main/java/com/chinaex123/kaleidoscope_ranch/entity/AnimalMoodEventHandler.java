@@ -9,7 +9,7 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalMoodSyncPayload;
 import com.chinaex123.kaleidoscope_ranch.util.PetScheduler;
 import net.minecraft.core.particles.ParticleTypes;

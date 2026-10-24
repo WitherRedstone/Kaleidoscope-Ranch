@@ -94,7 +94,7 @@ public class KRConfig {
         MOOD_RISE_ROSE_SALT_BLOCK_RADIUS = builder
                 .comment("玫瑰盐块检测半径")
                 .comment("Rose salt block detection radius")
-                .defineInRange("roseSaltBlockRadius", 4, 1, 32);
+                .defineInRange("roseSaltBlockRadius", 2, 1, 32);
         MOOD_RISE_ROSE_SALT_BLOCK_TICK_INTERVAL = builder
                 .comment("玫瑰盐块加成tick间隔")
                 .comment("Rose salt block bonus tick interval")

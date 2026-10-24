@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.init;
+package com.chinaex123.kaleidoscope_ranch.init.tags;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;

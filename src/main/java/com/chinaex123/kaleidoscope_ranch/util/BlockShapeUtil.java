@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.block;
+package com.chinaex123.kaleidoscope_ranch.util;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;

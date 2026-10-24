@@ -1,4 +1,4 @@
-package com.chinaex123.kaleidoscope_ranch.init;
+package com.chinaex123.kaleidoscope_ranch.init.tags;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import net.minecraft.core.registries.Registries;
@@ -15,8 +15,12 @@ public interface KREntityTags {
     TagKey<EntityType<?>> POULTRY = modTag("poultry");
     /** 家畜 */
     TagKey<EntityType<?>> LIVESTOCK = modTag("livestock");
+
     /** 好感度_泥巴 */
     TagKey<EntityType<?>> FAVOR_MUD = modTag("favor_mud");
+
+    /** 舔舐盐块的动物 */
+    TagKey<EntityType<?>> ROSE_SALT_ANIMAL = modTag("rose_salt_animal");
 
     private static TagKey<EntityType<?>> modTag(String name) {
         return TagKey.create(Registries.ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(KaleidoscopeRanch.MODID, name));

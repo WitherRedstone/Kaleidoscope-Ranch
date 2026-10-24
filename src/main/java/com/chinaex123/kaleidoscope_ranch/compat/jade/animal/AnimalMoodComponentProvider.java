@@ -4,7 +4,7 @@ import com.chinaex123.kaleidoscope_ranch.compat.jade.KRJadePlugin;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.ClientAnimalData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;

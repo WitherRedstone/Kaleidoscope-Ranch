@@ -2,7 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.data.animal.mood;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;

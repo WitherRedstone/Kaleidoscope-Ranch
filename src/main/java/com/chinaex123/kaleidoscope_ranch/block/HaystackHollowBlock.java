@@ -2,6 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.block;
 
 import com.chinaex123.kaleidoscope_ranch.blockentity.HaystackHollowBlockEntity;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
+import com.chinaex123.kaleidoscope_ranch.util.BlockShapeUtil;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

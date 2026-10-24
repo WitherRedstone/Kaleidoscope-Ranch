@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "kaleidoscope_ranch:block/rose_salt_cluster",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "kaleidoscope_ranch:block/rose_salt_cluster",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "kaleidoscope_ranch:block/rose_salt_cluster",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "kaleidoscope_ranch:block/rose_salt_cluster",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "kaleidoscope_ranch:block/rose_salt_cluster"
+    },
+    "facing=west": {
+      "model": "kaleidoscope_ranch:block/rose_salt_cluster",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

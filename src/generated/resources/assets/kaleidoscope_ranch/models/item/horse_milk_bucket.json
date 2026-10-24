@@ -1,0 +1,6 @@
+{
+  "parent": "neoforge:item/bucket",
+  "flip_gas": false,
+  "fluid": "kaleidoscope_ranch:horse_milk",
+  "loader": "neoforge:fluid_container"
+}

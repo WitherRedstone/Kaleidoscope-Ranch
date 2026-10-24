@@ -9,7 +9,7 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KRTemptGoal;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalHungerSyncPayload;
 import net.minecraft.core.particles.ParticleTypes;

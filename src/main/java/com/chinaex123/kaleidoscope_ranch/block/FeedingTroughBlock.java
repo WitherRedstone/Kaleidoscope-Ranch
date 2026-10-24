@@ -2,7 +2,8 @@ package com.chinaex123.kaleidoscope_ranch.block;
 
 import com.chinaex123.kaleidoscope_ranch.blockentity.FeedingTroughBlockEntity;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
-import com.chinaex123.kaleidoscope_ranch.init.KRItemTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KRItemTags;
+import com.chinaex123.kaleidoscope_ranch.util.BlockShapeUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;

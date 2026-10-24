@@ -7,7 +7,7 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import com.chinaex123.kaleidoscope_ranch.network.AnimalFavorSyncPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

@@ -1,10 +1,7 @@
 package com.chinaex123.kaleidoscope_ranch;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
-import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
-import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
-import com.chinaex123.kaleidoscope_ranch.init.KRCreativeTabs;
-import com.chinaex123.kaleidoscope_ranch.init.KRItems;
+import com.chinaex123.kaleidoscope_ranch.init.*;
 import com.chinaex123.kaleidoscope_ranch.network.KRPackets;
 import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -22,10 +19,11 @@ public class KaleidoscopeRanch {
     public KaleidoscopeRanch(IEventBus modEventBus, ModContainer modContainer) {
         modContainer.registerConfig(ModConfig.Type.COMMON, KRConfig.SPEC);
         KRBlocks.register(modEventBus);
-        KRItems.register(modEventBus);
-        KRCreativeTabs.register(modEventBus);
         KRBlockEntityTypes.register(modEventBus);
+        KRItems.register(modEventBus);
+        KRFluids.register(modEventBus);
         modEventBus.register(KRPackets.class);
+        KRCreativeTabs.register(modEventBus);
     }
 
     public static ResourceLocation id(String name) {

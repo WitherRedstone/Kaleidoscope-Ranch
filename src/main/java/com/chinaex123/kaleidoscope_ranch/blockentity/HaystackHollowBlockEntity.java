@@ -2,7 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.blockentity;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlockEntityTypes;
-import com.chinaex123.kaleidoscope_ranch.init.KRItemTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KRItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;

@@ -2,7 +2,7 @@ package com.chinaex123.kaleidoscope_ranch.data.animal.mood;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
-import com.chinaex123.kaleidoscope_ranch.init.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
@@ -30,9 +30,10 @@ public class MoodRise {
     }
 
     public static double calcSaltBlockBonus(ServerLevel level, Animal animal, double currentMood) {
+        if (!animal.getType().is(KREntityTags.ROSE_SALT_ANIMAL)) return 0;
         if (currentMood >= AnimalMood.getInitialMood()) return 0;
 
-        Block saltBlock = KRBlocks.SALT_BLOCK.get();
+        Block saltBlock = KRBlocks.ROSE_SALT_BLOCK.get();
         BlockPos center = animal.blockPosition();
         int r = KRConfig.MOOD_RISE_ROSE_SALT_BLOCK_RADIUS.get();
         for (BlockPos pos : BlockPos.betweenClosed(

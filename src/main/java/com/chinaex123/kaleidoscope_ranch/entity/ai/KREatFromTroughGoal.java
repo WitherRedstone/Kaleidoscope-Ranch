@@ -13,6 +13,7 @@ import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.animation.KREatingAnimation;
 import com.chinaex123.kaleidoscope_ranch.init.KRBlocks;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -217,10 +218,10 @@ public class KREatFromTroughGoal extends Goal {
 
     private Item getFeedItemFor(Mob mob) {
         // 根据 tag 决定饲料类型
-        if (mob.getType().is(com.chinaex123.kaleidoscope_ranch.init.KREntityTags.POULTRY)) {
+        if (mob.getType().is(KREntityTags.POULTRY)) {
             return KRItems.POULTRY_FEED.get();
         }
-        if (mob.getType().is(com.chinaex123.kaleidoscope_ranch.init.KREntityTags.LIVESTOCK)) {
+        if (mob.getType().is(KREntityTags.LIVESTOCK)) {
             return KRItems.LIVESTOCK_FEED.get();
         }
         return null;

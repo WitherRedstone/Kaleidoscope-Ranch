@@ -16,19 +16,33 @@ public class KRCreativeTabs {
 
     public static final Supplier<CreativeModeTab> KALEIDOSCOPE_RANCH_TAB =
             CREATIVE_MODE_TAB.register("kaleidoscope_ranch_tab", () -> CreativeModeTab.builder()
-                    .icon(() -> new ItemStack(KRBlocks.SALT_BLOCK.get()))
+                    .icon(() -> new ItemStack(KRBlocks.ROSE_SALT_BLOCK.get()))
                     .title(Component.translatable("itemGroup.kaleidoscope_ranch"))
                     .displayItems((parameters, output) -> {
 
-                        output.accept(KRBlocks.SALT_BLOCK.get());
+                        output.accept(KRBlocks.ROSE_SALT_ROCK.get());
+                        output.accept(KRBlocks.ROSE_SALT_CRYSTAL.get());
+                        output.accept(KRBlocks.ROSE_SALT_CRYSTAL_CORE.get());
+                        output.accept(KRBlocks.ROSE_SALT_CLUSTER.get());
+                        output.accept(KRBlocks.ROSE_SALT_BLOCK.get());
                         output.accept(KRBlocks.FEEDING_TROUGH.get());
                         output.accept(KRBlocks.HAYSTACK_HOLLOW.get());
 
-                        output.accept(KRItems.SALT.get());
+                        output.accept(KRItems.ROSE_SALT.get());
                         output.accept(KRItems.FECES.get());
                         output.accept(KRItems.POULTRY_FEED.get());
                         output.accept(KRItems.LIVESTOCK_FEED.get());
                         output.accept(KRItems.CREATIVE_FEED.get());
+                        output.accept(KRItems.GOLDEN_EGG.get());
+
+                        output.accept(KRItems.SHEEP_MILK_BUCKET.get());
+                        output.accept(KRItems.GOAT_MILK_BUCKET.get());
+                        output.accept(KRItems.HORSE_MILK_BUCKET.get());
+                        output.accept(KRItems.DONKEY_MILK_BUCKET.get());
+                        output.accept(KRItems.CAMEL_MILK_BUCKET.get());
+                        output.accept(KRItems.ALPACA_MILK_BUCKET.get());
+                        output.accept(KRItems.RABBIT_MILK_BUCKET.get());
+                        output.accept(KRItems.PIG_MILK_BUCKET.get());
 
                     })
                     .build());
