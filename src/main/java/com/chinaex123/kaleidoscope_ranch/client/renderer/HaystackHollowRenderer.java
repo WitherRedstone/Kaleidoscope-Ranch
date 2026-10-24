@@ -18,7 +18,7 @@ public class HaystackHollowRenderer implements BlockEntityRenderer<HaystackHollo
 
     public HaystackHollowRenderer(BlockEntityRendererProvider.Context context) {}
 
-    private static final float ITEM_SCALE = 0.42f;   // 蛋大一点，每层少放几个就够铺满
+    private static final float ITEM_SCALE = 0.45f;
     private static final float X_ROTATION = -90f;
 
     // 渲染区域（贴近方块边缘，大蛋也能铺满）
@@ -31,12 +31,13 @@ public class HaystackHollowRenderer implements BlockEntityRenderer<HaystackHollo
     // 竖直堆叠时每颗的间距（紧贴）
     private static final float STACK_HEIGHT = 0.075f;
 
-    // 平面网格：3x3 = 9 个位置，每层少几个
     private static final int COLS = 3;
-    private static final int GRID_COUNT = COLS * COLS; // 9 个平面位置
+    private static final int GRID_COUNT = COLS * COLS;
+    private static final int STACK_LAYERS = 2;
+    private static final int MAX_RENDER = 16;
+    private static final int MAX_ITEMS = 144;
 
-    // 固定竖直堆叠层数（每格都堆满）
-    private static final int STACK_LAYERS = 4;
+    private static final int[] GRID_ORDER = {4, 1, 3, 5, 7, 0, 2, 6, 8};
 
     // 平面散乱程度（格子大、蛋大，偏移小一点避免穿模）
     private static final float JITTER = 0.05f;
@@ -57,6 +58,8 @@ public class HaystackHollowRenderer implements BlockEntityRenderer<HaystackHollo
         int totalItems = blockEntity.getTotalItemCount();
         if (totalItems == 0) return;
 
+        int eggCount = Math.min(MAX_RENDER, (int) Math.ceil(totalItems * (double) MAX_RENDER / MAX_ITEMS));
+
         ItemStack eggStack = new ItemStack(Items.EGG);
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
 
@@ -66,8 +69,9 @@ public class HaystackHollowRenderer implements BlockEntityRenderer<HaystackHollo
 
         int rendered = 0;
 
-        for (int layer = 0; layer < STACK_LAYERS && rendered < totalItems; layer++) {
-            for (int gridIndex = 0; gridIndex < GRID_COUNT && rendered < totalItems; gridIndex++) {
+        for (int layer = 0; layer < STACK_LAYERS && rendered < eggCount; layer++) {
+            for (int orderIdx = 0; orderIdx < GRID_COUNT && rendered < eggCount; orderIdx++) {
+                int gridIndex = GRID_ORDER[orderIdx];
                 int gridX = gridIndex % COLS;
                 int gridZ = gridIndex / COLS;
 
