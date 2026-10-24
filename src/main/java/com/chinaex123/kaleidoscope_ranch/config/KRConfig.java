@@ -60,6 +60,9 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue HAYSTACK_COLLECT_INTERVAL;
     public static final ModConfigSpec.DoubleValue TROUGH_DETECT_RADIUS;
     public static final ModConfigSpec.IntValue TROUGH_FEED_COOLDOWN_TICKS;
+    public static final ModConfigSpec.IntValue PIG_TREASURE_INTERVAL;
+    public static final ModConfigSpec.DoubleValue PIG_TREASURE_CHANCE;
+    public static final ModConfigSpec.DoubleValue PIG_TREASURE_FAVOR_THRESHOLD;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -330,6 +333,22 @@ public class KRConfig {
                 .comment("干草窝收集蛋频率(tick)")
                 .comment("Haystack egg collect interval (tick)")
                 .defineInRange("collectInterval", 200, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+
+        builder.comment("猪寻宝配置").push("Pig Treasure Hunt");
+        PIG_TREASURE_INTERVAL = builder
+                .comment("寻宝间隔(tick)")
+                .comment("Treasure hunt interval (ticks)")
+                .defineInRange("interval", 6000, 100, Integer.MAX_VALUE);
+        PIG_TREASURE_CHANCE = builder
+                .comment("寻宝概率")
+                .comment("Treasure hunt chance")
+                .defineInRange("chance", 0.3, 0.0, 1.0);
+        PIG_TREASURE_FAVOR_THRESHOLD = builder
+                .comment("寻宝好感度阈值")
+                .comment("Treasure hunt favor threshold")
+                .defineInRange("favorThreshold", 110.0, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
 

@@ -89,7 +89,7 @@ public class AnimalFavorEventHandler {
         }
     }
 
-    private static void checkTameFromWild(ServerLevel level, Animal animal, AnimalFavorSavedData favorData) {
+    public static void checkTameFromWild(ServerLevel level, Animal animal, AnimalFavorSavedData favorData) {
         UUID uuid = animal.getUUID();
         float favorValue = favorData.getAnimalFavorValue(uuid);
         if (favorValue < KRConfig.WILD_TAME_FAVOR_THRESHOLD.get().floatValue()) return;

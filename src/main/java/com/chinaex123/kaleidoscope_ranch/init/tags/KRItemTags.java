@@ -10,6 +10,9 @@ public interface KRItemTags {
 
     /** 动物饲料 */
     TagKey<Item> ANIMAL_FEED = modItemTag("animal_feed");
+    /** 寻宝猪事件 */
+    TagKey<Item> TREASURE_HUNTING_PIG = modItemTag("treasure_hunting_pig");
+
     /** 干草窝蛋 */
     TagKey<Item> HAYSTACK_HOLLOW_EGG = modItemTag("haystack_hollow_egg");
     /** 羊奶 */

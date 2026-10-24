@@ -54,6 +54,8 @@ public class CreativeFeed extends Item {
         AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);
         AnimalFavorEventHandler.syncFavorToTrackingPlayers(animal, favorData);
 
+        AnimalFavorEventHandler.checkTameFromWild(level, animal, favorData);
+
         level.sendParticles(ParticleTypes.HEART, animal.getX(), animal.getY() + animal.getBbHeight() + 0.5, animal.getZ(),
                 8, 0.5, 0.5, 0.5, 0.1);
         level.sendParticles(ParticleTypes.HAPPY_VILLAGER, animal.getX(), animal.getY() + animal.getBbHeight() * 0.5, animal.getZ(),

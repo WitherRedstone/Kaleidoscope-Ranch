@@ -6,6 +6,7 @@ import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -26,8 +27,18 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         tag(KRItemTags.ANIMAL_FEED)
                 .add(KRItems.POULTRY_FEED.get())
                 .add(KRItems.LIVESTOCK_FEED.get());
+
         tag(KRItemTags.HAYSTACK_HOLLOW_EGG).addTag(Tags.Items.EGGS);
+
         tag(KRItemTags.SALTS).add(KRItems.ROSE_SALT.get());
+
+        tag(Tags.Items.EGGS).add(KRItems.GOLDEN_EGG.get());
+
+        tag(KRItemTags.TREASURE_HUNTING_PIG)
+                .add(KRItems.ROSE_SALT.get())
+                .add(Items.GOLD_NUGGET)
+                .add(Items.EMERALD)
+                .add(Items.DIAMOND);
 
         tag(KRItemTags.BUCKETS_MILK_SHEEP).add(KRItems.SHEEP_MILK_BUCKET.get());
         tag(KRItemTags.BUCKETS_MILK_GOAT).add(KRItems.GOAT_MILK_BUCKET.get());
@@ -74,6 +85,5 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 .add(KRItems.ALPACA_MILK_BUCKET.get())
                 .add(KRItems.RABBIT_MILK_BUCKET.get())
                 .add(KRItems.PIG_MILK_BUCKET.get());
-        tag(Tags.Items.EGGS).add(KRItems.GOLDEN_EGG.get());
     }
 }

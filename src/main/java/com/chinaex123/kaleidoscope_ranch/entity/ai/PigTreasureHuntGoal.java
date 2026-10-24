@@ -1,19 +1,19 @@
 package com.chinaex123.kaleidoscope_ranch.entity.ai;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
-import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
+import com.chinaex123.kaleidoscope_ranch.init.tags.KRItemTags;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.ItemStack;
 
-public class PigTreasureHuntGoal extends Goal {
+import java.util.List;
 
-    private static final int TREASURE_INTERVAL = 6000;
-    private static final float TREASURE_CHANCE = 0.3f;
-    private static final double FAVOR_THRESHOLD = 110.0;
+public class PigTreasureHuntGoal extends Goal {
 
     private final Pig pig;
     private int cooldown;
@@ -37,9 +37,9 @@ public class PigTreasureHuntGoal extends Goal {
         AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
         float favor = favorData.getAnimalFavorValue(pig.getUUID());
 
-        if (favor < FAVOR_THRESHOLD) return false;
+        if (favor < KRConfig.PIG_TREASURE_FAVOR_THRESHOLD.get().floatValue()) return false;
 
-        return level.random.nextFloat() < TREASURE_CHANCE;
+        return level.random.nextFloat() < KRConfig.PIG_TREASURE_CHANCE.get().floatValue();
     }
 
     @Override
@@ -51,19 +51,17 @@ public class PigTreasureHuntGoal extends Goal {
             pig.spawnAtLocation(treasure);
         }
 
-        cooldown = TREASURE_INTERVAL;
+        cooldown = KRConfig.PIG_TREASURE_INTERVAL.get();
     }
 
     private ItemStack generateTreasure(ServerLevel level) {
-        float roll = level.random.nextFloat();
-        if (roll < 0.4f) {
-            return new ItemStack(KRItems.ROSE_SALT.get(), 1 + level.random.nextInt(3));
-        } else if (roll < 0.7f) {
-            return new ItemStack(net.minecraft.world.item.Items.GOLD_NUGGET, 1 + level.random.nextInt(3));
-        } else if (roll < 0.9f) {
-            return new ItemStack(net.minecraft.world.item.Items.EMERALD, 1);
-        } else {
-            return new ItemStack(net.minecraft.world.item.Items.DIAMOND, 1);
-        }
+        List<ItemStack> treasures = level.registryAccess()
+                .lookupOrThrow(Registries.ITEM)
+                .getOrThrow(KRItemTags.TREASURE_HUNTING_PIG)
+                .stream()
+                .map(holder -> new ItemStack(holder.value(), 1 + level.random.nextInt(3)))
+                .toList();
+        if (treasures.isEmpty()) return ItemStack.EMPTY;
+        return treasures.get(level.random.nextInt(treasures.size()));
     }
 }
