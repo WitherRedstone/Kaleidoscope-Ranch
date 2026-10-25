@@ -7,6 +7,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.HashSet;
 import java.util.List;
@@ -56,17 +58,38 @@ public class MoodDecline {
     }
 
     public static double calcDiverseSpeciesPenalty(ServerLevel level, Animal animal) {
+        int radius = KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_RADIUS.get();
         List<? extends Animal> nearbyAnimals = level.getEntitiesOfClass(
                 Animal.class,
-                animal.getBoundingBox().inflate(KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_RADIUS.get()),
+                animal.getBoundingBox().inflate(radius),
                 other -> other != animal && KREntityTags.isManagedAnimal(other)
         );
         Set<Class<? extends Animal>> speciesTypes = new HashSet<>();
         for (Animal nearby : nearbyAnimals) {
+            if (hasBlockObstruction(level, animal, nearby)) continue;
             speciesTypes.add(nearby.getClass());
         }
         return speciesTypes.size() >= KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_REQUIRED.get()
                 ? KRConfig.MOOD_DECLINE_DIVERSE_SPECIES_AMOUNT.get() : 0;
+    }
+
+    private static boolean hasBlockObstruction(ServerLevel level, Animal from, Animal to) {
+        Vec3 start = from.getEyePosition();
+        Vec3 end = to.getEyePosition();
+        Vec3 direction = end.subtract(start);
+        double distance = direction.length();
+        if (distance < 0.1) return false;
+
+        Vec3 step = direction.normalize().scale(0.5);
+        int steps = (int) Math.ceil(distance / 0.5);
+        BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+        for (int i = 1; i < steps; i++) {
+            Vec3 pos = start.add(step.scale(i));
+            mutablePos.set(pos.x, pos.y, pos.z);
+            BlockState blockState = level.getBlockState(mutablePos);
+            if (blockState.isSolidRender(level, mutablePos)) return true;
+        }
+        return false;
     }
 
     public static double calcFecesPenalty(ServerLevel level, Animal animal) {

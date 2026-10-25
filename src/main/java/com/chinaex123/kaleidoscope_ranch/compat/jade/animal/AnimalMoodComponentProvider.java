@@ -46,11 +46,20 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_hunger", Component.literal(hungerText).withStyle(style -> style.withColor(hungerColor)))
                 .withStyle(style -> style.withColor(0xAAAAAA)));
 
-        float favorValue = clientData.getAnimalFavorValue(uuid);
-        int favorColor = AnimalFavor.getDisplayColor(favorValue);
-        String favorText = String.format("%.2f", favorValue);
+        int favorExp = clientData.getAnimalFavorExp(uuid);
+        int favorLevel = AnimalFavor.expToLevel(favorExp);
+        int favorColor = AnimalFavor.getDisplayColor(favorLevel);
+        String favorText = "Lv." + favorLevel;
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_favor", Component.literal(favorText).withStyle(style -> style.withColor(favorColor)))
                 .withStyle(style -> style.withColor(0xAAAAAA)));
+
+        if (favorLevel < AnimalFavor.MAX_LEVEL) {
+            int expNeeded = AnimalFavor.getLevelUpExp(favorLevel);
+            int expInCurrentLevel = favorExp - AnimalFavor.levelToExp(favorLevel);
+            String expText = expInCurrentLevel + "/" + expNeeded;
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_favor_exp", Component.literal(expText).withStyle(style -> style.withColor(favorColor)))
+                    .withStyle(style -> style.withColor(0xAAAAAA)));
+        }
 
         boolean petToday = clientData.hasBeenPetToday(uuid);
         String petKey = petToday

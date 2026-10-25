@@ -77,7 +77,7 @@ public abstract class ChickenLayEggMixin implements KRHoldEgg {
         UUID uuid = self.getUUID();
         float hunger = hungerData.getAnimalHungerValue(uuid);
         double mood = moodData.getAnimalMoodScore(uuid);
-        float favor = favorData.getAnimalFavorValue(uuid);
+        int favorLevel = favorData.getAnimalFavorLevel(uuid);
 
         if (hunger < 8 || mood < 70) {
             KR$holdingEgg = true;
@@ -116,8 +116,8 @@ public abstract class ChickenLayEggMixin implements KRHoldEgg {
             }
         }
 
-        if (hunger >= 8 && mood >= 80 && favor >= 100) {
-            float featherChance = Math.min(0.5f, (favor - 100) / 2000.0f);
+        if (hunger >= 8 && mood >= 80 && favorLevel >= 10) {
+            float featherChance = Math.min(0.5f, (favorLevel - 9) * 0.1f);
             if (level.random.nextFloat() < featherChance) {
                 self.spawnAtLocation(Items.FEATHER);
             }

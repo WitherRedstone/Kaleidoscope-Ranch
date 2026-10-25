@@ -48,7 +48,7 @@ public class CreativeFeed extends Item {
 
         moodData.setAnimalMoodScore(uuid, AnimalMood.getMaxMood());
         hungerData.setAnimalHungerValue(uuid, AnimalHunger.getMaxHunger());
-        favorData.setAnimalFavorValue(uuid, AnimalFavor.getMaxFavor());
+        favorData.setAnimalFavorExp(uuid, AnimalFavor.levelToExp(10));
 
         AnimalMoodEventHandler.syncMoodToTrackingPlayers(animal, moodData);
         AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);

@@ -201,7 +201,7 @@ public class KREatFromTroughGoal extends Goal {
         hungerData.setLastTroughFeedGameTime(uuid, currentGameTime);
         AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);
 
-        AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcHungerRiseFavor(gain));
+        AnimalFavorEventHandler.addFavorExp(level, animal, FavorRise.calcHungerRiseFavorExp(gain, level.random));
 
         spawnHappyParticles(level, animal);
     }

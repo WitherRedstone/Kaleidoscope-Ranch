@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalFavorSyncPayload(Map<UUID, Float> animalFavorMap) implements CustomPacketPayload {
+public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorMap) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalFavorSyncPayload> TYPE =
             new CustomPacketPayload.Type<>(KaleidoscopeRanch.id("animal_favor_sync"));
@@ -24,20 +24,20 @@ public record AnimalFavorSyncPayload(Map<UUID, Float> animalFavorMap) implements
 
     public static final StreamCodec<FriendlyByteBuf, AnimalFavorSyncPayload> STREAM_CODEC = StreamCodec.of(
             (buf, payload) -> {
-                Map<UUID, Float> favorMap = payload.animalFavorMap();
+                Map<UUID, Integer> favorMap = payload.animalFavorMap();
                 buf.writeVarInt(favorMap.size());
-                favorMap.forEach((uuid, favor) -> {
+                favorMap.forEach((uuid, exp) -> {
                     UUID_STREAM_CODEC.encode(buf, uuid);
-                    buf.writeFloat(favor);
+                    buf.writeVarInt(exp);
                 });
             },
             buf -> {
                 int size = buf.readVarInt();
-                Map<UUID, Float> favorMap = new HashMap<>(size);
+                Map<UUID, Integer> favorMap = new HashMap<>(size);
                 for (int i = 0; i < size; i++) {
                     UUID uuid = UUID_STREAM_CODEC.decode(buf);
-                    float favor = buf.readFloat();
-                    favorMap.put(uuid, favor);
+                    int exp = buf.readVarInt();
+                    favorMap.put(uuid, exp);
                 }
                 return new AnimalFavorSyncPayload(favorMap);
             }

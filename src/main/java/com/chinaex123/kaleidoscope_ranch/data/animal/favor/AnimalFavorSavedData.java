@@ -26,29 +26,34 @@ public class AnimalFavorSavedData extends SavedData {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag entry = list.getCompound(i);
             UUID uuid = entry.getUUID("kr_animal_id");
-            float favor = entry.getFloat("kr_favor_value");
-            this.animalFavorMap.put(uuid, new AnimalFavor(favor));
+            int exp = entry.getInt("kr_favor_exp");
+            this.animalFavorMap.put(uuid, new AnimalFavor(exp));
         }
     }
 
-    public float getAnimalFavorValue(UUID uuid) {
+    public int getAnimalFavorExp(UUID uuid) {
         AnimalFavor favor = animalFavorMap.get(uuid);
-        return favor != null ? favor.getFavorValue() : AnimalFavor.getInitialFavor();
+        return favor != null ? favor.getFavorExp() : 0;
     }
 
-    public void setAnimalFavorValue(UUID uuid, float favorValue) {
-        animalFavorMap.computeIfAbsent(uuid, k -> new AnimalFavor()).setFavorValue(favorValue);
+    public int getAnimalFavorLevel(UUID uuid) {
+        AnimalFavor favor = animalFavorMap.get(uuid);
+        return favor != null ? favor.getFavorLevel() : 0;
+    }
+
+    public void setAnimalFavorExp(UUID uuid, int exp) {
+        animalFavorMap.computeIfAbsent(uuid, k -> new AnimalFavor()).setFavorExp(exp);
         setDirty();
     }
 
-    public void addAnimalFavorValue(UUID uuid, float delta) {
-        animalFavorMap.computeIfAbsent(uuid, k -> new AnimalFavor()).addFavorValue(delta);
+    public void addAnimalFavorExp(UUID uuid, int delta) {
+        animalFavorMap.computeIfAbsent(uuid, k -> new AnimalFavor()).addFavorExp(delta);
         setDirty();
     }
 
-    public boolean applyFavorDelta(UUID uuid, float delta) {
+    public boolean applyFavorExpDelta(UUID uuid, int delta) {
         if (delta == 0) return false;
-        addAnimalFavorValue(uuid, delta);
+        addAnimalFavorExp(uuid, delta);
         return true;
     }
 
@@ -71,7 +76,7 @@ public class AnimalFavorSavedData extends SavedData {
         for (Map.Entry<UUID, AnimalFavor> entry : animalFavorMap.entrySet()) {
             CompoundTag entryTag = new CompoundTag();
             entryTag.putUUID("kr_animal_id", entry.getKey());
-            entryTag.putFloat("kr_favor_value", entry.getValue().getFavorValue());
+            entryTag.putInt("kr_favor_exp", entry.getValue().getFavorExp());
             list.add(entryTag);
         }
         tag.put("kr_animal_favor_list", list);

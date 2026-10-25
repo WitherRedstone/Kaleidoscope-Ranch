@@ -35,9 +35,9 @@ public class PigTreasureHuntGoal extends Goal {
 
         ServerLevel level = (ServerLevel) pig.level();
         AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
-        float favor = favorData.getAnimalFavorValue(pig.getUUID());
+        int favorLevel = favorData.getAnimalFavorLevel(pig.getUUID());
 
-        if (favor < KRConfig.PIG_TREASURE_FAVOR_THRESHOLD.get().floatValue()) return false;
+        if (favorLevel < KRConfig.PIG_TREASURE_FAVOR_THRESHOLD.get()) return false;
 
         return level.random.nextFloat() < KRConfig.PIG_TREASURE_CHANCE.get().floatValue();
     }

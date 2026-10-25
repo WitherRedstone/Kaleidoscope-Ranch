@@ -81,8 +81,8 @@ public class AnimalMoodEventHandler {
         if (player.isShiftKeyDown()) return;
         if (event.isCanceled()) return;
 
+        if (!player.getMainHandItem().isEmpty() || !player.getOffhandItem().isEmpty()) return;
         InteractionHand hand = event.getHand();
-        if (!player.getItemInHand(hand).isEmpty()) return;
 
         ServerLevel level = (ServerLevel) event.getLevel();
         AnimalMoodSavedData data = getAnimalMoodData(level);
@@ -94,7 +94,7 @@ public class AnimalMoodEventHandler {
         data.setLastPetDay(animal.getUUID(), gameDay);
         syncMoodToTrackingPlayers(animal, data);
 
-        AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcPetFavor());
+        AnimalFavorEventHandler.addFavorExp(level, animal, FavorRise.calcPetFavorExp(level.random));
 
         spawnHeartParticles(level, animal);
 

@@ -116,7 +116,7 @@ public class AnimalHungerEventHandler {
             syncHungerToTrackingPlayers(animal, hungerData);
             spawnHappyParticles(level, animal);
 
-            AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcHungerRiseFavor(gain));
+            AnimalFavorEventHandler.addFavorExp(level, animal, FavorRise.calcHungerRiseFavorExp(gain, level.random));
 
             player.swing(hand);
             event.setCancellationResult(InteractionResult.SUCCESS);
@@ -161,7 +161,7 @@ public class AnimalHungerEventHandler {
                 syncHungerToTrackingPlayers(animal, hungerData);
                 spawnHappyParticles(level, animal);
 
-                AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcHungerRiseFavor(gain));
+                AnimalFavorEventHandler.addFavorExp(level, animal, FavorRise.calcHungerRiseFavorExp(gain, level.random));
 
                 player.swing(hand);
                 event.setCancellationResult(InteractionResult.SUCCESS);

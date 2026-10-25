@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.mixin.server;
 
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
@@ -85,14 +86,14 @@ abstract class MobNeedsMixin {
             data.applyMoodDelta(uuid, moodDelta);
 
             if (bonusDelta > 0) {
-                AnimalFavorEventHandler.addFavor(level, animal, FavorRise.calcMoodRiseFavor(bonusDelta));
+                AnimalFavorEventHandler.addFavorExp(level, animal, FavorRise.calcMoodRiseFavorExp(bonusDelta, level.random));
             }
         }
 
         if (gameTime % MoodDecline.getRainPenaltyTickInterval() == 0) {
             double rainPenalty = MoodDecline.calcRainPenalty(level, animal);
             if (rainPenalty > 0) {
-                AnimalFavorEventHandler.addFavor(level, animal, -com.chinaex123.kaleidoscope_ranch.config.KRConfig.FAVOR_DECLINE_RAIN_AMOUNT.get().floatValue());
+                AnimalFavorEventHandler.addFavorExp(level, animal, -FavorDecline.calcRainPenaltyExp());
             }
         }
 

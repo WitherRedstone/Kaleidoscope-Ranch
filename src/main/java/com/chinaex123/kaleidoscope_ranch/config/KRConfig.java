@@ -2,6 +2,8 @@ package com.chinaex123.kaleidoscope_ranch.config;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
+import java.util.List;
+
 public class KRConfig {
     public static final ModConfigSpec SPEC;
 
@@ -12,10 +14,16 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue HUNGER_INITIAL;
     public static final ModConfigSpec.DoubleValue HUNGER_MIN;
     public static final ModConfigSpec.DoubleValue HUNGER_MAX;
-    public static final ModConfigSpec.DoubleValue FAVOR_INITIAL;
-    public static final ModConfigSpec.DoubleValue FAVOR_MIN;
-    public static final ModConfigSpec.DoubleValue FAVOR_MAX;
-    public static final ModConfigSpec.DoubleValue FAVOR_ABSOLUTE_MAX;
+    public static final ModConfigSpec.ConfigValue<List<? extends Integer>> FAVOR_EXP_TABLE;
+    public static final ModConfigSpec.IntValue FAVOR_RISE_PET_EXP_MIN;
+    public static final ModConfigSpec.IntValue FAVOR_RISE_PET_EXP_MAX;
+    public static final ModConfigSpec.IntValue FAVOR_RISE_MOOD_EXP_MIN;
+    public static final ModConfigSpec.IntValue FAVOR_RISE_MOOD_EXP_MAX;
+    public static final ModConfigSpec.IntValue FAVOR_RISE_HUNGER_EXP_MIN;
+    public static final ModConfigSpec.IntValue FAVOR_RISE_HUNGER_EXP_MAX;
+    public static final ModConfigSpec.IntValue FAVOR_DECLINE_HURT_EXP_MIN;
+    public static final ModConfigSpec.IntValue FAVOR_DECLINE_HURT_EXP_MAX;
+    public static final ModConfigSpec.IntValue FAVOR_DECLINE_RAIN_EXP;
     public static final ModConfigSpec.DoubleValue MOOD_RISE_PET_BONUS;
     public static final ModConfigSpec.DoubleValue MOOD_RISE_ROSE_SALT_BLOCK_BONUS;
     public static final ModConfigSpec.IntValue MOOD_RISE_ROSE_SALT_BLOCK_RADIUS;
@@ -41,16 +49,12 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_FECES_AMOUNT;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_RADIUS;
-    public static final ModConfigSpec.DoubleValue FAVOR_RISE_MOOD_FACTOR;
-    public static final ModConfigSpec.DoubleValue FAVOR_RISE_HUNGER_FACTOR;
-    public static final ModConfigSpec.DoubleValue FAVOR_RISE_PET_BONUS;
-    public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_HURT_AMOUNT;
-    public static final ModConfigSpec.DoubleValue FAVOR_DECLINE_RAIN_AMOUNT;
+
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MIN;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_HUNGER_MAX;
-    public static final ModConfigSpec.DoubleValue WILD_TAME_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.IntValue WILD_TAME_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue FLEE_DETECT_RADIUS;
     public static final ModConfigSpec.DoubleValue FLEE_SPEED;
     public static final ModConfigSpec.DoubleValue FLEE_DISTANCE;
@@ -63,15 +67,15 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue TROUGH_FEED_GAIN;
     public static final ModConfigSpec.IntValue PIG_TREASURE_INTERVAL;
     public static final ModConfigSpec.DoubleValue PIG_TREASURE_CHANCE;
-    public static final ModConfigSpec.DoubleValue PIG_TREASURE_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.IntValue PIG_TREASURE_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue LOOT_TIER1_MOOD_THRESHOLD;
-    public static final ModConfigSpec.DoubleValue LOOT_TIER1_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.IntValue LOOT_TIER1_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue LOOT_TIER1_MULTIPLIER;
     public static final ModConfigSpec.DoubleValue LOOT_TIER2_MOOD_THRESHOLD;
-    public static final ModConfigSpec.DoubleValue LOOT_TIER2_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.IntValue LOOT_TIER2_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue LOOT_TIER2_MULTIPLIER;
     public static final ModConfigSpec.DoubleValue LOOT_TIER3_MOOD_THRESHOLD;
-    public static final ModConfigSpec.DoubleValue LOOT_TIER3_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.IntValue LOOT_TIER3_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue LOOT_TIER3_MULTIPLIER;
 
     static {
@@ -228,47 +232,52 @@ public class KRConfig {
 
 
         builder.comment("好感度配置").push("Favor");
-        FAVOR_INITIAL = builder
-                .comment("初始好感度")
-                .comment("Initial favor value")
-                .defineInRange("initial", 0.0, 0.0, Integer.MAX_VALUE);
-        FAVOR_MIN = builder
-                .comment("最低好感度")
-                .comment("Minimum favor value")
-                .defineInRange("min", 0.0, 0.0, Integer.MAX_VALUE);
-        FAVOR_MAX = builder
-                .comment("最高好感度")
-                .comment("Maximum favor value")
-                .defineInRange("max", 10.0, 0.0, Integer.MAX_VALUE);
-        FAVOR_ABSOLUTE_MAX = builder
-                .comment("极限最高好感度")
-                .comment("Absolute maximum favor value")
-                .defineInRange("absoluteMax", 12.0, 0.0, Integer.MAX_VALUE);
+        FAVOR_EXP_TABLE = builder
+                .comment("升级经验表: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
+                .comment("Level up exp table: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
+                .defineList("expTable", List.of(10, 25, 50, 100, 150, 200, 300, 500, 1000, 1200, 2000),
+                        o -> o instanceof Integer && (Integer) o > 0);
 
-        builder.comment("好感提升配置").push("Favor Rise");
-        FAVOR_RISE_MOOD_FACTOR = builder
-                .comment("心情提升好感因数")
-                .comment("Mood-based favor gain factor")
-                .defineInRange("moodFactor", 0.1, 0.0, Integer.MAX_VALUE);
-        FAVOR_RISE_HUNGER_FACTOR = builder
-                .comment("饥饿提升好感因数")
-                .comment("Hunger-based favor gain factor")
-                .defineInRange("hungerFactor", 0.5, 0.0, Integer.MAX_VALUE);
-        FAVOR_RISE_PET_BONUS = builder
-                .comment("抚摸好感加成")
-                .comment("Petting favor bonus")
-                .defineInRange("petBonus", 2.5, 0.0, Integer.MAX_VALUE);
+        builder.comment("好感经验提升配置").push("Favor Rise");
+        FAVOR_RISE_PET_EXP_MIN = builder
+                .comment("抚摸经验最小值")
+                .comment("Petting exp minimum")
+                .defineInRange("petExpMin", 1, 1, Integer.MAX_VALUE);
+        FAVOR_RISE_PET_EXP_MAX = builder
+                .comment("抚摸经验最大值")
+                .comment("Petting exp maximum")
+                .defineInRange("petExpMax", 12, 1, Integer.MAX_VALUE);
+        FAVOR_RISE_MOOD_EXP_MIN = builder
+                .comment("心情提升每点经验最小值")
+                .comment("Mood rise exp per point minimum")
+                .defineInRange("moodExpMin", 1, 0, Integer.MAX_VALUE);
+        FAVOR_RISE_MOOD_EXP_MAX = builder
+                .comment("心情提升每点经验最大值")
+                .comment("Mood rise exp per point maximum")
+                .defineInRange("moodExpMax", 5, 0, Integer.MAX_VALUE);
+        FAVOR_RISE_HUNGER_EXP_MIN = builder
+                .comment("饥饿提升每点经验最小值")
+                .comment("Hunger rise exp per point minimum")
+                .defineInRange("hungerExpMin", 1, 0, Integer.MAX_VALUE);
+        FAVOR_RISE_HUNGER_EXP_MAX = builder
+                .comment("饥饿提升每点经验最大值")
+                .comment("Hunger rise exp per point maximum")
+                .defineInRange("hungerExpMax", 10, 0, Integer.MAX_VALUE);
         builder.pop();
 
-        builder.comment("好感下降配置").push("Favor Decline");
-        FAVOR_DECLINE_HURT_AMOUNT = builder
-                .comment("受伤好感惩罚量")
-                .comment("Hurt favor penalty amount")
-                .defineInRange("hurtAmount", 4.0, 0.0, Integer.MAX_VALUE);
-        FAVOR_DECLINE_RAIN_AMOUNT = builder
-                .comment("雨天好感下降量")
-                .comment("Rain favor decline amount")
-                .defineInRange("rainAmount", 0.1, 0.0, Integer.MAX_VALUE);
+        builder.comment("好感经验下降配置").push("Favor Decline");
+        FAVOR_DECLINE_HURT_EXP_MIN = builder
+                .comment("受伤经验惩罚最小值")
+                .comment("Hurt exp penalty minimum")
+                .defineInRange("hurtExpMin", 10, 0, Integer.MAX_VALUE);
+        FAVOR_DECLINE_HURT_EXP_MAX = builder
+                .comment("受伤经验惩罚最大值")
+                .comment("Hurt exp penalty maximum")
+                .defineInRange("hurtExpMax", 30, 0, Integer.MAX_VALUE);
+        FAVOR_DECLINE_RAIN_EXP = builder
+                .comment("淋雨经验下降量(每20秒)")
+                .comment("Rain exp decline amount (per 20s)")
+                .defineInRange("rainExp", 1, 0, Integer.MAX_VALUE);
         builder.pop();
 
         builder.pop();
@@ -292,9 +301,9 @@ public class KRConfig {
                 .comment("Wild initial hunger maximum")
                 .defineInRange("initialHungerMax", 9.0, 0.0, Integer.MAX_VALUE);
         WILD_TAME_FAVOR_THRESHOLD = builder
-                .comment("驯化好感度阈值")
-                .comment("Taming favor threshold")
-                .defineInRange("tameFavorThreshold", 5.0, 0.0, Integer.MAX_VALUE);
+                .comment("驯化好感等级阈值")
+                .comment("Taming favor level threshold")
+                .defineInRange("tameFavorThreshold", 3, 0, 12);
         builder.pop();
 
 
@@ -360,9 +369,9 @@ public class KRConfig {
                 .comment("Treasure hunt chance")
                 .defineInRange("chance", 0.3, 0.0, 1.0);
         PIG_TREASURE_FAVOR_THRESHOLD = builder
-                .comment("寻宝好感度阈值")
-                .comment("Treasure hunt favor threshold")
-                .defineInRange("favorThreshold", 110.0, 0.0, Integer.MAX_VALUE);
+                .comment("寻宝好感等级阈值")
+                .comment("Treasure hunt favor level threshold")
+                .defineInRange("favorThreshold", 10, 0, 12);
         builder.pop();
 
 
@@ -373,9 +382,9 @@ public class KRConfig {
                 .comment("Mood threshold")
                 .defineInRange("moodThreshold", 100.0, 0.0, 120.0);
         LOOT_TIER1_FAVOR_THRESHOLD = builder
-                .comment("好感度阈值")
-                .comment("Favor threshold")
-                .defineInRange("favorThreshold", 10.0, 0.0, 12.0);
+                .comment("好感等级阈值")
+                .comment("Favor level threshold")
+                .defineInRange("favorThreshold", 8, 0, 12);
         LOOT_TIER1_MULTIPLIER = builder
                 .comment("额外掉落倍率")
                 .comment("Extra loot multiplier")
@@ -387,9 +396,9 @@ public class KRConfig {
                 .comment("Mood threshold")
                 .defineInRange("moodThreshold", 110.0, 0.0, 120.0);
         LOOT_TIER2_FAVOR_THRESHOLD = builder
-                .comment("好感度阈值")
-                .comment("Favor threshold")
-                .defineInRange("favorThreshold", 11.0, 0.0, 12.0);
+                .comment("好感等级阈值")
+                .comment("Favor level threshold")
+                .defineInRange("favorThreshold", 10, 0, 12);
         LOOT_TIER2_MULTIPLIER = builder
                 .comment("额外掉落倍率")
                 .comment("Extra loot multiplier")
@@ -401,9 +410,9 @@ public class KRConfig {
                 .comment("Mood threshold")
                 .defineInRange("moodThreshold", 120.0, 0.0, 120.0);
         LOOT_TIER3_FAVOR_THRESHOLD = builder
-                .comment("好感度阈值")
-                .comment("Favor threshold")
-                .defineInRange("favorThreshold", 12.0, 0.0, 12.0);
+                .comment("好感等级阈值")
+                .comment("Favor level threshold")
+                .defineInRange("favorThreshold", 12, 0, 12);
         LOOT_TIER3_MULTIPLIER = builder
                 .comment("额外掉落倍率")
                 .comment("Extra loot multiplier")

@@ -16,7 +16,7 @@ public class ClientAnimalData {
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
     private final Map<UUID, Long> clientFeedCooldownExpireMap = new HashMap<>();
     private final Map<UUID, Long> clientTroughCooldownExpireMap = new HashMap<>();
-    private final Map<UUID, Float> clientFavorMap = new HashMap<>();
+    private final Map<UUID, Integer> clientFavorMap = new HashMap<>();
     private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
     private final Map<UUID, Integer> clientMilkMap = new HashMap<>();
     private final Map<UUID, Long> clientMilkDailyMaxMap = new HashMap<>();
@@ -75,12 +75,16 @@ public class ClientAnimalData {
         return getTroughFeedCooldownRemaining(uuid, currentGameTime) > 0;
     }
 
-    public void updateFavorData(Map<UUID, Float> favorMap) {
+    public void updateFavorData(Map<UUID, Integer> favorMap) {
         clientFavorMap.putAll(favorMap);
     }
 
-    public float getAnimalFavorValue(UUID uuid) {
-        return clientFavorMap.getOrDefault(uuid, AnimalFavor.getInitialFavor());
+    public int getAnimalFavorExp(UUID uuid) {
+        return clientFavorMap.getOrDefault(uuid, 0);
+    }
+
+    public int getAnimalFavorLevel(UUID uuid) {
+        return AnimalFavor.expToLevel(getAnimalFavorExp(uuid));
     }
 
     public boolean hasAnimalFavorData(UUID uuid) {

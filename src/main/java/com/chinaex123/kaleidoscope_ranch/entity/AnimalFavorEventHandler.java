@@ -35,7 +35,7 @@ public class AnimalFavorEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalFavorSavedData data = getAnimalFavorData(level);
             if (!data.hasAnimalFavorData(animal.getUUID())) {
-                data.setAnimalFavorValue(animal.getUUID(), AnimalFavor.getInitialFavor());
+                data.setAnimalFavorExp(animal.getUUID(), 0);
             }
             syncFavorToTrackingPlayers(animal, data);
         }
@@ -49,7 +49,7 @@ public class AnimalFavorEventHandler {
         if (!KREntityTags.isManagedAnimal(animal)) return;
 
         ServerLevel level = (ServerLevel) entity.level();
-        addFavor(level, animal, -FavorDecline.calcHurtPenalty());
+        addFavorExp(level, animal, -FavorDecline.calcHurtPenaltyExp(level.random));
     }
 
     @SubscribeEvent
@@ -79,11 +79,11 @@ public class AnimalFavorEventHandler {
         syncFavorToPlayer(player, animal, data);
     }
 
-    public static void addFavor(ServerLevel level, Animal animal, float delta) {
+    public static void addFavorExp(ServerLevel level, Animal animal, int delta) {
         if (delta == 0) return;
         AnimalFavorSavedData data = getAnimalFavorData(level);
         if (!data.hasAnimalFavorData(animal.getUUID())) return;
-        if (data.applyFavorDelta(animal.getUUID(), delta)) {
+        if (data.applyFavorExpDelta(animal.getUUID(), delta)) {
             syncFavorToTrackingPlayers(animal, data);
             checkTameFromWild(level, animal, data);
         }
@@ -91,8 +91,8 @@ public class AnimalFavorEventHandler {
 
     public static void checkTameFromWild(ServerLevel level, Animal animal, AnimalFavorSavedData favorData) {
         UUID uuid = animal.getUUID();
-        float favorValue = favorData.getAnimalFavorValue(uuid);
-        if (favorValue < KRConfig.WILD_TAME_FAVOR_THRESHOLD.get().floatValue()) return;
+        int favorLevel = favorData.getAnimalFavorLevel(uuid);
+        if (favorLevel < KRConfig.WILD_TAME_FAVOR_THRESHOLD.get()) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         if (!moodData.isWild(uuid)) return;
@@ -110,14 +110,14 @@ public class AnimalFavorEventHandler {
 
     public static void syncFavorToTrackingPlayers(Animal animal, AnimalFavorSavedData data) {
         UUID uuid = animal.getUUID();
-        Map<UUID, Float> favorEntry = Map.of(uuid, data.getAnimalFavorValue(uuid));
+        Map<UUID, Integer> favorEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
         AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(favorEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
     public static void syncFavorToPlayer(ServerPlayer player, Animal animal, AnimalFavorSavedData data) {
         UUID uuid = animal.getUUID();
-        Map<UUID, Float> favorEntry = Map.of(uuid, data.getAnimalFavorValue(uuid));
+        Map<UUID, Integer> favorEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
         AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(favorEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }

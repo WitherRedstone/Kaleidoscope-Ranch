@@ -33,9 +33,9 @@ public class AnimalLootEventHandler {
         AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
 
         double mood = moodData.getAnimalMoodScore(uuid);
-        float favor = favorData.getAnimalFavorValue(uuid);
+        int favorLevel = favorData.getAnimalFavorLevel(uuid);
 
-        double multiplier = resolveMultiplier(mood, favor);
+        double multiplier = resolveMultiplier(mood, favorLevel);
         if (multiplier <= 0) return;
 
         int fullCopies = (int) multiplier;
@@ -61,14 +61,14 @@ public class AnimalLootEventHandler {
         }
     }
 
-    private static double resolveMultiplier(double mood, float favor) {
-        if (mood >= KRConfig.LOOT_TIER3_MOOD_THRESHOLD.get() && favor >= KRConfig.LOOT_TIER3_FAVOR_THRESHOLD.get()) {
+    private static double resolveMultiplier(double mood, int favorLevel) {
+        if (mood >= KRConfig.LOOT_TIER3_MOOD_THRESHOLD.get() && favorLevel >= KRConfig.LOOT_TIER3_FAVOR_THRESHOLD.get()) {
             return KRConfig.LOOT_TIER3_MULTIPLIER.get();
         }
-        if (mood >= KRConfig.LOOT_TIER2_MOOD_THRESHOLD.get() && favor >= KRConfig.LOOT_TIER2_FAVOR_THRESHOLD.get()) {
+        if (mood >= KRConfig.LOOT_TIER2_MOOD_THRESHOLD.get() && favorLevel >= KRConfig.LOOT_TIER2_FAVOR_THRESHOLD.get()) {
             return KRConfig.LOOT_TIER2_MULTIPLIER.get();
         }
-        if (mood >= KRConfig.LOOT_TIER1_MOOD_THRESHOLD.get() && favor >= KRConfig.LOOT_TIER1_FAVOR_THRESHOLD.get()) {
+        if (mood >= KRConfig.LOOT_TIER1_MOOD_THRESHOLD.get() && favorLevel >= KRConfig.LOOT_TIER1_FAVOR_THRESHOLD.get()) {
             return KRConfig.LOOT_TIER1_MULTIPLIER.get();
         }
         return 0;

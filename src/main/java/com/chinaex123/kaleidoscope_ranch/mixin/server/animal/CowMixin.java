@@ -85,8 +85,8 @@ public abstract class CowMixin {
         }
 
         AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
-        float favor = favorData.getAnimalFavorValue(uuid);
-        if (favor < 8.0f) {
+        int favorLevel = favorData.getAnimalFavorLevel(uuid);
+        if (favorLevel < 8) {
             cir.setReturnValue(InteractionResult.SUCCESS);
             return;
         }
