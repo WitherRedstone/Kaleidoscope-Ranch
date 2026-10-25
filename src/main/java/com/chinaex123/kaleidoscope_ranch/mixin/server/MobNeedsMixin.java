@@ -16,6 +16,7 @@ import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -126,7 +127,9 @@ abstract class MobNeedsMixin {
 
     @Unique
     private void KR$tickMilk(ServerLevel level, Animal animal, UUID uuid, long gameTime) {
-        if (!(animal instanceof Pig)) return;
+        boolean isPig = animal instanceof Pig;
+        boolean isCow = animal instanceof Cow;
+        if (!isPig && !isCow) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
@@ -143,7 +146,12 @@ abstract class MobNeedsMixin {
         int maxCapacity = milkData.getMilkMaxCapacity(uuid);
         if (currentMilk >= maxCapacity) return;
 
-        int rate = 3 + level.random.nextInt(4);
+        int rate;
+        if (isPig) {
+            rate = 3 + level.random.nextInt(4);
+        } else {
+            rate = 18 + level.random.nextInt(8);
+        }
         milkData.addMilk(uuid, rate);
         AnimalMilkEventHandler.syncMilkToTrackingPlayers(animal, milkData);
     }

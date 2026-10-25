@@ -7,6 +7,7 @@ import com.chinaex123.kaleidoscope_ranch.network.AnimalMilkSyncPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Cow;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -26,7 +27,12 @@ public class AnimalMilkEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalMilkSavedData data = getAnimalMilkData(level);
             if (!data.hasMilkData(animal.getUUID())) {
-                int maxCapacity = 2000 + (int) (level.random.nextDouble() * 7000);
+                int maxCapacity;
+                if (animal instanceof Cow) {
+                    maxCapacity = 20000 + (int) (level.random.nextDouble() * 10000);
+                } else {
+                    maxCapacity = 2000 + (int) (level.random.nextDouble() * 7000);
+                }
                 data.initMilkData(animal.getUUID(), maxCapacity);
             }
             syncMilkToTrackingPlayers(animal, data);

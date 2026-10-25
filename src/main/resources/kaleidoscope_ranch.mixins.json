@@ -13,7 +13,8 @@
     "server.animal.AnimalBreedMixin",
     "server.animal.AnimalEatingAnimationMixin",
     "server.animal.ChickenLayEggMixin",
-    "server.animal.PigMixin"
+    "server.animal.PigMixin",
+    "server.animal.CowMixin"
   ],
   "injectors": {
     "defaultRequire": 1
