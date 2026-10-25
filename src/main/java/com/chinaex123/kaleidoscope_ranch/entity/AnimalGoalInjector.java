@@ -1,9 +1,11 @@
 package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.HorseEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -26,5 +28,12 @@ public class AnimalGoalInjector {
         }
 
         mob.goalSelector.addGoal(5, new KREatFromTroughGoal(mob));
+
+        if (mob instanceof Horse horse) {
+            if (mob.goalSelector.getAvailableGoals().stream()
+                    .noneMatch(g -> g.getGoal() instanceof HorseEatFromGroundGoal)) {
+                mob.goalSelector.addGoal(4, new HorseEatFromGroundGoal(horse));
+            }
+        }
     }
 }

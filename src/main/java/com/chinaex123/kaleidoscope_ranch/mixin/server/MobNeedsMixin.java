@@ -21,6 +21,8 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -149,7 +151,8 @@ abstract class MobNeedsMixin {
         boolean isPig = animal instanceof Pig;
         boolean isCow = animal instanceof Cow;
         boolean isSheep = animal instanceof Sheep;
-        if (!isPig && !isCow && !isSheep) return;
+        boolean isHorse = animal instanceof Horse;
+        if (!isPig && !isCow && !isSheep && !isHorse) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
@@ -171,6 +174,8 @@ abstract class MobNeedsMixin {
             rate = 3 + level.random.nextInt(4);
         } else if (isSheep) {
             rate = 2 + level.random.nextInt(2);
+        } else if (isHorse) {
+            rate = 25 + level.random.nextInt(4);
         } else {
             rate = 18 + level.random.nextInt(8);
         }
