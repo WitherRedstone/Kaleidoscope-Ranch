@@ -12,6 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.animal.Sheep;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -69,7 +70,7 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.pet_status", Component.translatable(petKey)
                 .withStyle(style -> style.withColor(petColor))));
 
-        if ((animal instanceof Pig || animal instanceof Cow) && clientData.hasMilkData(uuid)) {
+        if ((animal instanceof Pig || animal instanceof Cow || animal instanceof Sheep) && clientData.hasMilkData(uuid)) {
             int milkAmount = clientData.getAnimalMilkAmount(uuid);
             int milkMaxCapacity = (int) clientData.getAnimalMilkDailyMax(uuid);
             int milkColor = milkAmount >= milkMaxCapacity ? 0x55FF55 : 0xAAAAAA;
@@ -88,6 +89,13 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
             long remainingTicks = clientData.getTroughFeedCooldownRemaining(uuid, currentGameTime);
             String timeStr = formatTickTime(remainingTicks);
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.trough_feed_cooldown", Component.literal(timeStr).withStyle(style -> style.withColor(0xFFFFFF)))
+                    .withStyle(style -> style.withColor(0xAAAAAA)));
+        }
+
+        if (animal instanceof Sheep && clientData.hasShearCooldown(uuid, currentGameTime)) {
+            long remainingTicks = clientData.getShearCooldownRemaining(uuid, currentGameTime);
+            String timeStr = formatTickTime(remainingTicks);
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.shear_cooldown", Component.literal(timeStr).withStyle(style -> style.withColor(0xFFFFFF)))
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
     }

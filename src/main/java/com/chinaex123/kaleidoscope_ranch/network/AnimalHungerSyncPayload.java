@@ -12,7 +12,8 @@ import java.util.UUID;
 public record AnimalHungerSyncPayload(
         Map<UUID, Float> animalHungerMap,
         Map<UUID, Long> feedCooldownExpireMap,
-        Map<UUID, Long> troughCooldownExpireMap
+        Map<UUID, Long> troughCooldownExpireMap,
+        Map<UUID, Long> shearCooldownExpireMap
 ) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalHungerSyncPayload> TYPE =
@@ -46,6 +47,12 @@ public record AnimalHungerSyncPayload(
                     UUID_STREAM_CODEC.encode(buf, uuid);
                     buf.writeVarLong(expire);
                 });
+                Map<UUID, Long> shearExpireMap = payload.shearCooldownExpireMap();
+                buf.writeVarInt(shearExpireMap.size());
+                shearExpireMap.forEach((uuid, expire) -> {
+                    UUID_STREAM_CODEC.encode(buf, uuid);
+                    buf.writeVarLong(expire);
+                });
             },
             buf -> {
                 int size = buf.readVarInt();
@@ -69,7 +76,14 @@ public record AnimalHungerSyncPayload(
                     long expire = buf.readVarLong();
                     troughExpireMap.put(uuid, expire);
                 }
-                return new AnimalHungerSyncPayload(hungerMap, expireMap, troughExpireMap);
+                int shearExpireSize = buf.readVarInt();
+                Map<UUID, Long> shearExpireMap = new HashMap<>(shearExpireSize);
+                for (int i = 0; i < shearExpireSize; i++) {
+                    UUID uuid = UUID_STREAM_CODEC.decode(buf);
+                    long expire = buf.readVarLong();
+                    shearExpireMap.put(uuid, expire);
+                }
+                return new AnimalHungerSyncPayload(hungerMap, expireMap, troughExpireMap, shearExpireMap);
             }
     );
 

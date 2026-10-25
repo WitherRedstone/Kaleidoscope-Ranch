@@ -49,6 +49,7 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue HUNGER_DECLINE_FECES_AMOUNT;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_TICK_INTERVAL;
     public static final ModConfigSpec.IntValue HUNGER_DECLINE_FECES_RADIUS;
+    public static final ModConfigSpec.DoubleValue HUNGER_NATURAL_DECLINE_PER_MINUTE;
 
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue WILD_INITIAL_MOOD_MAX;
@@ -77,6 +78,7 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue LOOT_TIER3_MOOD_THRESHOLD;
     public static final ModConfigSpec.IntValue LOOT_TIER3_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue LOOT_TIER3_MULTIPLIER;
+    public static final ModConfigSpec.IntValue SHEEP_SHEAR_COOLDOWN_TICKS;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -226,6 +228,13 @@ public class KRConfig {
                 .comment("粪便饥饿检测半径")
                 .comment("Feces hunger detection radius")
                 .defineInRange("fecesRadius", 8, 1, 32);
+        builder.pop();
+
+        builder.push("naturalDecline");
+        HUNGER_NATURAL_DECLINE_PER_MINUTE = builder
+                .comment("每分钟自然饥饿下降量")
+                .comment("Natural hunger decline per minute")
+                .defineInRange("perMinute", 0.1, 0.0, 10.0);
         builder.pop();
 
         builder.pop();
@@ -419,6 +428,13 @@ public class KRConfig {
                 .defineInRange("multiplier", 3.0, 0.0, 10.0);
         builder.pop();
 
+        builder.pop();
+
+        builder.comment("羊剪毛配置").push("Sheep Shearing");
+        SHEEP_SHEAR_COOLDOWN_TICKS = builder
+                .comment("剪毛冷却时间(tick)")
+                .comment("Shearing cooldown (ticks)")
+                .defineInRange("shearCooldownTicks", 9600, 0, Integer.MAX_VALUE);
         builder.pop();
 
         SPEC = builder.build();

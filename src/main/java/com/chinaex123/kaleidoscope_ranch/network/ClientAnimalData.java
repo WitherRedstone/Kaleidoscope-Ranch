@@ -20,6 +20,7 @@ public class ClientAnimalData {
     private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
     private final Map<UUID, Integer> clientMilkMap = new HashMap<>();
     private final Map<UUID, Long> clientMilkDailyMaxMap = new HashMap<>();
+    private final Map<UUID, Long> shearCooldownExpireMap = new HashMap<>();
 
     public static ClientAnimalData getInstance() {
         return INSTANCE;
@@ -31,10 +32,11 @@ public class ClientAnimalData {
         clientWildMap.putAll(wildMap);
     }
 
-    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownExpireMap, Map<UUID, Long> troughCooldownExpireMap) {
+    public void updateHungerData(Map<UUID, Float> hungerMap, Map<UUID, Long> feedCooldownExpireMap, Map<UUID, Long> troughCooldownExpireMap, Map<UUID, Long> shearCooldownExpireMap) {
         clientHungerMap.putAll(hungerMap);
         clientFeedCooldownExpireMap.putAll(feedCooldownExpireMap);
         clientTroughCooldownExpireMap.putAll(troughCooldownExpireMap);
+        this.shearCooldownExpireMap.putAll(shearCooldownExpireMap);
     }
 
     public double getAnimalMoodScore(UUID uuid) {
@@ -110,5 +112,14 @@ public class ClientAnimalData {
 
     public long getAnimalMilkDailyMax(UUID uuid) {
         return clientMilkDailyMaxMap.getOrDefault(uuid, 0L);
+    }
+
+    public long getShearCooldownRemaining(UUID uuid, long currentGameTime) {
+        long expire = shearCooldownExpireMap.getOrDefault(uuid, 0L);
+        return Math.max(expire - currentGameTime, 0L);
+    }
+
+    public boolean hasShearCooldown(UUID uuid, long currentGameTime) {
+        return getShearCooldownRemaining(uuid, currentGameTime) > 0;
     }
 }

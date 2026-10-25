@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.mixin.server;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
@@ -19,6 +20,7 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
+import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -104,24 +106,40 @@ abstract class MobNeedsMixin {
 
     @Unique
     private void KR$tickHunger(ServerLevel level, Animal animal, UUID uuid, long gameTime) {
-        if (gameTime % HungerDecline.getFecesDecayTickInterval() != 0) return;
-
         AnimalHungerSavedData data = AnimalHungerEventHandler.getAnimalHungerData(level);
         if (!data.hasAnimalHungerData(uuid)) return;
 
-        if (data.isFeedCooldownExpired(uuid, gameTime) && data.getConsecutiveFeedCount(uuid) > 0) {
-            data.resetConsecutiveFeedCount(uuid);
-            AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, data);
+        boolean synced = false;
+
+        if (gameTime % 1200 == 0) {
+            float naturalDecline = KRConfig.HUNGER_NATURAL_DECLINE_PER_MINUTE.get().floatValue();
+            if (naturalDecline > 0) {
+                float currentHunger = data.getAnimalHungerValue(uuid);
+                if (currentHunger > AnimalHunger.getMinHunger()) {
+                    data.addAnimalHungerValue(uuid, -naturalDecline);
+                    synced = true;
+                }
+            }
         }
 
-        float currentHunger = data.getAnimalHungerValue(uuid);
-        if (currentHunger <= AnimalHunger.getMinHunger()) return;
+        if (gameTime % HungerDecline.getFecesDecayTickInterval() == 0) {
+            if (data.isFeedCooldownExpired(uuid, gameTime) && data.getConsecutiveFeedCount(uuid) > 0) {
+                data.resetConsecutiveFeedCount(uuid);
+                synced = true;
+            }
 
-        boolean wasFedToday = data.wasFedToday(uuid, gameTime);
-        float delta = HungerDecline.calcTickPenalty(level, animal, wasFedToday);
+            float currentHunger = data.getAnimalHungerValue(uuid);
+            if (currentHunger > AnimalHunger.getMinHunger()) {
+                boolean wasFedToday = data.wasFedToday(uuid, gameTime);
+                float delta = HungerDecline.calcTickPenalty(level, animal, wasFedToday);
+                if (delta != 0) {
+                    data.addAnimalHungerValue(uuid, delta);
+                    synced = true;
+                }
+            }
+        }
 
-        if (delta != 0) {
-            data.addAnimalHungerValue(uuid, delta);
+        if (synced) {
             AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, data);
         }
     }
@@ -130,7 +148,8 @@ abstract class MobNeedsMixin {
     private void KR$tickMilk(ServerLevel level, Animal animal, UUID uuid, long gameTime) {
         boolean isPig = animal instanceof Pig;
         boolean isCow = animal instanceof Cow;
-        if (!isPig && !isCow) return;
+        boolean isSheep = animal instanceof Sheep;
+        if (!isPig && !isCow && !isSheep) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
@@ -150,6 +169,8 @@ abstract class MobNeedsMixin {
         int rate;
         if (isPig) {
             rate = 3 + level.random.nextInt(4);
+        } else if (isSheep) {
+            rate = 2 + level.random.nextInt(2);
         } else {
             rate = 18 + level.random.nextInt(8);
         }

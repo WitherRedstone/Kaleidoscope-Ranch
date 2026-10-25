@@ -84,10 +84,10 @@ public class AnimalFavor {
     public static int getDisplayColor(int level) {
         if (level >= 11) {
             return 0xFFAA00;
-        } else if (level >= 8) {
-            return 0x55FF55;
-        } else if (level >= 5) {
+        } else if (level >= 7) {
             return 0xFFFFFF;
+        } else if (level >= 5) {
+            return 0x55FF55;
         } else if (level >= 3) {
             return 0x5599FF;
         } else {

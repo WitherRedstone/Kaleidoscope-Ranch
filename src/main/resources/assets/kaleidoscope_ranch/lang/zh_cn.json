@@ -53,6 +53,7 @@
   "jade.plugin_kaleidoscope_ranch.animal_hunger": "饥饿度: %s",
   "jade.plugin_kaleidoscope_ranch.feed_cooldown": "喂食冷却: %s",
   "jade.plugin_kaleidoscope_ranch.trough_feed_cooldown": "槽食冷却: %s",
+  "jade.plugin_kaleidoscope_ranch.shear_cooldown": "剪毛冷却: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor": "好感等级: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor_exp": "好感经验: %s",
   "jade.plugin_kaleidoscope_ranch.animal_milk": "存奶量: %s",

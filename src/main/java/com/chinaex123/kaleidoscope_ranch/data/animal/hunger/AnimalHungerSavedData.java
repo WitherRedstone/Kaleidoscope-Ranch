@@ -19,6 +19,7 @@ public class AnimalHungerSavedData extends SavedData {
     private final Map<UUID, Integer> consecutiveFeedCountMap = new HashMap<>();
     private final Map<UUID, Long> lastFeedGameTimeMap = new HashMap<>();
     private final Map<UUID, Long> lastTroughFeedGameTimeMap = new HashMap<>();
+    private final Map<UUID, Long> shearCooldownExpireMap = new HashMap<>();
 
     public AnimalHungerSavedData() {
         super();
@@ -41,6 +42,10 @@ public class AnimalHungerSavedData extends SavedData {
             }
             if (lastTroughFeedGameTime >= 0) {
                 this.lastTroughFeedGameTimeMap.put(uuid, lastTroughFeedGameTime);
+            }
+            long shearCooldownExpire = entry.getLong("kr_shear_cooldown_expire");
+            if (shearCooldownExpire > 0) {
+                this.shearCooldownExpireMap.put(uuid, shearCooldownExpire);
             }
         }
     }
@@ -71,6 +76,7 @@ public class AnimalHungerSavedData extends SavedData {
         consecutiveFeedCountMap.remove(uuid);
         lastFeedGameTimeMap.remove(uuid);
         lastTroughFeedGameTimeMap.remove(uuid);
+        shearCooldownExpireMap.remove(uuid);
         setDirty();
     }
 
@@ -170,6 +176,27 @@ public class AnimalHungerSavedData extends SavedData {
         return Math.max(remaining, 0);
     }
 
+    public long getShearCooldownExpire(UUID uuid) {
+        return shearCooldownExpireMap.getOrDefault(uuid, 0L);
+    }
+
+    public void setShearCooldownExpire(UUID uuid, long expireGameTime) {
+        shearCooldownExpireMap.put(uuid, expireGameTime);
+        setDirty();
+    }
+
+    public boolean isShearCooldownExpired(UUID uuid, long currentGameTime) {
+        Long expire = shearCooldownExpireMap.get(uuid);
+        if (expire == null) return true;
+        return currentGameTime >= expire;
+    }
+
+    public long getShearCooldownRemaining(UUID uuid, long currentGameTime) {
+        Long expire = shearCooldownExpireMap.get(uuid);
+        if (expire == null) return 0;
+        return Math.max(expire - currentGameTime, 0);
+    }
+
     @Override
     public @NotNull CompoundTag save(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
         ListTag list = new ListTag();
@@ -181,6 +208,7 @@ public class AnimalHungerSavedData extends SavedData {
             entryTag.putInt("kr_consecutive_feed_count", consecutiveFeedCountMap.getOrDefault(uuid, 0));
             entryTag.putLong("kr_last_feed_game_time", lastFeedGameTimeMap.getOrDefault(uuid, -1L));
             entryTag.putLong("kr_last_trough_feed_game_time", lastTroughFeedGameTimeMap.getOrDefault(uuid, -1L));
+            entryTag.putLong("kr_shear_cooldown_expire", shearCooldownExpireMap.getOrDefault(uuid, 0L));
             list.add(entryTag);
         }
         tag.put("kr_animal_hunger_list", list);
