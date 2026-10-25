@@ -64,6 +64,15 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue PIG_TREASURE_INTERVAL;
     public static final ModConfigSpec.DoubleValue PIG_TREASURE_CHANCE;
     public static final ModConfigSpec.DoubleValue PIG_TREASURE_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER1_MOOD_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER1_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER1_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER2_MOOD_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER2_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER2_MULTIPLIER;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER3_MOOD_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER3_FAVOR_THRESHOLD;
+    public static final ModConfigSpec.DoubleValue LOOT_TIER3_MULTIPLIER;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -356,6 +365,52 @@ public class KRConfig {
                 .defineInRange("favorThreshold", 110.0, 0.0, Integer.MAX_VALUE);
         builder.pop();
 
+
+        builder.comment("战利品倍率配置").push("Loot Multiplier");
+        builder.comment("第一阶").push("Tier1");
+        LOOT_TIER1_MOOD_THRESHOLD = builder
+                .comment("心情值阈值")
+                .comment("Mood threshold")
+                .defineInRange("moodThreshold", 100.0, 0.0, 120.0);
+        LOOT_TIER1_FAVOR_THRESHOLD = builder
+                .comment("好感度阈值")
+                .comment("Favor threshold")
+                .defineInRange("favorThreshold", 10.0, 0.0, 12.0);
+        LOOT_TIER1_MULTIPLIER = builder
+                .comment("额外掉落倍率")
+                .comment("Extra loot multiplier")
+                .defineInRange("multiplier", 1.0, 0.0, 10.0);
+        builder.pop();
+        builder.comment("第二阶").push("Tier2");
+        LOOT_TIER2_MOOD_THRESHOLD = builder
+                .comment("心情值阈值")
+                .comment("Mood threshold")
+                .defineInRange("moodThreshold", 110.0, 0.0, 120.0);
+        LOOT_TIER2_FAVOR_THRESHOLD = builder
+                .comment("好感度阈值")
+                .comment("Favor threshold")
+                .defineInRange("favorThreshold", 11.0, 0.0, 12.0);
+        LOOT_TIER2_MULTIPLIER = builder
+                .comment("额外掉落倍率")
+                .comment("Extra loot multiplier")
+                .defineInRange("multiplier", 2.0, 0.0, 10.0);
+        builder.pop();
+        builder.comment("第三阶").push("Tier3");
+        LOOT_TIER3_MOOD_THRESHOLD = builder
+                .comment("心情值阈值")
+                .comment("Mood threshold")
+                .defineInRange("moodThreshold", 120.0, 0.0, 120.0);
+        LOOT_TIER3_FAVOR_THRESHOLD = builder
+                .comment("好感度阈值")
+                .comment("Favor threshold")
+                .defineInRange("favorThreshold", 12.0, 0.0, 12.0);
+        LOOT_TIER3_MULTIPLIER = builder
+                .comment("额外掉落倍率")
+                .comment("Extra loot multiplier")
+                .defineInRange("multiplier", 3.0, 0.0, 10.0);
+        builder.pop();
+
+        builder.pop();
 
         SPEC = builder.build();
     }
