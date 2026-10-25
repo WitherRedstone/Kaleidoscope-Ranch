@@ -53,7 +53,7 @@ public abstract class PigMixin {
         if (heldItem.getItem() != Items.BUCKET) return;
 
         if (self.level().isClientSide()) {
-            cir.setReturnValue(InteractionResult.FAIL);
+            cir.setReturnValue(InteractionResult.SUCCESS);
             return;
         }
 
@@ -80,20 +80,20 @@ public abstract class PigMixin {
             self.setTarget(player);
             self.getLookControl().setLookAt(player, 10.0F, 10.0F);
             self.getNavigation().moveTo(player, 1.2);
-            cir.setReturnValue(InteractionResult.FAIL);
+            cir.setReturnValue(InteractionResult.SUCCESS);
             return;
         }
 
         int currentMilk = milkData.getMilkAmount(uuid);
         if (currentMilk < MILK_BUCKET_AMOUNT) {
-            cir.setReturnValue(InteractionResult.FAIL);
+            cir.setReturnValue(InteractionResult.SUCCESS);
             return;
         }
 
         AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
         float favor = favorData.getAnimalFavorValue(uuid);
         if (favor < 8.0f) {
-            cir.setReturnValue(InteractionResult.FAIL);
+            cir.setReturnValue(InteractionResult.SUCCESS);
             return;
         }
 

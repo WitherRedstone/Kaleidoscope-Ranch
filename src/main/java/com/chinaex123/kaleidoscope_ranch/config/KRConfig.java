@@ -60,6 +60,7 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue HAYSTACK_COLLECT_INTERVAL;
     public static final ModConfigSpec.DoubleValue TROUGH_DETECT_RADIUS;
     public static final ModConfigSpec.IntValue TROUGH_FEED_COOLDOWN_TICKS;
+    public static final ModConfigSpec.DoubleValue TROUGH_FEED_GAIN;
     public static final ModConfigSpec.IntValue PIG_TREASURE_INTERVAL;
     public static final ModConfigSpec.DoubleValue PIG_TREASURE_CHANCE;
     public static final ModConfigSpec.DoubleValue PIG_TREASURE_FAVOR_THRESHOLD;
@@ -316,7 +317,11 @@ public class KRConfig {
         TROUGH_FEED_COOLDOWN_TICKS = builder
                 .comment("喂食槽喂食冷却(tick)")
                 .comment("Trough feeding cooldown (ticks)")
-                .defineInRange("feedCooldownTicks", 3000, 0, Integer.MAX_VALUE);
+                .defineInRange("feedCooldownTicks", 1200, 0, Integer.MAX_VALUE);
+        TROUGH_FEED_GAIN = builder
+                .comment("喂食槽每次进食增加的饥饿值")
+                .comment("Hunger gain per trough feed")
+                .defineInRange("feedGain", 1.0, 0.0, 10.0);
         builder.pop();
 
 

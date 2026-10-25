@@ -6,7 +6,6 @@ import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
-import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerRise;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
@@ -195,19 +194,10 @@ public class KREatFromTroughGoal extends Goal {
         UUID uuid = animal.getUUID();
         long currentGameTime = level.getGameTime();
 
-        boolean cooldownExpired = hungerData.isFeedCooldownExpired(uuid, currentGameTime);
-        int resolvedCount = HungerRise.resolveConsecutiveCount(
-                cooldownExpired, hungerData.getConsecutiveFeedCount(uuid));
-
-        float gain = HungerRise.calcFeedGain(hungerData.getAnimalHungerValue(uuid), resolvedCount);
+        float gain = KRConfig.TROUGH_FEED_GAIN.get().floatValue();
         if (gain <= 0) return;
 
-        if (cooldownExpired) {
-            hungerData.resetConsecutiveFeedCount(uuid);
-        }
-
         hungerData.addAnimalHungerValue(uuid, gain);
-        hungerData.incrementConsecutiveFeedCount(uuid);
         hungerData.setLastTroughFeedGameTime(uuid, currentGameTime);
         AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);
 

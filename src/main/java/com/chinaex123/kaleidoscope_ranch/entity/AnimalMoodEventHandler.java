@@ -20,6 +20,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -71,13 +72,14 @@ public class AnimalMoodEventHandler {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onAnimalInteract(PlayerInteractEvent.EntityInteract event) {
         if (event.getLevel().isClientSide()) return;
         if (!(event.getTarget() instanceof Animal animal)) return;
         if (!KREntityTags.isManagedAnimal(animal)) return;
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (player.isShiftKeyDown()) return;
+        if (event.isCanceled()) return;
 
         InteractionHand hand = event.getHand();
         if (!player.getItemInHand(hand).isEmpty()) return;
