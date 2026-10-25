@@ -1,19 +1,11 @@
 package com.chinaex123.kaleidoscope_ranch.mixin.server;
 
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
-import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
-import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
-import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
-import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
-import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.HungerDecline;
-import com.chinaex123.kaleidoscope_ranch.data.animal.milk.AnimalMilkSavedData;
-import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
-import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodDecline;
-import com.chinaex123.kaleidoscope_ranch.data.animal.mood.MoodRise;
-import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
-import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
-import com.chinaex123.kaleidoscope_ranch.entity.AnimalMilkEventHandler;
-import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.*;
+import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.*;
+import com.chinaex123.kaleidoscope_ranch.data.animal.mood.*;
+import com.chinaex123.kaleidoscope_ranch.data.animal.milk.*;
+import com.chinaex123.kaleidoscope_ranch.entity.*;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Mob;
@@ -21,7 +13,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
-import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -152,7 +144,8 @@ abstract class MobNeedsMixin {
         boolean isCow = animal instanceof Cow;
         boolean isSheep = animal instanceof Sheep;
         boolean isHorse = animal instanceof Horse;
-        if (!isPig && !isCow && !isSheep && !isHorse) return;
+        boolean isDonkey = animal instanceof Donkey;
+        if (!isPig && !isCow && !isSheep && !isHorse && !isDonkey) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
@@ -175,7 +168,9 @@ abstract class MobNeedsMixin {
         } else if (isSheep) {
             rate = 2 + level.random.nextInt(2);
         } else if (isHorse) {
-            rate = 25 + level.random.nextInt(4);
+            rate = 13 + level.random.nextInt(3);
+        } else if (isDonkey) {
+            rate = 2 + level.random.nextInt(4);
         } else {
             rate = 18 + level.random.nextInt(8);
         }

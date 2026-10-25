@@ -7,12 +7,14 @@ import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMilkEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.AnimalChaseAndHurtGoal;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -59,13 +61,13 @@ public abstract class HorseMixin {
         if (heldItem.getItem() == Items.BUCKET) {
             if (isWild) {
                 self.goalSelector.getAvailableGoals().stream()
-                        .map(net.minecraft.world.entity.ai.goal.WrappedGoal::getGoal)
+                        .map(WrappedGoal::getGoal)
                         .filter(goal -> goal instanceof AnimalChaseAndHurtGoal)
                         .toList()
                         .forEach(self.goalSelector::removeGoal);
                 self.goalSelector.getAvailableGoals().stream()
-                        .map(net.minecraft.world.entity.ai.goal.WrappedGoal::getGoal)
-                        .filter(goal -> goal instanceof com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal)
+                        .map(WrappedGoal::getGoal)
+                        .filter(goal -> goal instanceof KRFleeFromPlayerGoal)
                         .toList()
                         .forEach(self.goalSelector::removeGoal);
                 self.getNavigation().stop();

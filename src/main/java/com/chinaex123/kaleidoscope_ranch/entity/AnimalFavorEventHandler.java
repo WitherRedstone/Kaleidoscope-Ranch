@@ -2,7 +2,6 @@ package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
-import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorDecline;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
