@@ -1,6 +1,5 @@
 package com.chinaex123.kaleidoscope_ranch.item;
 
-import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
@@ -48,7 +47,7 @@ public class CreativeFeed extends Item {
 
         moodData.setAnimalMoodScore(uuid, AnimalMood.getMaxMood());
         hungerData.setAnimalHungerValue(uuid, AnimalHunger.getMaxHunger());
-        favorData.setAnimalFavorExp(uuid, AnimalFavor.levelToExp(10));
+        favorData.setAnimalFavorLevel(uuid, 10);
 
         AnimalMoodEventHandler.syncMoodToTrackingPlayers(animal, moodData);
         AnimalHungerEventHandler.syncHungerToTrackingPlayers(animal, hungerData);

@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorMap) implements CustomPacketPayload {
+public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorLevelMap, Map<UUID, Integer> animalFavorExpMap) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalFavorSyncPayload> TYPE =
             new CustomPacketPayload.Type<>(KaleidoscopeRanch.id("animal_favor_sync"));
@@ -24,22 +24,27 @@ public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorMap) implemen
 
     public static final StreamCodec<FriendlyByteBuf, AnimalFavorSyncPayload> STREAM_CODEC = StreamCodec.of(
             (buf, payload) -> {
-                Map<UUID, Integer> favorMap = payload.animalFavorMap();
-                buf.writeVarInt(favorMap.size());
-                favorMap.forEach((uuid, exp) -> {
+                Map<UUID, Integer> levelMap = payload.animalFavorLevelMap();
+                Map<UUID, Integer> expMap = payload.animalFavorExpMap();
+                buf.writeVarInt(levelMap.size());
+                levelMap.forEach((uuid, level) -> {
                     UUID_STREAM_CODEC.encode(buf, uuid);
-                    buf.writeVarInt(exp);
+                    buf.writeVarInt(level);
+                    buf.writeVarInt(expMap.getOrDefault(uuid, 0));
                 });
             },
             buf -> {
                 int size = buf.readVarInt();
-                Map<UUID, Integer> favorMap = new HashMap<>(size);
+                Map<UUID, Integer> levelMap = new HashMap<>(size);
+                Map<UUID, Integer> expMap = new HashMap<>(size);
                 for (int i = 0; i < size; i++) {
                     UUID uuid = UUID_STREAM_CODEC.decode(buf);
+                    int level = buf.readVarInt();
                     int exp = buf.readVarInt();
-                    favorMap.put(uuid, exp);
+                    levelMap.put(uuid, level);
+                    expMap.put(uuid, exp);
                 }
-                return new AnimalFavorSyncPayload(favorMap);
+                return new AnimalFavorSyncPayload(levelMap, expMap);
             }
     );
 

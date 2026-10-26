@@ -251,10 +251,15 @@ public class KRConfig {
 
         builder.comment("好感度配置").push("Favor");
         FAVOR_EXP_TABLE = builder
-                .comment("升级经验表: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
-                .comment("Level up exp table: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
-                .defineList("expTable", List.of(10, 25, 50, 100, 150, 200, 300, 500, 1000, 1200, 2000, 3000),
-                        o -> o instanceof Integer && (Integer) o > 0);
+                .comment("每级升级所需经验: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
+                .comment("升级后当前等级经验归零，每个等级独立计算")
+                .comment("Exp required per level: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
+                .comment("Exp resets to 0 on level up, each level is independent")
+                .defineList("expTable", List.of(
+                        5, 10, 25, 50, 75,
+                        100, 125, 150, 175, 200,
+                        250, 500
+                        ), o -> o instanceof Integer && (Integer) o > 0);
 
         builder.comment("好感经验提升配置").push("Favor Rise");
         FAVOR_RISE_PET_EXP_MIN = builder

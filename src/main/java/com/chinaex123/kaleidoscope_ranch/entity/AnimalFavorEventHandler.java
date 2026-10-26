@@ -109,15 +109,17 @@ public class AnimalFavorEventHandler {
 
     public static void syncFavorToTrackingPlayers(Animal animal, AnimalFavorSavedData data) {
         UUID uuid = animal.getUUID();
-        Map<UUID, Integer> favorEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
-        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(favorEntry);
+        Map<UUID, Integer> levelEntry = Map.of(uuid, data.getAnimalFavorLevel(uuid));
+        Map<UUID, Integer> expEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
+        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(levelEntry, expEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
     public static void syncFavorToPlayer(ServerPlayer player, Animal animal, AnimalFavorSavedData data) {
         UUID uuid = animal.getUUID();
-        Map<UUID, Integer> favorEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
-        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(favorEntry);
+        Map<UUID, Integer> levelEntry = Map.of(uuid, data.getAnimalFavorLevel(uuid));
+        Map<UUID, Integer> expEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
+        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(levelEntry, expEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }
 

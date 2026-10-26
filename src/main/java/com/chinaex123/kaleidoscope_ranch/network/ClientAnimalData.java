@@ -1,6 +1,5 @@
 package com.chinaex123.kaleidoscope_ranch.network;
 
-import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHunger;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMood;
 
@@ -16,7 +15,8 @@ public class ClientAnimalData {
     private final Map<UUID, Float> clientHungerMap = new HashMap<>();
     private final Map<UUID, Long> clientFeedCooldownExpireMap = new HashMap<>();
     private final Map<UUID, Long> clientTroughCooldownExpireMap = new HashMap<>();
-    private final Map<UUID, Integer> clientFavorMap = new HashMap<>();
+    private final Map<UUID, Integer> clientFavorLevelMap = new HashMap<>();
+    private final Map<UUID, Integer> clientFavorExpMap = new HashMap<>();
     private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
     private final Map<UUID, Double> clientMilkMap = new HashMap<>();
     private final Map<UUID, Double> clientMilkDailyMaxMap = new HashMap<>();
@@ -77,20 +77,21 @@ public class ClientAnimalData {
         return getTroughFeedCooldownRemaining(uuid, currentGameTime) > 0;
     }
 
-    public void updateFavorData(Map<UUID, Integer> favorMap) {
-        clientFavorMap.putAll(favorMap);
+    public void updateFavorData(Map<UUID, Integer> favorLevelMap, Map<UUID, Integer> favorExpMap) {
+        clientFavorLevelMap.putAll(favorLevelMap);
+        clientFavorExpMap.putAll(favorExpMap);
     }
 
     public int getAnimalFavorExp(UUID uuid) {
-        return clientFavorMap.getOrDefault(uuid, 0);
+        return clientFavorExpMap.getOrDefault(uuid, 0);
     }
 
     public int getAnimalFavorLevel(UUID uuid) {
-        return AnimalFavor.expToLevel(getAnimalFavorExp(uuid));
+        return clientFavorLevelMap.getOrDefault(uuid, 0);
     }
 
     public boolean hasAnimalFavorData(UUID uuid) {
-        return clientFavorMap.containsKey(uuid);
+        return clientFavorLevelMap.containsKey(uuid);
     }
 
     public boolean isWild(UUID uuid) {

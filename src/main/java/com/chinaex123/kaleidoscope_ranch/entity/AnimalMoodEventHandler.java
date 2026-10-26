@@ -59,8 +59,8 @@ public class AnimalMoodEventHandler {
                     hungerData.setAnimalHungerValue(animal.getUUID(), initialHunger);
 
                     AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
-                    int favorExp = AnimalFavor.levelToExp(KRConfig.BREED_OFFSPRING_FAVOR_LEVEL.get());
-                    favorData.setAnimalFavorExp(animal.getUUID(), favorExp);
+                    int favorLevel = KRConfig.BREED_OFFSPRING_FAVOR_LEVEL.get();
+                    favorData.setAnimalFavorLevel(animal.getUUID(), favorLevel);
                 } else {
                     data.setWild(animal.getUUID(), true);
                     double minMood = KRConfig.WILD_INITIAL_MOOD_MIN.get();

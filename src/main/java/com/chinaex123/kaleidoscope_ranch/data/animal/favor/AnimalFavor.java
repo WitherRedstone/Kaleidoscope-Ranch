@@ -8,13 +8,15 @@ public class AnimalFavor {
 
     public static final int MAX_LEVEL = 12;
 
+    private int favorLevel;
     private int favorExp;
 
     public AnimalFavor() {
-        this(0);
+        this(0, 0);
     }
 
-    public AnimalFavor(int favorExp) {
+    public AnimalFavor(int favorLevel, int favorExp) {
+        this.favorLevel = Math.clamp(favorLevel, 0, MAX_LEVEL);
         this.favorExp = Math.max(0, favorExp);
     }
 
@@ -22,29 +24,37 @@ public class AnimalFavor {
         return favorExp;
     }
 
+    public int getFavorLevel() {
+        return favorLevel;
+    }
+
+    public void setFavorLevel(int level) {
+        this.favorLevel = Math.clamp(level, 0, MAX_LEVEL);
+        this.favorExp = 0;
+    }
+
     public void setFavorExp(int favorExp) {
         this.favorExp = Math.max(0, favorExp);
     }
 
     public void addFavorExp(int delta) {
+        if (favorLevel >= MAX_LEVEL) return;
         this.favorExp = Math.max(0, this.favorExp + delta);
-    }
-
-    public int getFavorLevel() {
-        return expToLevel(favorExp);
+        while (favorLevel < MAX_LEVEL) {
+            int needed = getLevelUpExp(favorLevel);
+            if (needed <= 0 || favorExp < needed) break;
+            favorExp -= needed;
+            favorLevel++;
+        }
     }
 
     public int getExpForNextLevel() {
-        int level = getFavorLevel();
-        if (level >= MAX_LEVEL) return 0;
-        return getLevelUpExp(level);
+        if (favorLevel >= MAX_LEVEL) return 0;
+        return getLevelUpExp(favorLevel);
     }
 
     public int getExpInCurrentLevel() {
-        int level = getFavorLevel();
-        if (level >= MAX_LEVEL) return 0;
-        int levelStartExp = levelToExp(level);
-        return favorExp - levelStartExp;
+        return favorExp;
     }
 
     public boolean isMaxed() {
@@ -53,16 +63,6 @@ public class AnimalFavor {
 
     public boolean isAbsolutelyMaxed() {
         return getFavorLevel() >= MAX_LEVEL;
-    }
-
-    public static int expToLevel(int exp) {
-        List<? extends Integer> table = KRConfig.FAVOR_EXP_TABLE.get();
-        int cumulative = 0;
-        for (int i = 0; i < table.size(); i++) {
-            cumulative += table.get(i);
-            if (exp < cumulative) return i;
-        }
-        return table.size();
     }
 
     public static int levelToExp(int level) {

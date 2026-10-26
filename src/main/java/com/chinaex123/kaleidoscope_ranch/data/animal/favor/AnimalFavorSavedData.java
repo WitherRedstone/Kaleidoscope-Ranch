@@ -26,8 +26,9 @@ public class AnimalFavorSavedData extends SavedData {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag entry = list.getCompound(i);
             UUID uuid = entry.getUUID("kr_animal_id");
+            int level = entry.getInt("kr_favor_level");
             int exp = entry.getInt("kr_favor_exp");
-            this.animalFavorMap.put(uuid, new AnimalFavor(exp));
+            this.animalFavorMap.put(uuid, new AnimalFavor(level, exp));
         }
     }
 
@@ -43,6 +44,11 @@ public class AnimalFavorSavedData extends SavedData {
 
     public void setAnimalFavorExp(UUID uuid, int exp) {
         animalFavorMap.computeIfAbsent(uuid, k -> new AnimalFavor()).setFavorExp(exp);
+        setDirty();
+    }
+
+    public void setAnimalFavorLevel(UUID uuid, int level) {
+        animalFavorMap.computeIfAbsent(uuid, k -> new AnimalFavor()).setFavorLevel(level);
         setDirty();
     }
 
@@ -76,6 +82,7 @@ public class AnimalFavorSavedData extends SavedData {
         for (Map.Entry<UUID, AnimalFavor> entry : animalFavorMap.entrySet()) {
             CompoundTag entryTag = new CompoundTag();
             entryTag.putUUID("kr_animal_id", entry.getKey());
+            entryTag.putInt("kr_favor_level", entry.getValue().getFavorLevel());
             entryTag.putInt("kr_favor_exp", entry.getValue().getFavorExp());
             list.add(entryTag);
         }
