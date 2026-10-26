@@ -107,6 +107,21 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue BREED_PIG_TIER5_CHANCE;
     public static final ModConfigSpec.IntValue BREED_PIG_TIER5_MIN;
     public static final ModConfigSpec.IntValue BREED_PIG_TIER5_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER1_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER1_COUNT;
+    public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER2_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER2_MIN;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER2_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER3_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER3_MIN;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER3_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER4_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER4_COUNT;
+    public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER5_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER5_COUNT;
+    public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER6_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER6_MIN;
+    public static final ModConfigSpec.IntValue BREED_RABBIT_TIER6_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MIN;
@@ -459,6 +474,7 @@ public class KRConfig {
                 .comment("山羊双方好感≥10时额外繁殖6只子代的概率")
                 .comment("Chance of 6 extra offspring when both goat parents have favor >= 10")
                 .defineInRange("goatExtra6Chance", 0.0039, 0.0, 1.0);
+
         BREED_PIG_BASE_COUNT = builder
                 .comment("猪双方好感≥10时保底繁殖子代数量")
                 .comment("Base offspring count when both pig parents have favor >= 10")
@@ -503,6 +519,50 @@ public class KRConfig {
                 .defineInRange("pigTier5Min", 18, 1, Integer.MAX_VALUE);
         BREED_PIG_TIER5_MAX = builder
                 .defineInRange("pigTier5Max", 20, 1, Integer.MAX_VALUE);
+
+        BREED_RABBIT_TIER1_CHANCE = builder
+                .comment("兔繁殖第1档概率(50%→2只)")
+                .comment("Rabbit breed tier1 chance (50% -> 2)")
+                .defineInRange("rabbitTier1Chance", 0.50, 0.0, 1.0);
+        BREED_RABBIT_TIER1_COUNT = builder
+                .defineInRange("rabbitTier1Count", 2, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER2_CHANCE = builder
+                .comment("兔繁殖第2档概率(25%→3-4只)")
+                .comment("Rabbit breed tier2 chance (25% -> 3-4)")
+                .defineInRange("rabbitTier2Chance", 0.25, 0.0, 1.0);
+        BREED_RABBIT_TIER2_MIN = builder
+                .defineInRange("rabbitTier2Min", 3, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER2_MAX = builder
+                .defineInRange("rabbitTier2Max", 4, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER3_CHANCE = builder
+                .comment("兔繁殖第3档概率(15%→5-6只)")
+                .comment("Rabbit breed tier3 chance (15% -> 5-6)")
+                .defineInRange("rabbitTier3Chance", 0.15, 0.0, 1.0);
+        BREED_RABBIT_TIER3_MIN = builder
+                .defineInRange("rabbitTier3Min", 5, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER3_MAX = builder
+                .defineInRange("rabbitTier3Max", 6, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER4_CHANCE = builder
+                .comment("兔繁殖第4档概率(8%→7只)")
+                .comment("Rabbit breed tier4 chance (8% -> 7)")
+                .defineInRange("rabbitTier4Chance", 0.08, 0.0, 1.0);
+        BREED_RABBIT_TIER4_COUNT = builder
+                .defineInRange("rabbitTier4Count", 7, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER5_CHANCE = builder
+                .comment("兔繁殖第5档概率(1.56%→8只)")
+                .comment("Rabbit breed tier5 chance (1.56% -> 8)")
+                .defineInRange("rabbitTier5Chance", 0.0156, 0.0, 1.0);
+        BREED_RABBIT_TIER5_COUNT = builder
+                .defineInRange("rabbitTier5Count", 8, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER6_CHANCE = builder
+                .comment("兔繁殖第6档概率(0.39%→9-10只)")
+                .comment("Rabbit breed tier6 chance (0.39% -> 9-10)")
+                .defineInRange("rabbitTier6Chance", 0.0039, 0.0, 1.0);
+        BREED_RABBIT_TIER6_MIN = builder
+                .defineInRange("rabbitTier6Min", 9, 1, Integer.MAX_VALUE);
+        BREED_RABBIT_TIER6_MAX = builder
+                .defineInRange("rabbitTier6Max", 10, 1, Integer.MAX_VALUE);
+
         BREED_OFFSPRING_MOOD_MIN = builder
                 .comment("繁殖子代初始心情最小值")
                 .comment("Bred offspring initial mood minimum")

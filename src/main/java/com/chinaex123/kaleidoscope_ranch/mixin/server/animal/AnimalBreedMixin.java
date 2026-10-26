@@ -322,6 +322,48 @@ public abstract class AnimalBreedMixin {
             }
         }
 
+        boolean selfIsRabbit = self instanceof Rabbit;
+        boolean mateIsRabbit = mate instanceof Rabbit;
+
+        if (selfIsRabbit && mateIsRabbit) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int selfFavor = favorData.getAnimalFavorLevel(self.getUUID());
+            int mateFavor = favorData.getAnimalFavorLevel(mate.getUUID());
+
+            if (selfFavor >= 10 && mateFavor >= 10) {
+                int totalCount = 0;
+                double roll = level.random.nextDouble();
+                if (roll < KRConfig.BREED_RABBIT_TIER6_CHANCE.get()) {
+                    int min = KRConfig.BREED_RABBIT_TIER6_MIN.get();
+                    int max = KRConfig.BREED_RABBIT_TIER6_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_RABBIT_TIER5_CHANCE.get()) {
+                    totalCount = KRConfig.BREED_RABBIT_TIER5_COUNT.get();
+                } else if (roll < KRConfig.BREED_RABBIT_TIER4_CHANCE.get()) {
+                    totalCount = KRConfig.BREED_RABBIT_TIER4_COUNT.get();
+                } else if (roll < KRConfig.BREED_RABBIT_TIER3_CHANCE.get()) {
+                    int min = KRConfig.BREED_RABBIT_TIER3_MIN.get();
+                    int max = KRConfig.BREED_RABBIT_TIER3_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_RABBIT_TIER2_CHANCE.get()) {
+                    int min = KRConfig.BREED_RABBIT_TIER2_MIN.get();
+                    int max = KRConfig.BREED_RABBIT_TIER2_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_RABBIT_TIER1_CHANCE.get()) {
+                    totalCount = KRConfig.BREED_RABBIT_TIER1_COUNT.get();
+                }
+
+                for (int i = 0; i < totalCount; i++) {
+                    Animal baby = (Animal) self.getBreedOffspring(level, mate);
+                    if (baby == null) break;
+
+                    baby.setBaby(true);
+                    baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
+                    level.addFreshEntityWithPassengers(baby);
+                }
+            }
+        }
+
         BreedContext.setBreeding(false);
     }
 }
