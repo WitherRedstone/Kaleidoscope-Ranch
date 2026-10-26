@@ -82,6 +82,15 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue MOOSHROOM_STEW_EFFECT_DURATION_TICKS;
     public static final ModConfigSpec.DoubleValue BREED_EXTRA_OFFSPRING_CHANCE;
     public static final ModConfigSpec.IntValue BREED_EXTRA_OFFSPRING_COUNT;
+    public static final ModConfigSpec.DoubleValue BREED_SHEEP_EXTRA_2_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_SHEEP_EXTRA_3_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_SHEEP_EXTRA_4_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_SHEEP_EXTRA_5_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_2_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_3_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_4_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_5_CHANCE;
+    public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_6_CHANCE;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MIN;
@@ -398,6 +407,42 @@ public class KRConfig {
                 .comment("额外繁殖子代数量")
                 .comment("Number of extra offspring")
                 .defineInRange("extraOffspringCount", 1, 1, Integer.MAX_VALUE);
+        BREED_SHEEP_EXTRA_2_CHANCE = builder
+                .comment("羊双方好感≥10时额外繁殖2只子代的概率")
+                .comment("Chance of 2 extra offspring when both sheep parents have favor >= 10")
+                .defineInRange("sheepExtra2Chance", 0.20, 0.0, 1.0);
+        BREED_SHEEP_EXTRA_3_CHANCE = builder
+                .comment("羊双方好感≥10时额外繁殖3只子代的概率")
+                .comment("Chance of 3 extra offspring when both sheep parents have favor >= 10")
+                .defineInRange("sheepExtra3Chance", 0.10, 0.0, 1.0);
+        BREED_SHEEP_EXTRA_4_CHANCE = builder
+                .comment("羊双方好感≥10时额外繁殖4只子代的概率")
+                .comment("Chance of 4 extra offspring when both sheep parents have favor >= 10")
+                .defineInRange("sheepExtra4Chance", 0.05, 0.0, 1.0);
+        BREED_SHEEP_EXTRA_5_CHANCE = builder
+                .comment("羊双方好感≥10时额外繁殖5只子代的概率")
+                .comment("Chance of 5 extra offspring when both sheep parents have favor >= 10")
+                .defineInRange("sheepExtra5Chance", 0.0156, 0.0, 1.0);
+        BREED_GOAT_EXTRA_2_CHANCE = builder
+                .comment("山羊双方好感≥10时额外繁殖2只子代的概率")
+                .comment("Chance of 2 extra offspring when both goat parents have favor >= 10")
+                .defineInRange("goatExtra2Chance", 0.20, 0.0, 1.0);
+        BREED_GOAT_EXTRA_3_CHANCE = builder
+                .comment("山羊双方好感≥10时额外繁殖3只子代的概率")
+                .comment("Chance of 3 extra offspring when both goat parents have favor >= 10")
+                .defineInRange("goatExtra3Chance", 0.10, 0.0, 1.0);
+        BREED_GOAT_EXTRA_4_CHANCE = builder
+                .comment("山羊双方好感≥10时额外繁殖4只子代的概率")
+                .comment("Chance of 4 extra offspring when both goat parents have favor >= 10")
+                .defineInRange("goatExtra4Chance", 0.05, 0.0, 1.0);
+        BREED_GOAT_EXTRA_5_CHANCE = builder
+                .comment("山羊双方好感≥10时额外繁殖5只子代的概率")
+                .comment("Chance of 5 extra offspring when both goat parents have favor >= 10")
+                .defineInRange("goatExtra5Chance", 0.0156, 0.0, 1.0);
+        BREED_GOAT_EXTRA_6_CHANCE = builder
+                .comment("山羊双方好感≥10时额外繁殖6只子代的概率")
+                .comment("Chance of 6 extra offspring when both goat parents have favor >= 10")
+                .defineInRange("goatExtra6Chance", 0.0039, 0.0, 1.0);
         BREED_OFFSPRING_MOOD_MIN = builder
                 .comment("繁殖子代初始心情最小值")
                 .comment("Bred offspring initial mood minimum")

@@ -24,6 +24,9 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -204,6 +207,72 @@ public abstract class AnimalBreedMixin {
                         baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
                         level.addFreshEntityWithPassengers(baby);
                     }
+                }
+            }
+        }
+
+        boolean selfIsSheep = self instanceof Sheep;
+        boolean mateIsSheep = mate instanceof Sheep;
+
+        if (selfIsSheep && mateIsSheep) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int selfFavor = favorData.getAnimalFavorLevel(self.getUUID());
+            int mateFavor = favorData.getAnimalFavorLevel(mate.getUUID());
+
+            if (selfFavor >= 10 && mateFavor >= 10) {
+                int extraCount = 0;
+                double roll = level.random.nextDouble();
+                if (roll < KRConfig.BREED_SHEEP_EXTRA_5_CHANCE.get()) {
+                    extraCount = 5;
+                } else if (roll < KRConfig.BREED_SHEEP_EXTRA_4_CHANCE.get()) {
+                    extraCount = 4;
+                } else if (roll < KRConfig.BREED_SHEEP_EXTRA_3_CHANCE.get()) {
+                    extraCount = 3;
+                } else if (roll < KRConfig.BREED_SHEEP_EXTRA_2_CHANCE.get()) {
+                    extraCount = 2;
+                }
+
+                for (int i = 0; i < extraCount; i++) {
+                    Animal baby = (Animal) self.getBreedOffspring(level, mate);
+                    if (baby == null) break;
+
+                    baby.setBaby(true);
+                    baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
+                    level.addFreshEntityWithPassengers(baby);
+                }
+            }
+        }
+
+        boolean selfIsGoat = self instanceof Goat;
+        boolean mateIsGoat = mate instanceof Goat;
+
+        if (selfIsGoat && mateIsGoat) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int selfFavor = favorData.getAnimalFavorLevel(self.getUUID());
+            int mateFavor = favorData.getAnimalFavorLevel(mate.getUUID());
+
+            if (selfFavor >= 10 && mateFavor >= 10) {
+                int extraCount = 0;
+                double roll = level.random.nextDouble();
+                if (roll < KRConfig.BREED_GOAT_EXTRA_6_CHANCE.get()) {
+                    extraCount = 6;
+                } else if (roll < KRConfig.BREED_GOAT_EXTRA_5_CHANCE.get()) {
+                    extraCount = 5;
+                } else if (roll < KRConfig.BREED_GOAT_EXTRA_4_CHANCE.get()) {
+                    extraCount = 4;
+                } else if (roll < KRConfig.BREED_GOAT_EXTRA_3_CHANCE.get()) {
+                    extraCount = 3;
+                } else if (roll < KRConfig.BREED_GOAT_EXTRA_2_CHANCE.get()) {
+                    extraCount = 2;
+                }
+
+                for (int i = 0; i < extraCount; i++) {
+                    Animal baby = (Animal) self.getBreedOffspring(level, mate);
+                    if (baby == null) break;
+
+                    baby.setBaby(true);
+                    baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
+                    level.addFreshEntityWithPassengers(baby);
                 }
             }
         }
