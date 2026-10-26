@@ -28,6 +28,7 @@ import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.Donkey;
+import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -381,6 +382,30 @@ public abstract class AnimalBreedMixin {
                     baby.setBaby(true);
                     baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
                     level.addFreshEntityWithPassengers(baby);
+                }
+            }
+        }
+
+        boolean selfIsLlama = self instanceof Llama;
+        boolean mateIsLlama = mate instanceof Llama;
+
+        if (selfIsLlama && mateIsLlama) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int selfFavor = favorData.getAnimalFavorLevel(self.getUUID());
+            int mateFavor = favorData.getAnimalFavorLevel(mate.getUUID());
+
+            if (selfFavor >= 10 && mateFavor >= 10) {
+                double chance = KRConfig.BREED_LLAMA_EXTRA_CHANCE.get();
+                if (level.random.nextDouble() < chance) {
+                    int extraCount = KRConfig.BREED_LLAMA_EXTRA_COUNT.get();
+                    for (int i = 0; i < extraCount; i++) {
+                        Animal baby = (Animal) self.getBreedOffspring(level, mate);
+                        if (baby == null) break;
+
+                        baby.setBaby(true);
+                        baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
+                        level.addFreshEntityWithPassengers(baby);
+                    }
                 }
             }
         }
