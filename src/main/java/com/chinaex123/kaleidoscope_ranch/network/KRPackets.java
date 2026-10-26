@@ -48,7 +48,7 @@ public class KRPackets {
 
     private static void handleAnimalFavorSyncOnClient(AnimalFavorSyncPayload payload, IPayloadContext context) {
         context.enqueueWork(() ->
-                ClientAnimalData.getInstance().updateFavorData(payload.animalFavorLevelMap(), payload.animalFavorExpMap())
+                ClientAnimalData.getInstance().updateFavorData(payload.animalFavorLevelMap(), payload.animalFavorExpMap(), payload.breedCountMap())
         );
     }
 

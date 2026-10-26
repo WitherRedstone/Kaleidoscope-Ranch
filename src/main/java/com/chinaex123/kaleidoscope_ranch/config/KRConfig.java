@@ -122,6 +122,7 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue BREED_RABBIT_TIER6_CHANCE;
     public static final ModConfigSpec.IntValue BREED_RABBIT_TIER6_MIN;
     public static final ModConfigSpec.IntValue BREED_RABBIT_TIER6_MAX;
+    public static final ModConfigSpec.IntValue DONKEY_MAX_BREED_COUNT;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MIN;
@@ -562,6 +563,10 @@ public class KRConfig {
                 .defineInRange("rabbitTier6Min", 9, 1, Integer.MAX_VALUE);
         BREED_RABBIT_TIER6_MAX = builder
                 .defineInRange("rabbitTier6Max", 10, 1, Integer.MAX_VALUE);
+        DONKEY_MAX_BREED_COUNT = builder
+                .comment("驴最大繁殖次数")
+                .comment("Max breed count for donkey")
+                .defineInRange("donkeyMaxBreedCount", 15, 1, Integer.MAX_VALUE);
 
         BREED_OFFSPRING_MOOD_MIN = builder
                 .comment("繁殖子代初始心情最小值")

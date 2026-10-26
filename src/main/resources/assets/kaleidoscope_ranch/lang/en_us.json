@@ -56,6 +56,7 @@
   "jade.plugin_kaleidoscope_ranch.shear_cooldown": "Shear Cooldown: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor": "Favor Lv: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor_exp": "Favor Exp: %s",
+  "jade.plugin_kaleidoscope_ranch.breed_count": "Breed Count: %s",
   "jade.plugin_kaleidoscope_ranch.animal_milk": "Milk: %s",
   "jade.plugin_kaleidoscope_ranch.wild_status": "[Wild]",
   "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "Feeding Trough",

@@ -27,7 +27,7 @@ import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.goat.Goat;
-import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -160,6 +160,21 @@ public abstract class AnimalBreedMixin {
 
         BreedContext.setBreeding(true);
 
+        if (self instanceof Donkey || mate instanceof Donkey) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int maxBreed = KRConfig.DONKEY_MAX_BREED_COUNT.get();
+            if (favorData.getBreedCount(self.getUUID()) >= maxBreed
+                    || favorData.getBreedCount(mate.getUUID()) >= maxBreed) {
+                int cooldown = KRConfig.BREED_COOLDOWN_TICKS.get();
+                self.setAge(cooldown);
+                mate.setAge(cooldown);
+                self.resetLove();
+                mate.resetLove();
+                ci.cancel();
+                return;
+            }
+        }
+
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
 
@@ -185,6 +200,12 @@ public abstract class AnimalBreedMixin {
         int cooldown = KRConfig.BREED_COOLDOWN_TICKS.get();
         self.setAge(cooldown);
         mate.setAge(cooldown);
+
+        if (self instanceof Donkey || mate instanceof Donkey) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            favorData.incrementBreedCount(self.getUUID());
+            favorData.incrementBreedCount(mate.getUUID());
+        }
 
         boolean selfIsCow = self instanceof Cow && !(self instanceof MushroomCow);
         boolean selfIsMooshroom = self instanceof MushroomCow;

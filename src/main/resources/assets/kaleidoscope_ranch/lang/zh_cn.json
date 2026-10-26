@@ -56,6 +56,7 @@
   "jade.plugin_kaleidoscope_ranch.shear_cooldown": "剪毛冷却: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor": "好感等级: %s",
   "jade.plugin_kaleidoscope_ranch.animal_favor_exp": "好感经验: %s",
+  "jade.plugin_kaleidoscope_ranch.breed_count": "繁殖次数: %s",
   "jade.plugin_kaleidoscope_ranch.animal_milk": "存奶量: %s",
   "jade.plugin_kaleidoscope_ranch.wild_status": "[野生]",
   "config.jade.plugin_kaleidoscope_ranch.feeding_trough": "喂食槽内容",

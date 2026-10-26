@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorLevelMap, Map<UUID, Integer> animalFavorExpMap) implements CustomPacketPayload {
+public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorLevelMap, Map<UUID, Integer> animalFavorExpMap, Map<UUID, Integer> breedCountMap) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AnimalFavorSyncPayload> TYPE =
             new CustomPacketPayload.Type<>(KaleidoscopeRanch.id("animal_favor_sync"));
@@ -26,25 +26,30 @@ public record AnimalFavorSyncPayload(Map<UUID, Integer> animalFavorLevelMap, Map
             (buf, payload) -> {
                 Map<UUID, Integer> levelMap = payload.animalFavorLevelMap();
                 Map<UUID, Integer> expMap = payload.animalFavorExpMap();
+                Map<UUID, Integer> breedMap = payload.breedCountMap();
                 buf.writeVarInt(levelMap.size());
                 levelMap.forEach((uuid, level) -> {
                     UUID_STREAM_CODEC.encode(buf, uuid);
                     buf.writeVarInt(level);
                     buf.writeVarInt(expMap.getOrDefault(uuid, 0));
+                    buf.writeVarInt(breedMap.getOrDefault(uuid, 0));
                 });
             },
             buf -> {
                 int size = buf.readVarInt();
                 Map<UUID, Integer> levelMap = new HashMap<>(size);
                 Map<UUID, Integer> expMap = new HashMap<>(size);
+                Map<UUID, Integer> breedMap = new HashMap<>(size);
                 for (int i = 0; i < size; i++) {
                     UUID uuid = UUID_STREAM_CODEC.decode(buf);
                     int level = buf.readVarInt();
                     int exp = buf.readVarInt();
+                    int breedCount = buf.readVarInt();
                     levelMap.put(uuid, level);
                     expMap.put(uuid, exp);
+                    breedMap.put(uuid, breedCount);
                 }
-                return new AnimalFavorSyncPayload(levelMap, expMap);
+                return new AnimalFavorSyncPayload(levelMap, expMap, breedMap);
             }
     );
 

@@ -15,6 +15,7 @@ public class AnimalFavorSavedData extends SavedData {
     private static final String DATA_NAME = "kaleidoscope_ranch_animal_favor";
 
     private final Map<UUID, AnimalFavor> animalFavorMap = new HashMap<>();
+    private final Map<UUID, Integer> breedCountMap = new HashMap<>();
 
     public AnimalFavorSavedData() {
         super();
@@ -29,6 +30,13 @@ public class AnimalFavorSavedData extends SavedData {
             int level = entry.getInt("kr_favor_level");
             int exp = entry.getInt("kr_favor_exp");
             this.animalFavorMap.put(uuid, new AnimalFavor(level, exp));
+        }
+        ListTag breedList = tag.getList("kr_breed_count_list", 10);
+        for (int i = 0; i < breedList.size(); i++) {
+            CompoundTag entry = breedList.getCompound(i);
+            UUID uuid = entry.getUUID("kr_animal_id");
+            int count = entry.getInt("kr_breed_count");
+            this.breedCountMap.put(uuid, count);
         }
     }
 
@@ -65,6 +73,7 @@ public class AnimalFavorSavedData extends SavedData {
 
     public void removeAnimalFavor(UUID uuid) {
         animalFavorMap.remove(uuid);
+        breedCountMap.remove(uuid);
         setDirty();
     }
 
@@ -87,6 +96,14 @@ public class AnimalFavorSavedData extends SavedData {
             list.add(entryTag);
         }
         tag.put("kr_animal_favor_list", list);
+        ListTag breedList = new ListTag();
+        for (Map.Entry<UUID, Integer> entry : breedCountMap.entrySet()) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putUUID("kr_animal_id", entry.getKey());
+            entryTag.putInt("kr_breed_count", entry.getValue());
+            breedList.add(entryTag);
+        }
+        tag.put("kr_breed_count_list", breedList);
         return tag;
     }
 
@@ -96,5 +113,14 @@ public class AnimalFavorSavedData extends SavedData {
 
     public static String getDataName() {
         return DATA_NAME;
+    }
+
+    public int getBreedCount(UUID uuid) {
+        return breedCountMap.getOrDefault(uuid, 0);
+    }
+
+    public void incrementBreedCount(UUID uuid) {
+        breedCountMap.merge(uuid, 1, Integer::sum);
+        setDirty();
     }
 }

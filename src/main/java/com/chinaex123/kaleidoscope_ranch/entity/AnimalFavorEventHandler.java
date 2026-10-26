@@ -111,7 +111,8 @@ public class AnimalFavorEventHandler {
         UUID uuid = animal.getUUID();
         Map<UUID, Integer> levelEntry = Map.of(uuid, data.getAnimalFavorLevel(uuid));
         Map<UUID, Integer> expEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
-        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(levelEntry, expEntry);
+        Map<UUID, Integer> breedEntry = Map.of(uuid, data.getBreedCount(uuid));
+        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(levelEntry, expEntry, breedEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
@@ -119,7 +120,8 @@ public class AnimalFavorEventHandler {
         UUID uuid = animal.getUUID();
         Map<UUID, Integer> levelEntry = Map.of(uuid, data.getAnimalFavorLevel(uuid));
         Map<UUID, Integer> expEntry = Map.of(uuid, data.getAnimalFavorExp(uuid));
-        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(levelEntry, expEntry);
+        Map<UUID, Integer> breedEntry = Map.of(uuid, data.getBreedCount(uuid));
+        AnimalFavorSyncPayload payload = new AnimalFavorSyncPayload(levelEntry, expEntry, breedEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }
 
