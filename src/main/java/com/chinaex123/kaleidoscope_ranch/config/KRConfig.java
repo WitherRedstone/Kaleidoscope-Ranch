@@ -79,6 +79,7 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue LOOT_TIER3_FAVOR_THRESHOLD;
     public static final ModConfigSpec.DoubleValue LOOT_TIER3_MULTIPLIER;
     public static final ModConfigSpec.IntValue SHEEP_SHEAR_COOLDOWN_TICKS;
+    public static final ModConfigSpec.IntValue MOOSHROOM_STEW_EFFECT_DURATION_TICKS;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -365,6 +366,14 @@ public class KRConfig {
                 .comment("干草窝收集蛋频率(tick)")
                 .comment("Haystack egg collect interval (tick)")
                 .defineInRange("collectInterval", 200, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+
+        builder.comment("哞菇配置").push("Mooshroom");
+        MOOSHROOM_STEW_EFFECT_DURATION_TICKS = builder
+                .comment("蘑菇煲效果持续时间(tick)")
+                .comment("Mushroom stew effect duration (ticks)")
+                .defineInRange("stewEffectDurationTicks", 100, 1, Integer.MAX_VALUE);
         builder.pop();
 
 

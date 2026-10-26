@@ -5,6 +5,7 @@ import com.chinaex123.kaleidoscope_ranch.entity.ai.CamelEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.DonkeyEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.GoatEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.RabbitEatFromGroundGoal;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.MooshroomEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.HorseEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.LlamaEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
@@ -12,6 +13,7 @@ import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
 import net.minecraft.world.entity.animal.Rabbit;
+import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.Donkey;
@@ -84,6 +86,13 @@ public class AnimalGoalInjector {
             if (mob.goalSelector.getAvailableGoals().stream()
                     .noneMatch(g -> g.getGoal() instanceof RabbitEatFromGroundGoal)) {
                 mob.goalSelector.addGoal(4, new RabbitEatFromGroundGoal(rabbit));
+            }
+        }
+
+        if (mob instanceof MushroomCow mooshroom) {
+            if (mob.goalSelector.getAvailableGoals().stream()
+                    .noneMatch(g -> g.getGoal() instanceof MooshroomEatFromGroundGoal)) {
+                mob.goalSelector.addGoal(4, new MooshroomEatFromGroundGoal(mooshroom));
             }
         }
     }

@@ -20,7 +20,9 @@
     "server.animal.DonkeyMixin",
     "server.animal.LlamaMixin",
     "server.animal.CamelMixin",
-    "server.animal.GoatMixin"
+    "server.animal.GoatMixin",
+    "server.animal.MooshroomMixin",
+    "server.item.StewItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1
