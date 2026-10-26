@@ -10,6 +10,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.animal.Sheep;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,15 +31,17 @@ public class AnimalMilkEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalMilkSavedData data = getAnimalMilkData(level);
             if (!data.hasMilkData(animal.getUUID())) {
-                int maxCapacity;
+                double maxCapacity;
                 if (animal instanceof Cow) {
-                    maxCapacity = 20000 + (int) (level.random.nextDouble() * 10000);
+                    maxCapacity = 20000 + level.random.nextDouble() * 10000;
                 } else if (animal instanceof Horse) {
-                    maxCapacity = 150000 + (int) (level.random.nextDouble() * 40000);
+                    maxCapacity = 150000 + level.random.nextDouble() * 40000;
                 } else if (animal instanceof Donkey) {
-                    maxCapacity = 2300 + (int) (level.random.nextDouble() * 3600);
+                    maxCapacity = 2300 + level.random.nextDouble() * 3600;
+                } else if (animal instanceof Llama) {
+                    maxCapacity = 1000;
                 } else {
-                    maxCapacity = 2000 + (int) (level.random.nextDouble() * 7000);
+                    maxCapacity = 2000 + level.random.nextDouble() * 7000;
                 }
                 data.initMilkData(animal.getUUID(), maxCapacity);
             }
@@ -59,16 +62,16 @@ public class AnimalMilkEventHandler {
 
     public static void syncMilkToTrackingPlayers(Animal animal, AnimalMilkSavedData data) {
         UUID uuid = animal.getUUID();
-        Map<UUID, Integer> milkEntry = Map.of(uuid, data.getMilkAmount(uuid));
-        Map<UUID, Long> maxCapacityEntry = Map.of(uuid, (long) data.getMilkMaxCapacity(uuid));
+        Map<UUID, Double> milkEntry = Map.of(uuid, data.getMilkAmount(uuid));
+        Map<UUID, Double> maxCapacityEntry = Map.of(uuid, data.getMilkMaxCapacity(uuid));
         AnimalMilkSyncPayload payload = new AnimalMilkSyncPayload(milkEntry, maxCapacityEntry);
         PacketDistributor.sendToPlayersTrackingEntity(animal, payload);
     }
 
     public static void syncMilkToPlayer(ServerPlayer player, Animal animal, AnimalMilkSavedData data) {
         UUID uuid = animal.getUUID();
-        Map<UUID, Integer> milkEntry = Map.of(uuid, data.getMilkAmount(uuid));
-        Map<UUID, Long> maxCapacityEntry = Map.of(uuid, (long) data.getMilkMaxCapacity(uuid));
+        Map<UUID, Double> milkEntry = Map.of(uuid, data.getMilkAmount(uuid));
+        Map<UUID, Double> maxCapacityEntry = Map.of(uuid, data.getMilkMaxCapacity(uuid));
         AnimalMilkSyncPayload payload = new AnimalMilkSyncPayload(milkEntry, maxCapacityEntry);
         PacketDistributor.sendToPlayer(player, payload);
     }

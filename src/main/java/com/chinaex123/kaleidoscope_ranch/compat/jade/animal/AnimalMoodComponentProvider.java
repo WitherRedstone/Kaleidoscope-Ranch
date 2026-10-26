@@ -15,6 +15,7 @@ import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Llama;
 import snownee.jade.api.EntityAccessor;
 import snownee.jade.api.IEntityComponentProvider;
 import snownee.jade.api.ITooltip;
@@ -72,11 +73,12 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.pet_status", Component.translatable(petKey)
                 .withStyle(style -> style.withColor(petColor))));
 
-        if ((animal instanceof Pig || animal instanceof Cow || animal instanceof Sheep || animal instanceof Horse || animal instanceof Donkey) && clientData.hasMilkData(uuid)) {
-            int milkAmount = clientData.getAnimalMilkAmount(uuid);
-            int milkMaxCapacity = (int) clientData.getAnimalMilkDailyMax(uuid);
+        if ((animal instanceof Pig || animal instanceof Cow || animal instanceof Sheep || animal instanceof Horse || animal instanceof Donkey || animal instanceof Llama) && clientData.hasMilkData(uuid)) {
+            double milkAmount = clientData.getAnimalMilkAmount(uuid);
+            double milkMaxCapacity = clientData.getAnimalMilkDailyMax(uuid);
             int milkColor = milkAmount >= milkMaxCapacity ? 0x55FF55 : 0xAAAAAA;
-            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_milk", Component.literal(milkAmount + "/" + milkMaxCapacity + "mb").withStyle(style -> style.withColor(milkColor)))
+            String milkStr = String.format("%.1f/%.1fmb", milkAmount, milkMaxCapacity);
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.animal_milk", Component.literal(milkStr).withStyle(style -> style.withColor(milkColor)))
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
 

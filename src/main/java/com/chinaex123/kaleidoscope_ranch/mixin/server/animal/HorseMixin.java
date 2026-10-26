@@ -80,7 +80,7 @@ public abstract class HorseMixin {
             }
 
             AnimalMilkSavedData milkData = AnimalMilkEventHandler.getAnimalMilkData(level);
-            int currentMilk = milkData.getMilkAmount(uuid);
+            double currentMilk = milkData.getMilkAmount(uuid);
             if (currentMilk < MILK_BUCKET_AMOUNT) {
                 cir.setReturnValue(InteractionResult.SUCCESS);
                 return;

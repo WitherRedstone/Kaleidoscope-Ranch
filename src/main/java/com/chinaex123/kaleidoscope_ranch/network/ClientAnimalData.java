@@ -18,8 +18,8 @@ public class ClientAnimalData {
     private final Map<UUID, Long> clientTroughCooldownExpireMap = new HashMap<>();
     private final Map<UUID, Integer> clientFavorMap = new HashMap<>();
     private final Map<UUID, Boolean> clientWildMap = new HashMap<>();
-    private final Map<UUID, Integer> clientMilkMap = new HashMap<>();
-    private final Map<UUID, Long> clientMilkDailyMaxMap = new HashMap<>();
+    private final Map<UUID, Double> clientMilkMap = new HashMap<>();
+    private final Map<UUID, Double> clientMilkDailyMaxMap = new HashMap<>();
     private final Map<UUID, Long> shearCooldownExpireMap = new HashMap<>();
 
     public static ClientAnimalData getInstance() {
@@ -97,21 +97,21 @@ public class ClientAnimalData {
         return clientWildMap.getOrDefault(uuid, false);
     }
 
-    public void updateMilkData(Map<UUID, Integer> milkMap, Map<UUID, Long> dailyMaxMap) {
+    public void updateMilkData(Map<UUID, Double> milkMap, Map<UUID, Double> dailyMaxMap) {
         clientMilkMap.putAll(milkMap);
         clientMilkDailyMaxMap.putAll(dailyMaxMap);
     }
 
-    public int getAnimalMilkAmount(UUID uuid) {
-        return clientMilkMap.getOrDefault(uuid, 0);
+    public double getAnimalMilkAmount(UUID uuid) {
+        return clientMilkMap.getOrDefault(uuid, 0.0);
     }
 
     public boolean hasMilkData(UUID uuid) {
         return clientMilkMap.containsKey(uuid);
     }
 
-    public long getAnimalMilkDailyMax(UUID uuid) {
-        return clientMilkDailyMaxMap.getOrDefault(uuid, 0L);
+    public double getAnimalMilkDailyMax(UUID uuid) {
+        return clientMilkDailyMaxMap.getOrDefault(uuid, 0.0);
     }
 
     public long getShearCooldownRemaining(UUID uuid, long currentGameTime) {

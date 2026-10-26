@@ -17,7 +17,8 @@
     "server.animal.CowMixin",
     "server.animal.SheepMixin",
     "server.animal.HorseMixin",
-    "server.animal.DonkeyMixin"
+    "server.animal.DonkeyMixin",
+    "server.animal.LlamaMixin"
   ],
   "injectors": {
     "defaultRequire": 1

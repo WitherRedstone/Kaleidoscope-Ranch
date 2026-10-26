@@ -84,7 +84,7 @@ public abstract class PigMixin {
             return;
         }
 
-        int currentMilk = milkData.getMilkAmount(uuid);
+        double currentMilk = milkData.getMilkAmount(uuid);
         if (currentMilk < MILK_BUCKET_AMOUNT) {
             cir.setReturnValue(InteractionResult.SUCCESS);
             return;

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public record AnimalMilkSyncPayload(Map<UUID, Integer> milkMap, Map<UUID, Long> dailyMaxMap) implements CustomPacketPayload {
+public record AnimalMilkSyncPayload(Map<UUID, Double> milkMap, Map<UUID, Double> dailyMaxMap) implements CustomPacketPayload {
 
     public static final ResourceLocation ID = KaleidoscopeRanch.id("animal_milk_sync");
     public static final Type<AnimalMilkSyncPayload> TYPE = new Type<>(ID);
@@ -18,20 +18,20 @@ public record AnimalMilkSyncPayload(Map<UUID, Integer> milkMap, Map<UUID, Long> 
     public static final StreamCodec<FriendlyByteBuf, AnimalMilkSyncPayload> STREAM_CODEC = StreamCodec.of(
             (buf, payload) -> {
                 buf.writeVarInt(payload.milkMap.size());
-                for (Map.Entry<UUID, Integer> entry : payload.milkMap.entrySet()) {
+                for (Map.Entry<UUID, Double> entry : payload.milkMap.entrySet()) {
                     buf.writeUUID(entry.getKey());
-                    buf.writeVarInt(entry.getValue());
-                    buf.writeVarLong(payload.dailyMaxMap.getOrDefault(entry.getKey(), 0L));
+                    buf.writeDouble(entry.getValue());
+                    buf.writeDouble(payload.dailyMaxMap.getOrDefault(entry.getKey(), 0.0));
                 }
             },
             buf -> {
                 int size = buf.readVarInt();
-                Map<UUID, Integer> milkMap = new HashMap<>();
-                Map<UUID, Long> dailyMaxMap = new HashMap<>();
+                Map<UUID, Double> milkMap = new HashMap<>();
+                Map<UUID, Double> dailyMaxMap = new HashMap<>();
                 for (int i = 0; i < size; i++) {
                     UUID uuid = buf.readUUID();
-                    int milk = buf.readVarInt();
-                    long dailyMax = buf.readVarLong();
+                    double milk = buf.readDouble();
+                    double dailyMax = buf.readDouble();
                     milkMap.put(uuid, milk);
                     dailyMaxMap.put(uuid, dailyMax);
                 }

@@ -26,8 +26,8 @@ public class AnimalMilkSavedData extends SavedData {
         for (int i = 0; i < list.size(); i++) {
             CompoundTag entry = list.getCompound(i);
             UUID uuid = entry.getUUID("kr_animal_id");
-            int milkAmount = entry.getInt("kr_milk_amount");
-            int maxCapacity = entry.getInt("kr_max_capacity");
+            double milkAmount = entry.getDouble("kr_milk_amount");
+            double maxCapacity = entry.getDouble("kr_max_capacity");
             AnimalMilk milk = new AnimalMilk(milkAmount, maxCapacity);
             milkMap.put(uuid, milk);
         }
@@ -39,8 +39,8 @@ public class AnimalMilkSavedData extends SavedData {
         for (Map.Entry<UUID, AnimalMilk> entry : milkMap.entrySet()) {
             CompoundTag entryTag = new CompoundTag();
             entryTag.putUUID("kr_animal_id", entry.getKey());
-            entryTag.putInt("kr_milk_amount", entry.getValue().getMilkAmount());
-            entryTag.putInt("kr_max_capacity", entry.getValue().getMaxCapacity());
+            entryTag.putDouble("kr_milk_amount", entry.getValue().getMilkAmount());
+            entryTag.putDouble("kr_max_capacity", entry.getValue().getMaxCapacity());
             list.add(entryTag);
         }
         tag.put("kr_animal_milk_list", list);
@@ -55,39 +55,39 @@ public class AnimalMilkSavedData extends SavedData {
         return DATA_NAME;
     }
 
-    public int getMilkAmount(UUID uuid) {
+    public double getMilkAmount(UUID uuid) {
         AnimalMilk milk = milkMap.get(uuid);
         return milk != null ? milk.getMilkAmount() : 0;
     }
 
-    public int getMilkMaxCapacity(UUID uuid) {
+    public double getMilkMaxCapacity(UUID uuid) {
         AnimalMilk milk = milkMap.get(uuid);
         return milk != null ? milk.getMaxCapacity() : 0;
     }
 
-    public void setMilkAmount(UUID uuid, int amount) {
+    public void setMilkAmount(UUID uuid, double amount) {
         milkMap.computeIfAbsent(uuid, k -> new AnimalMilk()).setMilkAmount(amount);
         setDirty();
     }
 
-    public void initMilkData(UUID uuid, int maxCapacity) {
+    public void initMilkData(UUID uuid, double maxCapacity) {
         AnimalMilk milk = new AnimalMilk();
         milk.setMaxCapacity(maxCapacity);
         milkMap.put(uuid, milk);
         setDirty();
     }
 
-    public void addMilk(UUID uuid, int amount) {
+    public void addMilk(UUID uuid, double amount) {
         AnimalMilk milk = milkMap.get(uuid);
         if (milk == null) return;
         milk.addMilk(amount);
         setDirty();
     }
 
-    public int drainMilk(UUID uuid, int amount) {
+    public double drainMilk(UUID uuid, double amount) {
         AnimalMilk milk = milkMap.get(uuid);
         if (milk == null) return 0;
-        int drained = milk.drainMilk(amount);
+        double drained = milk.drainMilk(amount);
         if (drained > 0) setDirty();
         return drained;
     }

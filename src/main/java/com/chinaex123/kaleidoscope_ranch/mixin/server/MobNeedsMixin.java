@@ -15,6 +15,7 @@ import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -29,6 +30,7 @@ abstract class MobNeedsMixin {
 
     @Unique
     private static final int SPREAD_FACTOR = 20;
+
 
     @Inject(method = "serverAiStep", at = @At("TAIL"))
     private void KR$tickAnimalNeeds(CallbackInfo ci) {
@@ -145,7 +147,8 @@ abstract class MobNeedsMixin {
         boolean isSheep = animal instanceof Sheep;
         boolean isHorse = animal instanceof Horse;
         boolean isDonkey = animal instanceof Donkey;
-        if (!isPig && !isCow && !isSheep && !isHorse && !isDonkey) return;
+        boolean isLlama = animal instanceof Llama;
+        if (!isPig && !isCow && !isSheep && !isHorse && !isDonkey && !isLlama) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
@@ -158,23 +161,27 @@ abstract class MobNeedsMixin {
         AnimalMilkSavedData milkData = AnimalMilkEventHandler.getAnimalMilkData(level);
         if (!milkData.hasMilkData(uuid)) return;
 
-        int currentMilk = milkData.getMilkAmount(uuid);
-        int maxCapacity = milkData.getMilkMaxCapacity(uuid);
+        double currentMilk = milkData.getMilkAmount(uuid);
+        double maxCapacity = milkData.getMilkMaxCapacity(uuid);
         if (currentMilk >= maxCapacity) return;
 
-        int rate;
-        if (isPig) {
-            rate = 3 + level.random.nextInt(4);
-        } else if (isSheep) {
-            rate = 2 + level.random.nextInt(2);
-        } else if (isHorse) {
-            rate = 13 + level.random.nextInt(3);
-        } else if (isDonkey) {
-            rate = 2 + level.random.nextInt(4);
+        if (isLlama) {
+            milkData.addMilk(uuid, 0.42);
         } else {
-            rate = 18 + level.random.nextInt(8);
+            double rate;
+            if (isPig) {
+                rate = 4.17 + level.random.nextDouble() * 3.33;
+            } else if (isSheep) {
+                rate = 0.50 + level.random.nextDouble() * 0.13;
+            } else if (isHorse) {
+                rate = 12.5 + level.random.nextDouble() * 3.3;
+            } else if (isDonkey) {
+                rate = 1.98 + level.random.nextDouble() * 2.98;
+            } else {
+                rate = 16.7 + level.random.nextDouble() * 8.3;
+            }
+            milkData.addMilk(uuid, rate);
         }
-        milkData.addMilk(uuid, rate);
         AnimalMilkEventHandler.syncMilkToTrackingPlayers(animal, milkData);
     }
 }
