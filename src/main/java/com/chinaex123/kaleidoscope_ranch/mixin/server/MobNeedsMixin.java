@@ -146,6 +146,8 @@ abstract class MobNeedsMixin {
 
     @Unique
     private void KR$tickMilk(ServerLevel level, Animal animal, UUID uuid, long gameTime) {
+        if (animal.isBaby()) return;
+
         boolean isPig = animal instanceof Pig;
         boolean isCow = animal instanceof Cow;
         boolean isSheep = animal instanceof Sheep;
