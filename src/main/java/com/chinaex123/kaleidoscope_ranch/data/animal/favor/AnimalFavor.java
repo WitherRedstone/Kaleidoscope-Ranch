@@ -39,7 +39,11 @@ public class AnimalFavor {
 
     public void addFavorExp(int delta) {
         if (favorLevel >= MAX_LEVEL) return;
-        this.favorExp = Math.max(0, this.favorExp + delta);
+        if (delta < 0) {
+            this.favorExp = Math.max(0, this.favorExp + delta);
+            return;
+        }
+        this.favorExp += delta;
         while (favorLevel < MAX_LEVEL) {
             int needed = getLevelUpExp(favorLevel);
             if (needed <= 0 || favorExp < needed) break;
