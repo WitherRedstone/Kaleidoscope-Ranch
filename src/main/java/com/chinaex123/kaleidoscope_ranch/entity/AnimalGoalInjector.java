@@ -4,16 +4,20 @@ import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.CamelEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.DonkeyEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.GoatEatFromGroundGoal;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.RabbitEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.HorseEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.LlamaEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -69,6 +73,17 @@ public class AnimalGoalInjector {
             if (mob.goalSelector.getAvailableGoals().stream()
                     .noneMatch(g -> g.getGoal() instanceof GoatEatFromGroundGoal)) {
                 mob.goalSelector.addGoal(4, new GoatEatFromGroundGoal(goat));
+            }
+        }
+
+        if (mob instanceof Rabbit rabbit) {
+            mob.goalSelector.getAvailableGoals().stream()
+                    .filter(g -> g.getGoal() instanceof AvoidEntityGoal)
+                    .toList()
+                    .forEach(g -> mob.goalSelector.removeGoal(g.getGoal()));
+            if (mob.goalSelector.getAvailableGoals().stream()
+                    .noneMatch(g -> g.getGoal() instanceof RabbitEatFromGroundGoal)) {
+                mob.goalSelector.addGoal(4, new RabbitEatFromGroundGoal(rabbit));
             }
         }
     }
