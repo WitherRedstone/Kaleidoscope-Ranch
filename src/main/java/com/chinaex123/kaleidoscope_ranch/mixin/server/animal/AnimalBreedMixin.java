@@ -23,6 +23,7 @@ import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.MushroomCow;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.goat.Goat;
@@ -267,6 +268,50 @@ public abstract class AnimalBreedMixin {
                 }
 
                 for (int i = 0; i < extraCount; i++) {
+                    Animal baby = (Animal) self.getBreedOffspring(level, mate);
+                    if (baby == null) break;
+
+                    baby.setBaby(true);
+                    baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
+                    level.addFreshEntityWithPassengers(baby);
+                }
+            }
+        }
+
+        boolean selfIsPig = self instanceof Pig;
+        boolean mateIsPig = mate instanceof Pig;
+
+        if (selfIsPig && mateIsPig) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int selfFavor = favorData.getAnimalFavorLevel(self.getUUID());
+            int mateFavor = favorData.getAnimalFavorLevel(mate.getUUID());
+
+            if (selfFavor >= 10 && mateFavor >= 10) {
+                int totalCount = KRConfig.BREED_PIG_BASE_COUNT.get();
+                double roll = level.random.nextDouble();
+                if (roll < KRConfig.BREED_PIG_TIER5_CHANCE.get()) {
+                    int min = KRConfig.BREED_PIG_TIER5_MIN.get();
+                    int max = KRConfig.BREED_PIG_TIER5_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_PIG_TIER4_CHANCE.get()) {
+                    int min = KRConfig.BREED_PIG_TIER4_MIN.get();
+                    int max = KRConfig.BREED_PIG_TIER4_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_PIG_TIER3_CHANCE.get()) {
+                    int min = KRConfig.BREED_PIG_TIER3_MIN.get();
+                    int max = KRConfig.BREED_PIG_TIER3_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_PIG_TIER2_CHANCE.get()) {
+                    int min = KRConfig.BREED_PIG_TIER2_MIN.get();
+                    int max = KRConfig.BREED_PIG_TIER2_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                } else if (roll < KRConfig.BREED_PIG_TIER1_CHANCE.get()) {
+                    int min = KRConfig.BREED_PIG_TIER1_MIN.get();
+                    int max = KRConfig.BREED_PIG_TIER1_MAX.get();
+                    totalCount = min + level.random.nextInt(max - min + 1);
+                }
+
+                for (int i = 0; i < totalCount; i++) {
                     Animal baby = (Animal) self.getBreedOffspring(level, mate);
                     if (baby == null) break;
 

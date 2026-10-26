@@ -91,6 +91,22 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_4_CHANCE;
     public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_5_CHANCE;
     public static final ModConfigSpec.DoubleValue BREED_GOAT_EXTRA_6_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_PIG_BASE_COUNT;
+    public static final ModConfigSpec.DoubleValue BREED_PIG_TIER1_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER1_MIN;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER1_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_PIG_TIER2_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER2_MIN;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER2_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_PIG_TIER3_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER3_MIN;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER3_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_PIG_TIER4_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER4_MIN;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER4_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_PIG_TIER5_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER5_MIN;
+    public static final ModConfigSpec.IntValue BREED_PIG_TIER5_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MIN;
@@ -443,6 +459,50 @@ public class KRConfig {
                 .comment("山羊双方好感≥10时额外繁殖6只子代的概率")
                 .comment("Chance of 6 extra offspring when both goat parents have favor >= 10")
                 .defineInRange("goatExtra6Chance", 0.0039, 0.0, 1.0);
+        BREED_PIG_BASE_COUNT = builder
+                .comment("猪双方好感≥10时保底繁殖子代数量")
+                .comment("Base offspring count when both pig parents have favor >= 10")
+                .defineInRange("pigBaseCount", 3, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER1_CHANCE = builder
+                .comment("猪繁殖第1档概率(50%→4-8只)")
+                .comment("Pig breed tier1 chance (50% -> 4-8)")
+                .defineInRange("pigTier1Chance", 0.50, 0.0, 1.0);
+        BREED_PIG_TIER1_MIN = builder
+                .defineInRange("pigTier1Min", 4, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER1_MAX = builder
+                .defineInRange("pigTier1Max", 8, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER2_CHANCE = builder
+                .comment("猪繁殖第2档概率(30%→9-11只)")
+                .comment("Pig breed tier2 chance (30% -> 9-11)")
+                .defineInRange("pigTier2Chance", 0.30, 0.0, 1.0);
+        BREED_PIG_TIER2_MIN = builder
+                .defineInRange("pigTier2Min", 9, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER2_MAX = builder
+                .defineInRange("pigTier2Max", 11, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER3_CHANCE = builder
+                .comment("猪繁殖第3档概率(8%→12-15只)")
+                .comment("Pig breed tier3 chance (8% -> 12-15)")
+                .defineInRange("pigTier3Chance", 0.08, 0.0, 1.0);
+        BREED_PIG_TIER3_MIN = builder
+                .defineInRange("pigTier3Min", 12, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER3_MAX = builder
+                .defineInRange("pigTier3Max", 15, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER4_CHANCE = builder
+                .comment("猪繁殖第4档概率(1.56%→16-17只)")
+                .comment("Pig breed tier4 chance (1.56% -> 16-17)")
+                .defineInRange("pigTier4Chance", 0.0156, 0.0, 1.0);
+        BREED_PIG_TIER4_MIN = builder
+                .defineInRange("pigTier4Min", 16, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER4_MAX = builder
+                .defineInRange("pigTier4Max", 17, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER5_CHANCE = builder
+                .comment("猪繁殖第5档概率(0.39%→18-20只)")
+                .comment("Pig breed tier5 chance (0.39% -> 18-20)")
+                .defineInRange("pigTier5Chance", 0.0039, 0.0, 1.0);
+        BREED_PIG_TIER5_MIN = builder
+                .defineInRange("pigTier5Min", 18, 1, Integer.MAX_VALUE);
+        BREED_PIG_TIER5_MAX = builder
+                .defineInRange("pigTier5Max", 20, 1, Integer.MAX_VALUE);
         BREED_OFFSPRING_MOOD_MIN = builder
                 .comment("繁殖子代初始心情最小值")
                 .comment("Bred offspring initial mood minimum")
