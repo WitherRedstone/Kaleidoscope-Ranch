@@ -3,11 +3,13 @@ package com.chinaex123.kaleidoscope_ranch.entity;
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.CamelEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.DonkeyEatFromGroundGoal;
+import com.chinaex123.kaleidoscope_ranch.entity.ai.GoatEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.HorseEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.LlamaEatFromGroundGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KREatFromTroughGoal;
 import com.chinaex123.kaleidoscope_ranch.init.tags.KREntityTags;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
@@ -60,6 +62,13 @@ public class AnimalGoalInjector {
             if (mob.goalSelector.getAvailableGoals().stream()
                     .noneMatch(g -> g.getGoal() instanceof CamelEatFromGroundGoal)) {
                 mob.goalSelector.addGoal(4, new CamelEatFromGroundGoal(camel));
+            }
+        }
+
+        if (mob instanceof Goat goat) {
+            if (mob.goalSelector.getAvailableGoals().stream()
+                    .noneMatch(g -> g.getGoal() instanceof GoatEatFromGroundGoal)) {
+                mob.goalSelector.addGoal(4, new GoatEatFromGroundGoal(goat));
             }
         }
     }

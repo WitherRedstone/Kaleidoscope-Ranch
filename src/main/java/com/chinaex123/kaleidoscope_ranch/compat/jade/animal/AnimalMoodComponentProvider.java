@@ -11,6 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.camel.Camel;
@@ -74,7 +75,7 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
         tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.pet_status", Component.translatable(petKey)
                 .withStyle(style -> style.withColor(petColor))));
 
-        if ((animal instanceof Pig || animal instanceof Cow || animal instanceof Sheep || animal instanceof Horse || animal instanceof Donkey || animal instanceof Llama || animal instanceof Camel) && clientData.hasMilkData(uuid)) {
+        if ((animal instanceof Pig || animal instanceof Cow || animal instanceof Sheep || animal instanceof Horse || animal instanceof Donkey || animal instanceof Llama || animal instanceof Camel || animal instanceof Goat) && clientData.hasMilkData(uuid)) {
             double milkAmount = clientData.getAnimalMilkAmount(uuid);
             double milkMaxCapacity = clientData.getAnimalMilkDailyMax(uuid);
             int milkColor = milkAmount >= milkMaxCapacity ? 0x55FF55 : 0xAAAAAA;

@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.camel.Camel;
@@ -43,6 +44,8 @@ public class AnimalMilkEventHandler {
                     maxCapacity = 1000;
                 } else if (animal instanceof Camel) {
                     maxCapacity = 5000 + level.random.nextDouble() * 25000;
+                } else if (animal instanceof Goat) {
+                    maxCapacity = 1000 + level.random.nextDouble() * 1000;
                 } else {
                     maxCapacity = 2000 + level.random.nextDouble() * 7000;
                 }
