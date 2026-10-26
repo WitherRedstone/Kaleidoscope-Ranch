@@ -10,6 +10,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.Llama;
 import net.minecraft.world.entity.animal.Sheep;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -40,6 +41,8 @@ public class AnimalMilkEventHandler {
                     maxCapacity = 2300 + level.random.nextDouble() * 3600;
                 } else if (animal instanceof Llama) {
                     maxCapacity = 1000;
+                } else if (animal instanceof Camel) {
+                    maxCapacity = 5000 + level.random.nextDouble() * 25000;
                 } else {
                     maxCapacity = 2000 + level.random.nextDouble() * 7000;
                 }

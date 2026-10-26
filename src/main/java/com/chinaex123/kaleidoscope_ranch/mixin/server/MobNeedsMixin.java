@@ -13,6 +13,7 @@ import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.Llama;
@@ -148,7 +149,8 @@ abstract class MobNeedsMixin {
         boolean isHorse = animal instanceof Horse;
         boolean isDonkey = animal instanceof Donkey;
         boolean isLlama = animal instanceof Llama;
-        if (!isPig && !isCow && !isSheep && !isHorse && !isDonkey && !isLlama) return;
+        boolean isCamel = animal instanceof Camel;
+        if (!isPig && !isCow && !isSheep && !isHorse && !isDonkey && !isLlama && !isCamel) return;
 
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
@@ -177,6 +179,8 @@ abstract class MobNeedsMixin {
                 rate = 12.5 + level.random.nextDouble() * 3.3;
             } else if (isDonkey) {
                 rate = 1.98 + level.random.nextDouble() * 2.98;
+            } else if (isCamel) {
+                rate = 4.17 + level.random.nextDouble() * 20.83;
             } else {
                 rate = 16.7 + level.random.nextDouble() * 8.3;
             }
