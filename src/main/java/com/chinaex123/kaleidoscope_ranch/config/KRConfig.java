@@ -80,6 +80,14 @@ public class KRConfig {
     public static final ModConfigSpec.DoubleValue LOOT_TIER3_MULTIPLIER;
     public static final ModConfigSpec.IntValue SHEEP_SHEAR_COOLDOWN_TICKS;
     public static final ModConfigSpec.IntValue MOOSHROOM_STEW_EFFECT_DURATION_TICKS;
+    public static final ModConfigSpec.DoubleValue BREED_EXTRA_OFFSPRING_CHANCE;
+    public static final ModConfigSpec.IntValue BREED_EXTRA_OFFSPRING_COUNT;
+    public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MIN;
+    public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MAX;
+    public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MIN;
+    public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MAX;
+    public static final ModConfigSpec.IntValue BREED_OFFSPRING_FAVOR_LEVEL;
+    public static final ModConfigSpec.IntValue BREED_COOLDOWN_TICKS;
 
     static {
         ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -245,7 +253,7 @@ public class KRConfig {
         FAVOR_EXP_TABLE = builder
                 .comment("升级经验表: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
                 .comment("Level up exp table: 0→1, 1→2, 2→3, ..., 10→11, 11→12")
-                .defineList("expTable", List.of(10, 25, 50, 100, 150, 200, 300, 500, 1000, 1200, 2000),
+                .defineList("expTable", List.of(10, 25, 50, 100, 150, 200, 300, 500, 1000, 1200, 2000, 3000),
                         o -> o instanceof Integer && (Integer) o > 0);
 
         builder.comment("好感经验提升配置").push("Favor Rise");
@@ -374,6 +382,41 @@ public class KRConfig {
                 .comment("蘑菇煲效果持续时间(tick)")
                 .comment("Mushroom stew effect duration (ticks)")
                 .defineInRange("stewEffectDurationTicks", 100, 1, Integer.MAX_VALUE);
+        builder.pop();
+
+        builder.comment("繁殖配置").push("Breeding");
+        BREED_EXTRA_OFFSPRING_CHANCE = builder
+                .comment("牛/哞菇双方好感≥10时额外繁殖子代的概率")
+                .comment("Chance of extra offspring when both cow/mooshroom parents have favor >= 10")
+                .defineInRange("extraOffspringChance", 0.0156, 0.0, 1.0);
+        BREED_EXTRA_OFFSPRING_COUNT = builder
+                .comment("额外繁殖子代数量")
+                .comment("Number of extra offspring")
+                .defineInRange("extraOffspringCount", 1, 1, Integer.MAX_VALUE);
+        BREED_OFFSPRING_MOOD_MIN = builder
+                .comment("繁殖子代初始心情最小值")
+                .comment("Bred offspring initial mood minimum")
+                .defineInRange("offspringMoodMin", 50.0, 0.0, 120.0);
+        BREED_OFFSPRING_MOOD_MAX = builder
+                .comment("繁殖子代初始心情最大值")
+                .comment("Bred offspring initial mood maximum")
+                .defineInRange("offspringMoodMax", 120.0, 0.0, 120.0);
+        BREED_OFFSPRING_HUNGER_MIN = builder
+                .comment("繁殖子代初始饥饿最小值")
+                .comment("Bred offspring initial hunger minimum")
+                .defineInRange("offspringHungerMin", 1.0, 0.0, 10.0);
+        BREED_OFFSPRING_HUNGER_MAX = builder
+                .comment("繁殖子代初始饥饿最大值")
+                .comment("Bred offspring initial hunger maximum")
+                .defineInRange("offspringHungerMax", 3.0, 0.0, 10.0);
+        BREED_OFFSPRING_FAVOR_LEVEL = builder
+                .comment("繁殖子代初始好感等级")
+                .comment("Bred offspring initial favor level")
+                .defineInRange("offspringFavorLevel", 12, 0, 12);
+        BREED_COOLDOWN_TICKS = builder
+                .comment("繁殖冷却时间(tick)")
+                .comment("Breeding cooldown (ticks)")
+                .defineInRange("cooldownTicks", 24000, 0, Integer.MAX_VALUE);
         builder.pop();
 
 

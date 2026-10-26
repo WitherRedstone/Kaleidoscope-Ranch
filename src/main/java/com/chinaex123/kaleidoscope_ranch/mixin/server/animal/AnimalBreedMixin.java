@@ -1,5 +1,6 @@
 package com.chinaex123.kaleidoscope_ranch.mixin.server.animal;
 
+import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.milk.AnimalMilkSavedData;
@@ -8,6 +9,7 @@ import com.chinaex123.kaleidoscope_ranch.entity.AnimalFavorEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalHungerEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMilkEventHandler;
 import com.chinaex123.kaleidoscope_ranch.entity.AnimalMoodEventHandler;
+import com.chinaex123.kaleidoscope_ranch.entity.BreedContext;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.AnimalChaseAndHurtGoal;
 import com.chinaex123.kaleidoscope_ranch.entity.ai.KRFleeFromPlayerGoal;
 import com.chinaex123.kaleidoscope_ranch.init.KRItems;
@@ -19,6 +21,8 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.animal.Cow;
+import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.entity.animal.Rabbit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -150,6 +154,8 @@ public abstract class AnimalBreedMixin {
         if (!KREntityTags.isManagedAnimal(self)) return;
         if (!KREntityTags.isManagedAnimal(mate)) return;
 
+        BreedContext.setBreeding(true);
+
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
 
@@ -159,11 +165,49 @@ public abstract class AnimalBreedMixin {
         float otherHunger = hungerData.getAnimalHungerValue(mate.getUUID());
 
         if (selfMood < 100.0 || selfHunger < 10.0f || otherMood < 100.0 || otherHunger < 10.0f) {
-            self.setAge(6000);
-            mate.setAge(6000);
+            int cooldown = KRConfig.BREED_COOLDOWN_TICKS.get();
+            self.setAge(cooldown);
+            mate.setAge(cooldown);
             self.resetLove();
             mate.resetLove();
             ci.cancel();
         }
+    }
+
+    @Inject(method = "spawnChildFromBreeding", at = @At("TAIL"))
+    private void onBreedTail(ServerLevel level, Animal mate, CallbackInfo ci) {
+        Animal self = (Animal) (Object) this;
+
+        int cooldown = KRConfig.BREED_COOLDOWN_TICKS.get();
+        self.setAge(cooldown);
+        mate.setAge(cooldown);
+
+        boolean selfIsCow = self instanceof Cow && !(self instanceof MushroomCow);
+        boolean selfIsMooshroom = self instanceof MushroomCow;
+        boolean mateIsCow = mate instanceof Cow && !(mate instanceof MushroomCow);
+        boolean mateIsMooshroom = mate instanceof MushroomCow;
+
+        if ((selfIsCow && mateIsCow) || (selfIsMooshroom && mateIsMooshroom)) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int selfFavor = favorData.getAnimalFavorLevel(self.getUUID());
+            int mateFavor = favorData.getAnimalFavorLevel(mate.getUUID());
+
+            if (selfFavor >= 10 && mateFavor >= 10) {
+                double chance = KRConfig.BREED_EXTRA_OFFSPRING_CHANCE.get();
+                if (level.random.nextDouble() < chance) {
+                    int extraCount = KRConfig.BREED_EXTRA_OFFSPRING_COUNT.get();
+                    for (int i = 0; i < extraCount; i++) {
+                        Animal baby = (Animal) self.getBreedOffspring(level, mate);
+                        if (baby == null) break;
+
+                        baby.setBaby(true);
+                        baby.moveTo(self.getX(), self.getY(), self.getZ(), 0.0F, 0.0F);
+                        level.addFreshEntityWithPassengers(baby);
+                    }
+                }
+            }
+        }
+
+        BreedContext.setBreeding(false);
     }
 }

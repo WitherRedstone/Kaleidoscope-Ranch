@@ -2,6 +2,8 @@ package com.chinaex123.kaleidoscope_ranch.entity;
 
 import com.chinaex123.kaleidoscope_ranch.KaleidoscopeRanch;
 import com.chinaex123.kaleidoscope_ranch.config.KRConfig;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavor;
+import com.chinaex123.kaleidoscope_ranch.data.animal.favor.AnimalFavorSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.favor.FavorRise;
 import com.chinaex123.kaleidoscope_ranch.data.animal.hunger.AnimalHungerSavedData;
 import com.chinaex123.kaleidoscope_ranch.data.animal.mood.AnimalMoodSavedData;
@@ -43,11 +45,29 @@ public class AnimalMoodEventHandler {
             ServerLevel level = (ServerLevel) event.getLevel();
             AnimalMoodSavedData data = getAnimalMoodData(level);
             if (!data.hasAnimalMoodData(animal.getUUID())) {
-                data.setWild(animal.getUUID(), true);
-                double minMood = KRConfig.WILD_INITIAL_MOOD_MIN.get();
-                double maxMood = KRConfig.WILD_INITIAL_MOOD_MAX.get();
-                double initialMood = minMood + level.random.nextDouble() * (maxMood - minMood);
-                data.setAnimalMoodScore(animal.getUUID(), initialMood);
+                if (BreedContext.isBreeding()) {
+                    data.setWild(animal.getUUID(), false);
+                    double minMood = KRConfig.BREED_OFFSPRING_MOOD_MIN.get();
+                    double maxMood = KRConfig.BREED_OFFSPRING_MOOD_MAX.get();
+                    double initialMood = minMood + level.random.nextDouble() * (maxMood - minMood);
+                    data.setAnimalMoodScore(animal.getUUID(), initialMood);
+
+                    AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
+                    float minHunger = KRConfig.BREED_OFFSPRING_HUNGER_MIN.get().floatValue();
+                    float maxHunger = KRConfig.BREED_OFFSPRING_HUNGER_MAX.get().floatValue();
+                    float initialHunger = minHunger + level.random.nextFloat() * (maxHunger - minHunger);
+                    hungerData.setAnimalHungerValue(animal.getUUID(), initialHunger);
+
+                    AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+                    int favorExp = AnimalFavor.levelToExp(KRConfig.BREED_OFFSPRING_FAVOR_LEVEL.get());
+                    favorData.setAnimalFavorExp(animal.getUUID(), favorExp);
+                } else {
+                    data.setWild(animal.getUUID(), true);
+                    double minMood = KRConfig.WILD_INITIAL_MOOD_MIN.get();
+                    double maxMood = KRConfig.WILD_INITIAL_MOOD_MAX.get();
+                    double initialMood = minMood + level.random.nextDouble() * (maxMood - minMood);
+                    data.setAnimalMoodScore(animal.getUUID(), initialMood);
+                }
             }
             syncMoodToTrackingPlayers(animal, data);
 
