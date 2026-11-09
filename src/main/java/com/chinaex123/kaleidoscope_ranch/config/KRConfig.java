@@ -125,6 +125,7 @@ public class KRConfig {
     public static final ModConfigSpec.IntValue DONKEY_MAX_BREED_COUNT;
     public static final ModConfigSpec.DoubleValue BREED_LLAMA_EXTRA_CHANCE;
     public static final ModConfigSpec.IntValue BREED_LLAMA_EXTRA_COUNT;
+    public static final ModConfigSpec.IntValue CAMEL_MAX_BREED_COUNT;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MIN;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_MOOD_MAX;
     public static final ModConfigSpec.DoubleValue BREED_OFFSPRING_HUNGER_MIN;
@@ -577,6 +578,11 @@ public class KRConfig {
                 .comment("羊驼额外繁殖子代数量")
                 .comment("Extra offspring count for llama")
                 .defineInRange("llamaExtraCount", 2, 1, Integer.MAX_VALUE);
+
+        CAMEL_MAX_BREED_COUNT = builder
+                .comment("骆驼最大繁殖次数")
+                .comment("Max breed count for camel")
+                .defineInRange("camelMaxBreedCount", 6, 1, Integer.MAX_VALUE);
 
         BREED_OFFSPRING_MOOD_MIN = builder
                 .comment("繁殖子代初始心情最小值")

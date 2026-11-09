@@ -29,6 +29,7 @@ import net.minecraft.world.entity.animal.Sheep;
 import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.animal.horse.Donkey;
 import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.camel.Camel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -176,6 +177,21 @@ public abstract class AnimalBreedMixin {
             }
         }
 
+        if (self instanceof Camel || mate instanceof Camel) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            int maxBreed = KRConfig.CAMEL_MAX_BREED_COUNT.get();
+            if (favorData.getBreedCount(self.getUUID()) >= maxBreed
+                    || favorData.getBreedCount(mate.getUUID()) >= maxBreed) {
+                int cooldown = KRConfig.BREED_COOLDOWN_TICKS.get();
+                self.setAge(cooldown);
+                mate.setAge(cooldown);
+                self.resetLove();
+                mate.resetLove();
+                ci.cancel();
+                return;
+            }
+        }
+
         AnimalMoodSavedData moodData = AnimalMoodEventHandler.getAnimalMoodData(level);
         AnimalHungerSavedData hungerData = AnimalHungerEventHandler.getAnimalHungerData(level);
 
@@ -203,6 +219,12 @@ public abstract class AnimalBreedMixin {
         mate.setAge(cooldown);
 
         if (self instanceof Donkey || mate instanceof Donkey) {
+            AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
+            favorData.incrementBreedCount(self.getUUID());
+            favorData.incrementBreedCount(mate.getUUID());
+        }
+
+        if (self instanceof Camel || mate instanceof Camel) {
             AnimalFavorSavedData favorData = AnimalFavorEventHandler.getAnimalFavorData(level);
             favorData.incrementBreedCount(self.getUUID());
             favorData.incrementBreedCount(mate.getUUID());

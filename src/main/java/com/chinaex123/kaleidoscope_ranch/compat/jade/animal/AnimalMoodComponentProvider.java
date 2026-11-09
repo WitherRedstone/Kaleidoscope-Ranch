@@ -113,6 +113,14 @@ public enum AnimalMoodComponentProvider implements IEntityComponentProvider {
             tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.breed_count", Component.literal(breedCount + "/" + maxBreed).withStyle(style -> style.withColor(breedColor)))
                     .withStyle(style -> style.withColor(0xAAAAAA)));
         }
+
+        if (animal instanceof Camel) {
+            int breedCount = clientData.getBreedCount(uuid);
+            int maxBreed = com.chinaex123.kaleidoscope_ranch.config.KRConfig.CAMEL_MAX_BREED_COUNT.get();
+            int breedColor = breedCount >= maxBreed ? 0xFF5555 : 0xAAAAAA;
+            tooltip.add(Component.translatable("jade.plugin_kaleidoscope_ranch.breed_count", Component.literal(breedCount + "/" + maxBreed).withStyle(style -> style.withColor(breedColor)))
+                    .withStyle(style -> style.withColor(0xAAAAAA)));
+        }
     }
 
     private static String formatTickTime(long ticks) {
